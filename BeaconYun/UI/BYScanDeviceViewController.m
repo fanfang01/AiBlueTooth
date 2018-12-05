@@ -193,7 +193,7 @@
     }];
 
     adverButton.titleLabel.font = [UIFont fontWithName:sIconsFont size:20.f];
-    [adverButton setTitle:@"开始广播" forState:UIControlStateNormal];
+    [adverButton setTitle:@"开始操作" forState:UIControlStateNormal];
     [adverButton setTitleColor:[UIColor colorWithRed:0.25 green:0.32 blue:0.71 alpha:1.00] forState:UIControlStateNormal];
     [adverButton addTarget:self action:@selector(startToAdertise) forControlEvents:UIControlEventTouchUpInside];
     

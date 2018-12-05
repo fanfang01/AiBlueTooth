@@ -19,7 +19,7 @@
 	<key>CFBundleShortVersionString</key>
 	<string>1.0</string>
 	<key>CFBundleVersion</key>
-	<string>1</string>
+	<string>2</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -41,6 +41,8 @@
 	</dict>
 	<key>NSBluetoothPeripheralUsageDescription</key>
 	<string>The app will communication with device by bluetooth module. </string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>The app will use your microPhone to record your voice</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>icon.ttf</string>

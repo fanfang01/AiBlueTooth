@@ -7,10 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		282D97F421B7D404004E9D39 /* WakeUp.bin in Resources */ = {isa = PBXBuildFile; fileRef = 282D97F321B7D404004E9D39 /* WakeUp.bin */; };
 		286D6B1021B7AC2F000DB7C8 /* MTBeaconManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 286D6B0C21B7AC2F000DB7C8 /* MTBeaconManager.m */; };
 		286D6B1121B7AC2F000DB7C8 /* MTCommonTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 286D6B0D21B7AC2F000DB7C8 /* MTCommonTool.m */; };
 		286D6B1221B7AC2F000DB7C8 /* MTPeripheralManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 286D6B0E21B7AC2F000DB7C8 /* MTPeripheralManager.m */; };
-		286D6B2221B7ACD2000DB7C8 /* AdvertiseView.m in Sources */ = {isa = PBXBuildFile; fileRef = 286D6B1421B7ACD1000DB7C8 /* AdvertiseView.m */; };
 		286D6B2321B7ACD2000DB7C8 /* BYScanDeviceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 286D6B1521B7ACD2000DB7C8 /* BYScanDeviceViewController.m */; };
 		286D6B2421B7ACD2000DB7C8 /* BYDeviceDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 286D6B1721B7ACD2000DB7C8 /* BYDeviceDetailViewController.m */; };
 		286D6B2521B7ACD2000DB7C8 /* BYInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 286D6B1A21B7ACD2000DB7C8 /* BYInfoViewController.m */; };
@@ -18,8 +18,6 @@
 		286D6B2721B7ACD2000DB7C8 /* BYNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 286D6B1C21B7ACD2000DB7C8 /* BYNavigationController.m */; };
 		286D6B2821B7ACD2000DB7C8 /* BYBindDeviceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 286D6B2021B7ACD2000DB7C8 /* BYBindDeviceViewController.m */; };
 		286D6B2F21B7ACDD000DB7C8 /* SettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 286D6B2A21B7ACDC000DB7C8 /* SettingViewController.m */; };
-		286D6B3021B7ACDD000DB7C8 /* StartAdvertiseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 286D6B2C21B7ACDD000DB7C8 /* StartAdvertiseViewController.m */; };
-		286D6B3121B7ACDD000DB7C8 /* ShakeSelectView.m in Sources */ = {isa = PBXBuildFile; fileRef = 286D6B2D21B7ACDD000DB7C8 /* ShakeSelectView.m */; };
 		286D6B3321B7AD1B000DB7C8 /* shake.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 286D6B3221B7AD1B000DB7C8 /* shake.xcassets */; };
 		286D6B7921B7B2D6000DB7C8 /* .gitIgnore in Resources */ = {isa = PBXBuildFile; fileRef = 286D6B3B21B7B2D3000DB7C8 /* .gitIgnore */; };
 		286D6B7A21B7B2D6000DB7C8 /* bds_license.dat in Resources */ = {isa = PBXBuildFile; fileRef = 286D6B5221B7B2D5000DB7C8 /* bds_license.dat */; };
@@ -52,6 +50,9 @@
 		286D6BAF21B7B511000DB7C8 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 286D6BAE21B7B511000DB7C8 /* CFNetwork.framework */; };
 		286D6BB121B7B519000DB7C8 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 286D6BB021B7B519000DB7C8 /* CoreLocation.framework */; };
 		286D6BB321B7B521000DB7C8 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 286D6BB221B7B521000DB7C8 /* CoreTelephony.framework */; };
+		286D6BC021B7B771000DB7C8 /* StartAdvertiseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 286D6BB921B7B771000DB7C8 /* StartAdvertiseViewController.m */; };
+		286D6BC121B7B771000DB7C8 /* AdvertiseView.m in Sources */ = {isa = PBXBuildFile; fileRef = 286D6BBC21B7B771000DB7C8 /* AdvertiseView.m */; };
+		286D6BC221B7B771000DB7C8 /* ShakeSelectView.m in Sources */ = {isa = PBXBuildFile; fileRef = 286D6BBD21B7B771000DB7C8 /* ShakeSelectView.m */; };
 		B1CFC9764E4898520C187548 /* libPods-BeaconYun.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F5851AABDA97E315A353A0BF /* libPods-BeaconYun.a */; };
 		E532AFD01E9B92290001BE28 /* lock.js in Resources */ = {isa = PBXBuildFile; fileRef = E532AFCF1E9B92290001BE28 /* lock.js */; };
 		E539CF0D1E762AA800B9D731 /* ui2.js in Resources */ = {isa = PBXBuildFile; fileRef = E539CF0C1E762AA800B9D731 /* ui2.js */; };
@@ -122,6 +123,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		282D97F321B7D404004E9D39 /* WakeUp.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; path = WakeUp.bin; sourceTree = "<group>"; };
 		286D6B0921B7AC2F000DB7C8 /* MTPeripheralManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTPeripheralManager.h; sourceTree = "<group>"; };
 		286D6B0A21B7AC2F000DB7C8 /* MTCommonTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTCommonTool.h; sourceTree = "<group>"; };
 		286D6B0B21B7AC2F000DB7C8 /* MTBeaconManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTBeaconManager.h; sourceTree = "<group>"; };
@@ -130,11 +132,9 @@
 		286D6B0E21B7AC2F000DB7C8 /* MTPeripheralManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTPeripheralManager.m; sourceTree = "<group>"; };
 		286D6B0F21B7AC2F000DB7C8 /* MTPeripheralManagerEx.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTPeripheralManagerEx.h; sourceTree = "<group>"; };
 		286D6B1321B7AC53000DB7C8 /* PrefixHeader.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
-		286D6B1421B7ACD1000DB7C8 /* AdvertiseView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AdvertiseView.m; sourceTree = "<group>"; };
 		286D6B1521B7ACD2000DB7C8 /* BYScanDeviceViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BYScanDeviceViewController.m; sourceTree = "<group>"; };
 		286D6B1621B7ACD2000DB7C8 /* BYDeviceDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BYDeviceDetailViewController.h; sourceTree = "<group>"; };
 		286D6B1721B7ACD2000DB7C8 /* BYDeviceDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BYDeviceDetailViewController.m; sourceTree = "<group>"; };
-		286D6B1821B7ACD2000DB7C8 /* AdvertiseView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AdvertiseView.h; sourceTree = "<group>"; };
 		286D6B1921B7ACD2000DB7C8 /* BYSetDeviceViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BYSetDeviceViewController.h; sourceTree = "<group>"; };
 		286D6B1A21B7ACD2000DB7C8 /* BYInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BYInfoViewController.m; sourceTree = "<group>"; };
 		286D6B1B21B7ACD2000DB7C8 /* BYSetDeviceViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BYSetDeviceViewController.m; sourceTree = "<group>"; };
@@ -144,12 +144,8 @@
 		286D6B1F21B7ACD2000DB7C8 /* BYBindDeviceViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BYBindDeviceViewController.h; sourceTree = "<group>"; };
 		286D6B2021B7ACD2000DB7C8 /* BYBindDeviceViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BYBindDeviceViewController.m; sourceTree = "<group>"; };
 		286D6B2121B7ACD2000DB7C8 /* BYInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BYInfoViewController.h; sourceTree = "<group>"; };
-		286D6B2921B7ACDC000DB7C8 /* ShakeSelectView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShakeSelectView.h; sourceTree = "<group>"; };
 		286D6B2A21B7ACDC000DB7C8 /* SettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingViewController.m; sourceTree = "<group>"; };
 		286D6B2B21B7ACDD000DB7C8 /* SettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingViewController.h; sourceTree = "<group>"; };
-		286D6B2C21B7ACDD000DB7C8 /* StartAdvertiseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StartAdvertiseViewController.m; sourceTree = "<group>"; };
-		286D6B2D21B7ACDD000DB7C8 /* ShakeSelectView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShakeSelectView.m; sourceTree = "<group>"; };
-		286D6B2E21B7ACDD000DB7C8 /* StartAdvertiseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StartAdvertiseViewController.h; sourceTree = "<group>"; };
 		286D6B3221B7AD1B000DB7C8 /* shake.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = shake.xcassets; sourceTree = "<group>"; };
 		286D6B3821B7B2D3000DB7C8 /* BDSWakeupParameters.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BDSWakeupParameters.h; sourceTree = "<group>"; };
 		286D6B3921B7B2D3000DB7C8 /* BDSASRParameters.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BDSASRParameters.h; sourceTree = "<group>"; };
@@ -202,6 +198,12 @@
 		286D6BAE21B7B511000DB7C8 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		286D6BB021B7B519000DB7C8 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		286D6BB221B7B521000DB7C8 /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
+		286D6BB821B7B771000DB7C8 /* StartAdvertiseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StartAdvertiseViewController.h; sourceTree = "<group>"; };
+		286D6BB921B7B771000DB7C8 /* StartAdvertiseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StartAdvertiseViewController.m; sourceTree = "<group>"; };
+		286D6BBC21B7B771000DB7C8 /* AdvertiseView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AdvertiseView.m; sourceTree = "<group>"; };
+		286D6BBD21B7B771000DB7C8 /* ShakeSelectView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShakeSelectView.m; sourceTree = "<group>"; };
+		286D6BBE21B7B771000DB7C8 /* AdvertiseView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AdvertiseView.h; sourceTree = "<group>"; };
+		286D6BBF21B7B771000DB7C8 /* ShakeSelectView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShakeSelectView.h; sourceTree = "<group>"; };
 		49E0A3CD57A1B7DE50179925 /* Pods-BeaconYun.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BeaconYun.debug.xcconfig"; path = "Pods/Target Support Files/Pods-BeaconYun/Pods-BeaconYun.debug.xcconfig"; sourceTree = "<group>"; };
 		B370C1B698562C91509A8E8F /* Pods-BeaconYun.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BeaconYun.release.xcconfig"; path = "Pods/Target Support Files/Pods-BeaconYun/Pods-BeaconYun.release.xcconfig"; sourceTree = "<group>"; };
 		E532AFCF1E9B92290001BE28 /* lock.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = lock.js; sourceTree = "<group>"; };
@@ -336,6 +338,7 @@
 		286D6B3521B7B2A7000DB7C8 /* BaiduSDK */ = {
 			isa = PBXGroup;
 			children = (
+				282D97F321B7D404004E9D39 /* WakeUp.bin */,
 				286D6B3621B7B2D3000DB7C8 /* BDSClientHeaders */,
 				286D6B7621B7B2D6000DB7C8 /* BDSClientLib */,
 				286D6B4F21B7B2D5000DB7C8 /* BDSClientResource */,
@@ -450,6 +453,43 @@
 				286D6B7721B7B2D6000DB7C8 /* libBaiduSpeechSDK.a */,
 			);
 			path = BDSClientLib;
+			sourceTree = "<group>";
+		};
+		286D6BB621B7B771000DB7C8 /* Advertise */ = {
+			isa = PBXGroup;
+			children = (
+				286D6BB721B7B771000DB7C8 /* Controller */,
+				286D6BBA21B7B771000DB7C8 /* Model */,
+				286D6BBB21B7B771000DB7C8 /* View */,
+			);
+			path = Advertise;
+			sourceTree = "<group>";
+		};
+		286D6BB721B7B771000DB7C8 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				286D6BB821B7B771000DB7C8 /* StartAdvertiseViewController.h */,
+				286D6BB921B7B771000DB7C8 /* StartAdvertiseViewController.m */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		286D6BBA21B7B771000DB7C8 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		286D6BBB21B7B771000DB7C8 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				286D6BBE21B7B771000DB7C8 /* AdvertiseView.h */,
+				286D6BBC21B7B771000DB7C8 /* AdvertiseView.m */,
+				286D6BBD21B7B771000DB7C8 /* ShakeSelectView.m */,
+				286D6BBF21B7B771000DB7C8 /* ShakeSelectView.h */,
+			);
+			path = View;
 			sourceTree = "<group>";
 		};
 		4A16B165B91471A682D1289E /* Frameworks */ = {
@@ -636,14 +676,9 @@
 		E56992EA1E5EB97100C76E42 /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				286D6BB621B7B771000DB7C8 /* Advertise */,
 				286D6B2B21B7ACDD000DB7C8 /* SettingViewController.h */,
 				286D6B2A21B7ACDC000DB7C8 /* SettingViewController.m */,
-				286D6B2921B7ACDC000DB7C8 /* ShakeSelectView.h */,
-				286D6B2D21B7ACDD000DB7C8 /* ShakeSelectView.m */,
-				286D6B2E21B7ACDD000DB7C8 /* StartAdvertiseViewController.h */,
-				286D6B2C21B7ACDD000DB7C8 /* StartAdvertiseViewController.m */,
-				286D6B1821B7ACD2000DB7C8 /* AdvertiseView.h */,
-				286D6B1421B7ACD1000DB7C8 /* AdvertiseView.m */,
 				286D6B1F21B7ACD2000DB7C8 /* BYBindDeviceViewController.h */,
 				286D6B2021B7ACD2000DB7C8 /* BYBindDeviceViewController.m */,
 				286D6B1621B7ACD2000DB7C8 /* BYDeviceDetailViewController.h */,
@@ -797,7 +832,7 @@
 				TargetAttributes = {
 					E56992961E5EB60B00C76E42 = {
 						CreatedOnToolsVersion = 8.2.1;
-						DevelopmentTeam = 646P9H983T;
+						DevelopmentTeam = 7V7KVUW3JN;
 						ProvisioningStyle = Automatic;
 					};
 					E56992AF1E5EB60B00C76E42 = {
@@ -883,6 +918,7 @@
 				E54F0A2F1EA9D13F008B7CC3 /* osc.png in Resources */,
 				E5CF142B1E9E189D00C1D26D /* lock@2x.png in Resources */,
 				286D6B8021B7B2D6000DB7C8 /* bds_easr_gramm.dat in Resources */,
+				282D97F421B7D404004E9D39 /* WakeUp.bin in Resources */,
 				E56992DE1E5EB91500C76E42 /* LaunchScreen.storyboard in Resources */,
 				E5CF142A1E9E189D00C1D26D /* key.png in Resources */,
 				286D6B7F21B7B2D6000DB7C8 /* bds_easr_mfe_dnn.dat in Resources */,
@@ -965,23 +1001,23 @@
 			buildActionMask = 2147483647;
 			files = (
 				E545202D1E67FFB700C0D46E /* MinewModuleManager.m in Sources */,
-				286D6B2221B7ACD2000DB7C8 /* AdvertiseView.m in Sources */,
 				286D6B1021B7AC2F000DB7C8 /* MTBeaconManager.m in Sources */,
 				E56992EF1E5EB97100C76E42 /* BYCommonTools.m in Sources */,
 				E5A7E1EF1E602A6300D72212 /* BYHeaderView.m in Sources */,
 				E545202A1E67FFB700C0D46E /* MinewCommonTool.m in Sources */,
 				286D6B2821B7ACD2000DB7C8 /* BYBindDeviceViewController.m in Sources */,
 				E54520301E68000000C0D46E /* MinewModuleAPI.m in Sources */,
+				286D6BC121B7B771000DB7C8 /* AdvertiseView.m in Sources */,
 				286D6B1221B7AC2F000DB7C8 /* MTPeripheralManager.m in Sources */,
 				E56992F11E5EB97100C76E42 /* BYCustomManager.m in Sources */,
 				E5BF8E721EB040A300AF94DC /* ColorPickerView.m in Sources */,
-				286D6B3021B7ACDD000DB7C8 /* StartAdvertiseViewController.m in Sources */,
 				286D6B2721B7ACD2000DB7C8 /* BYNavigationController.m in Sources */,
 				E56992DC1E5EB91500C76E42 /* AppDelegate.m in Sources */,
 				286D6B2521B7ACD2000DB7C8 /* BYInfoViewController.m in Sources */,
-				286D6B3121B7ACDD000DB7C8 /* ShakeSelectView.m in Sources */,
 				E5E4BDAF1E710B780086472B /* NSTimer+Blocks.m in Sources */,
+				286D6BC221B7B771000DB7C8 /* ShakeSelectView.m in Sources */,
 				286D6B2F21B7ACDD000DB7C8 /* SettingViewController.m in Sources */,
+				286D6BC021B7B771000DB7C8 /* StartAdvertiseViewController.m in Sources */,
 				E56992FB1E5EBE6B00C76E42 /* BYTableViewModel.m in Sources */,
 				E56992E01E5EB91500C76E42 /* main.m in Sources */,
 				286D6B2321B7ACD2000DB7C8 /* BYScanDeviceViewController.m in Sources */,
@@ -1152,7 +1188,7 @@
 			baseConfigurationReference = 49E0A3CD57A1B7DE50179925 /* Pods-BeaconYun.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = 646P9H983T;
+				DEVELOPMENT_TEAM = 7V7KVUW3JN;
 				GCC_PREFIX_HEADER = $SRCROOT/BeaconYun/Configs/PrefixHeader.pch;
 				INFOPLIST_FILE = "$(SRCROOT)/BeaconYun/Configs/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
@@ -1161,7 +1197,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/BeaconYun/BaiduSDK/BDSClientLib",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.minew.blelight;
+				PRODUCT_BUNDLE_IDENTIFIER = com.AiBlue;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -1171,7 +1207,7 @@
 			baseConfigurationReference = B370C1B698562C91509A8E8F /* Pods-BeaconYun.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = 646P9H983T;
+				DEVELOPMENT_TEAM = 7V7KVUW3JN;
 				GCC_PREFIX_HEADER = $SRCROOT/BeaconYun/Configs/PrefixHeader.pch;
 				INFOPLIST_FILE = "$(SRCROOT)/BeaconYun/Configs/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
@@ -1180,7 +1216,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/BeaconYun/BaiduSDK/BDSClientLib",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.minew.blelight;
+				PRODUCT_BUNDLE_IDENTIFIER = com.AiBlue;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
