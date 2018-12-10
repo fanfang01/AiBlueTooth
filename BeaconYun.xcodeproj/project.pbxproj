@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		282D97F421B7D404004E9D39 /* WakeUp.bin in Resources */ = {isa = PBXBuildFile; fileRef = 282D97F321B7D404004E9D39 /* WakeUp.bin */; };
+		284212F621B910C500B36B94 /* AdvDataModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 284212F521B910C500B36B94 /* AdvDataModel.m */; };
 		286D6B1021B7AC2F000DB7C8 /* MTBeaconManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 286D6B0C21B7AC2F000DB7C8 /* MTBeaconManager.m */; };
 		286D6B1121B7AC2F000DB7C8 /* MTCommonTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 286D6B0D21B7AC2F000DB7C8 /* MTCommonTool.m */; };
 		286D6B1221B7AC2F000DB7C8 /* MTPeripheralManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 286D6B0E21B7AC2F000DB7C8 /* MTPeripheralManager.m */; };
@@ -124,6 +125,8 @@
 
 /* Begin PBXFileReference section */
 		282D97F321B7D404004E9D39 /* WakeUp.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; path = WakeUp.bin; sourceTree = "<group>"; };
+		284212F421B910C500B36B94 /* AdvDataModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AdvDataModel.h; sourceTree = "<group>"; };
+		284212F521B910C500B36B94 /* AdvDataModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AdvDataModel.m; sourceTree = "<group>"; };
 		286D6B0921B7AC2F000DB7C8 /* MTPeripheralManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTPeripheralManager.h; sourceTree = "<group>"; };
 		286D6B0A21B7AC2F000DB7C8 /* MTCommonTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTCommonTool.h; sourceTree = "<group>"; };
 		286D6B0B21B7AC2F000DB7C8 /* MTBeaconManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTBeaconManager.h; sourceTree = "<group>"; };
@@ -477,6 +480,8 @@
 		286D6BBA21B7B771000DB7C8 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				284212F421B910C500B36B94 /* AdvDataModel.h */,
+				284212F521B910C500B36B94 /* AdvDataModel.m */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -832,8 +837,13 @@
 				TargetAttributes = {
 					E56992961E5EB60B00C76E42 = {
 						CreatedOnToolsVersion = 8.2.1;
-						DevelopmentTeam = 7V7KVUW3JN;
+						DevelopmentTeam = KMD2P8B7WV;
 						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+						};
 					};
 					E56992AF1E5EB60B00C76E42 = {
 						CreatedOnToolsVersion = 8.2.1;
@@ -1009,6 +1019,7 @@
 				E54520301E68000000C0D46E /* MinewModuleAPI.m in Sources */,
 				286D6BC121B7B771000DB7C8 /* AdvertiseView.m in Sources */,
 				286D6B1221B7AC2F000DB7C8 /* MTPeripheralManager.m in Sources */,
+				284212F621B910C500B36B94 /* AdvDataModel.m in Sources */,
 				E56992F11E5EB97100C76E42 /* BYCustomManager.m in Sources */,
 				E5BF8E721EB040A300AF94DC /* ColorPickerView.m in Sources */,
 				286D6B2721B7ACD2000DB7C8 /* BYNavigationController.m in Sources */,
@@ -1188,7 +1199,9 @@
 			baseConfigurationReference = 49E0A3CD57A1B7DE50179925 /* Pods-BeaconYun.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = 7V7KVUW3JN;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = KMD2P8B7WV;
 				GCC_PREFIX_HEADER = $SRCROOT/BeaconYun/Configs/PrefixHeader.pch;
 				INFOPLIST_FILE = "$(SRCROOT)/BeaconYun/Configs/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
@@ -1197,8 +1210,10 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/BeaconYun/BaiduSDK/BDSClientLib",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.AiBlue;
+				PRODUCT_BUNDLE_IDENTIFIER = com.anshunkang.Aitesttest;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -1207,7 +1222,9 @@
 			baseConfigurationReference = B370C1B698562C91509A8E8F /* Pods-BeaconYun.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = 7V7KVUW3JN;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = KMD2P8B7WV;
 				GCC_PREFIX_HEADER = $SRCROOT/BeaconYun/Configs/PrefixHeader.pch;
 				INFOPLIST_FILE = "$(SRCROOT)/BeaconYun/Configs/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
@@ -1216,8 +1233,10 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/BeaconYun/BaiduSDK/BDSClientLib",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.AiBlue;
+				PRODUCT_BUNDLE_IDENTIFIER = com.anshunkang.Aitesttest;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};

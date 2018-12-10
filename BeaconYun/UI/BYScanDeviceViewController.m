@@ -28,7 +28,7 @@
 
 #define INTERVAL_KEYBOARD 0
 
-@interface BYScanDeviceViewController ()<MinewModuleManagerDelegate,UITextFieldDelegate>
+@interface BYScanDeviceViewController ()<MinewModuleManagerDelegate,UITextFieldDelegate,CAAnimationDelegate>
 
 @property (nonatomic, strong) BYTableViewModel *tvModel;
 
@@ -44,7 +44,7 @@
 
 @property (nonatomic, strong) UIView *noneDeviceView;
 
-@property(nonatomic,strong) NSMutableArray *tempArr ;
+@property(nonatomic,strong) NSMutableArray *tempArr ;//存放当前扫描到的设备
 
 @end
 
@@ -53,8 +53,13 @@
     UITextField *_contentTF;
     NSString *_testString;
     NSString *_deviceName;
+    UIImageView *_scanBGImageView;
+    UILabel *showLabel;
+    UILabel *TitleLabel;
+
 }
 
+static NSInteger scanCount;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -62,12 +67,22 @@
 //    if ([self respondsToSelector:@selector(setEdgesForExtendedLayout:)]) {
 //        self.edgesForExtendedLayout = UIRectEdgeNone;
 //    }
-    
+    scanCount = 0;
     [self initGUI];
     [self initCore];
     
     //add notofication for keyBoard
     [self addNoticeForKeyboard];
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    if (scanCount != 0) {
+        [_manager stopScan];
+        showLabel.text = @"请点击上方按钮开始扫描";
+    }
+    scanCount = 0;
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -83,145 +98,69 @@
 
 - (void)initGUI
 {
-    self.title = NSLocalizedString(@"Devices", nil);
-    self.view.backgroundColor = [BYCommonTools colorWithRgb:@"eeeeee"];
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"About"] style:UIBarButtonItemStyleDone target:self action:@selector(infoButtonClick:)];
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"设置" style:UIBarButtonItemStylePlain target:self action:@selector(startToSetup)];
+
+    UIImageView *backgroundImageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, ScreenWidth, ScreenHeight)];
+    backgroundImageView.image = [UIImage imageNamed:@"all_background"];
+    [self.view addSubview:backgroundImageView];
     
-    _sectionModel = [[BYSectionModel alloc]init];
-    _sectionModel.rowHeight = 60.f;
-    _sectionModel.rowAtitude = 4;
-    _sectionModel.headerHeight = 40.f;
-    BYHeaderView *header = [[BYHeaderView alloc]initWithType:HeaderViewTypeNormal title:NSLocalizedString(@"All Devices", nil)];
-    header.tapped = ^(){ BYLog(@"don't touche me, Bitch!");};
-    _sectionModel.header = header;
     
-    // set tableview model
-    _tvModel = [[BYTableViewModel alloc]init];
-    _tvModel.globalSectionModel = _sectionModel;
+    UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, ScreenWidth, 60)];
+    titleLabel.center = CGPointMake(ScreenWidth/2, 70);
+    titleLabel.text = @"使用前请先打开手机蓝牙";
+    titleLabel.textAlignment = NSTextAlignmentCenter;
+    titleLabel.textColor = COLOR_RGBA(160, 160, 160, 1);
+    [self.view addSubview:titleLabel];
     
-    __weak NSArray *weakModules = _moduleArray;
-    _tvModel.cellModel = ^( NSIndexPath *indexpath){
-        
-        __strong NSArray *strongModules = weakModules;
-        
-        MinewModule *module = strongModules[indexpath.row];
-        
-        BYCellModel *cm = [[BYCellModel alloc]init];
-        cm.title = module.name;
-        cm.detailText = @"Module Device";
-        return cm;
-    };
+    UIImageView *scanBGImageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 100, 100)];
+    scanBGImageView.userInteractionEnabled = NO;
+    scanBGImageView.layer.cornerRadius = 50.;
+    scanBGImageView.layer.masksToBounds = YES;
+    _scanBGImageView = scanBGImageView;
+    scanBGImageView.center = CGPointMake(ScreenWidth/2.0, ScreenHeight/2.0);
+    scanBGImageView.image = [UIImage imageNamed:@"scanBack"];
+    [self.view addSubview:scanBGImageView];
     
-//    __weak BYScanDeviceViewController *weakSelf = self;
-    _tvModel.cellSelect = ^(UITableView *tableView, NSIndexPath *indexPath){
-        
-//        __strong BYScanDeviceViewController *strongSelf = weakSelf;
-//        strongSelf.tableView.userInteractionEnabled = NO;
-//
-//        BYDeviceDetailViewController *svc = [[BYDeviceDetailViewController alloc]init];
-//        [strongSelf.navigationController pushViewController:svc animated:YES];
-//
-//        strongSelf.tableView.userInteractionEnabled = YES;
-//        [MinewModuleAPI sharedInstance].lastModule = strongSelf.moduleArray[indexPath.row];
-    };
+    UIControl *scanControl = [[UIControl alloc] initWithFrame:scanBGImageView.frame];
+    [scanControl addTarget:self action:@selector(startToScan) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:scanControl];
     
-//    __weak BYScanDeviceViewController *weakSelf = self;
-//    _tvModel.cellSelect = ^(UITableView *tableView, NSIndexPath *indexPath){
-//        
-//        __strong BYScanDeviceViewController *strongSelf = weakSelf;
-//        strongSelf.tableView.userInteractionEnabled = NO;
-//        
-//        BYSetDeviceViewController *svc = [[BYSetDeviceViewController alloc]init];
-//        svc.module = strongSelf.moduleArray[indexPath.row];
-//        [strongSelf.navigationController pushViewController:svc animated:YES];
-//        
-//        strongSelf.tableView.userInteractionEnabled = YES;
-//    };
+    showLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, ScreenWidth, 60)];
+    showLabel.center = CGPointMake(scanBGImageView.center.x, ScreenHeight - 100);
+    showLabel.numberOfLines = 0;
+    showLabel.textAlignment = NSTextAlignmentCenter;
+    showLabel.textColor = COLOR_RGBA(160, 160, 160, 1);
+    showLabel.font = [UIFont boldSystemFontOfSize:18.0f];
+    [self.view addSubview:showLabel];
+    showLabel.text = @"请点击上方按钮开始扫描";
 
     
-    
-    // set tableview
-    _tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, 64, ScreenWidth, ScreenHeight-64) style:UITableViewStyleGrouped];
-    [self.view addSubview:_tableView];
-    
-    [_tableView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.view.mas_top).offset(0);
-        make.left.equalTo(self.view.mas_left).offset(0);
-        make.right.equalTo(self.view.mas_right).offset(0);
-        make.bottom.equalTo(self.view.mas_bottom).offset(0);
-    }];
-    _tableView.delegate = _tvModel;
-    _tableView.dataSource = _tvModel;
-    _tableView.backgroundColor = [BYCommonTools colorWithRgb:@"#eeeeee"];
-    
-    
-//    UITextField *tf = [[UITextField alloc] initWithFrame:CGRectMake(10, ScreenHeight -180, 150, 50)];
-//    _contentTF = tf;
-//    tf.placeholder = @"请输入测试广播数据";
-//    tf.borderStyle = UITextBorderStyleRoundedRect;
-//    tf.layer.borderColor = [UIColor blueColor].CGColor;
-//    tf.layer.borderWidth = 1;
-//    tf.font = [UIFont systemFontOfSize:13];
-//    tf.delegate = self;
-//    [self.view addSubview:tf];
-    
-    UIButton *scanButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    [self.view addSubview:scanButton];
-    [scanButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.bottom.equalTo(self.view.mas_bottom).offset(-40);
-        make.size.mas_equalTo(CGSizeMake( 100, 50));
-        make.left.equalTo(self.view.mas_left).offset(sScreenWidth / 2.0f - 100 / 2.0);
-    }];
-    scanButton.layer.cornerRadius = 25.f;
-    scanButton.layer.masksToBounds = YES;
-    scanButton.layer.borderColor = [UIColor colorWithRed:0.25 green:0.32 blue:0.71 alpha:1.00].CGColor;
-    scanButton.layer.borderWidth = 0.4f;
-    scanButton.backgroundColor = [UIColor whiteColor];
-    scanButton.titleLabel.font = [UIFont fontWithName:sIconsFont size:20.f];
-    scanButton.titleLabel.textAlignment = NSTextAlignmentCenter;
-    [scanButton setTitle:@"开始扫描" forState:UIControlStateNormal];
-    [scanButton setTitleColor:[UIColor colorWithRed:0.25 green:0.32 blue:0.71 alpha:1.00] forState:UIControlStateNormal];
-    [scanButton addTarget:self action:@selector(scanButtonClick:) forControlEvents:UIControlEventTouchUpInside];
-    
-    
-    UIButton *adverButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    [self.view addSubview:adverButton];
-    [adverButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.bottom.equalTo(self.view.mas_bottom).offset(-40);
-        make.size.mas_equalTo(CGSizeMake( 100, 50));
-        make.left.equalTo(scanButton.mas_right).offset(10);
-    }];
 
-    adverButton.titleLabel.font = [UIFont fontWithName:sIconsFont size:20.f];
-    [adverButton setTitle:@"开始操作" forState:UIControlStateNormal];
-    [adverButton setTitleColor:[UIColor colorWithRed:0.25 green:0.32 blue:0.71 alpha:1.00] forState:UIControlStateNormal];
-    [adverButton addTarget:self action:@selector(startToAdertise) forControlEvents:UIControlEventTouchUpInside];
+}
+
+- (void)startToScan {
+    [_manager stopScan];
+    [_manager startScan];
+    [self scanAction];
+}
+
+#pragma mark --- 动画开始
+- (void)scanAction {
+    [_scanBGImageView.layer removeAnimationForKey:@"transform"];
+    CAKeyframeAnimation *theAnimation = [CAKeyframeAnimation animation];
+    theAnimation.values = [NSArray arrayWithObjects:
+                           [NSValue valueWithCATransform3D:CATransform3DMakeRotation(0, 0,0,1)],
+                           [NSValue valueWithCATransform3D:CATransform3DMakeRotation(3.13, 0,0,1)],
+                           [NSValue valueWithCATransform3D:CATransform3DMakeRotation(6.26, 0,0,1)],
+                           nil];
+    theAnimation.cumulative = YES;
+    theAnimation.duration = 1.5;
+    theAnimation.repeatCount = MAXFLOAT;
+    theAnimation.removedOnCompletion = YES;
+    theAnimation.delegate = self;
+    [_scanBGImageView.layer addAnimation:theAnimation forKey:@"transform"];
     
-    UIButton *setButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    [self.view addSubview:setButton];
-    [setButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.bottom.equalTo(self.view.mas_bottom).offset(-40);
-        make.size.mas_equalTo(CGSizeMake( 100, 50));
-        make.right.equalTo(scanButton.mas_left).offset(-10);
-    }];
-    
-    setButton.titleLabel.font = [UIFont fontWithName:sIconsFont size:20.f];
-    [setButton setTitle:@"开始设置" forState:UIControlStateNormal];
-    [setButton setTitleColor:[UIColor colorWithRed:0.25 green:0.32 blue:0.71 alpha:1.00] forState:UIControlStateNormal];
-    [setButton addTarget:self action:@selector(startToSetup) forControlEvents:UIControlEventTouchUpInside];
-    
-    
-//    UILabel *scanTip = [[UILabel alloc]init];
-//    [self.view addSubview:scanTip];
-//    [scanTip mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.size.mas_equalTo(CGSizeMake( 50, 20));
-//        make.left.equalTo(scanButton.mas_left).offset(0);
-//        make.top.equalTo(scanButton.mas_bottom).offset(5);
-//    }];
-//    scanTip.textAlignment = NSTextAlignmentCenter;
-//    scanTip.textColor = [UIColor colorWithRed:0.25 green:0.32 blue:0.71 alpha:1.00];
-//    scanTip.text = NSLocalizedString(@"Scan", nil);
-//    scanTip.font = [UIFont systemFontOfSize:14.f];
+    showLabel.text = @"开始扫描";
 }
 
 //- (void)reloadData {
@@ -245,7 +184,23 @@
 {
     _manager = [MinewModuleManager sharedInstance];
     _manager.delegaate = self;
-    [_manager startScan];
+//    [_manager startScan];
+    
+    __weak BYScanDeviceViewController *weakSelf = self;
+    _manager.findDevice = ^(MinewModule *module) {
+        __strong BYScanDeviceViewController *strongSelf = weakSelf;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            showLabel.text = [NSString stringWithFormat:@"扫描到%@",module.name];
+            if (scanCount == 0) {
+                [SVProgressHUD showSuccessWithStatus:[NSString stringWithFormat:@"扫描到%@",module.name]];
+
+//                [weakSelf.manager stopScan];
+                [weakSelf startToAdertise];
+                scanCount ++;
+            }
+        });
+        
+    };
 
     if (_timer)
         [_timer invalidate];
@@ -261,39 +216,43 @@
     _moduleArray = [_manager.allModules copy];
     _sectionModel.rowAtitude = _moduleArray.count;
     
-#warning 添加RGB的测试
-//    if (!_tempArr) {
-//        _tempArr = [NSMutableArray array];
-//    }
-//    [_tempArr removeAllObjects];
-//
-//    for (MinewModule *module in _moduleArray) {
-//        if ([module.name isEqualToString:@"Minew_RGB"]) {
-//            [_tempArr addObject:module];
-//        }
-//    }
-//    _sectionModel.rowAtitude = _tempArr.count;
+#warning 添加HToy的测试  记录所有的设备
+    if (!_tempArr) {
+        _tempArr = [NSMutableArray array];
+    }
+    [_tempArr removeAllObjects];
+
+    for (MinewModule *module in _moduleArray) {
+        if ([module.name isEqualToString:@"HToy"]) {
+            [_tempArr addObject:module];
+        }
+    }
+    
+    if (_tempArr.count>0) {
+        MinewModule *module = [_tempArr firstObject];
+        
+    }
 
     
     
-    BYHeaderView *header = [[BYHeaderView alloc]initWithType:HeaderViewTypeNormal title:[NSString stringWithFormat:@"%@: %lu",NSLocalizedString(@"All Devices", nil), (unsigned long)_moduleArray.count]];
-    header.tapped = ^(){ BYLog(@"don't touche me, Bitch!");};
-    _sectionModel.header = header;
-    
-    __weak NSArray *weakModules = _moduleArray;
-    _tvModel.cellModel = ^( NSIndexPath *indexpath){
-        
-        __strong NSArray *strongModules = weakModules;
-        
-        MinewModule *module = strongModules[indexpath.row];
-        
-        BYCellModel *cm = [[BYCellModel alloc]init];
-        cm.title = module.name;
-        cm.detailText = [NSString stringWithFormat:@"RSSI: %lddBm", (long)module.rssi];
-        return cm;
-    };
-    
-    [_tableView reloadData];
+//    BYHeaderView *header = [[BYHeaderView alloc]initWithType:HeaderViewTypeNormal title:[NSString stringWithFormat:@"%@: %lu",NSLocalizedString(@"All Devices", nil), (unsigned long)_moduleArray.count]];
+//    header.tapped = ^(){ BYLog(@"don't touche me, Bitch!");};
+//    _sectionModel.header = header;
+//
+//    __weak NSArray *weakModules = _moduleArray;
+//    _tvModel.cellModel = ^( NSIndexPath *indexpath){
+//
+//        __strong NSArray *strongModules = weakModules;
+//
+//        MinewModule *module = strongModules[indexpath.row];
+//
+//        BYCellModel *cm = [[BYCellModel alloc]init];
+//        cm.title = module.name;
+//        cm.detailText = [NSString stringWithFormat:@"RSSI: %lddBm", (long)module.rssi];
+//        return cm;
+//    };
+//
+//    [_tableView reloadData];
 }
 
 - (void) startToAdertise {
@@ -341,11 +300,6 @@
     return hexStr;
 }
 
-- (void)scanButtonClick:(UIButton *)sender
-{
-    [_manager stopScan];
-    [_manager startScan];
-}
 
 
 - (void)startToSetup {
@@ -414,5 +368,14 @@
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
 {
     [_contentTF resignFirstResponder];
+}
+
+#pragma mark - animation
+- (void)animationDidStart:(CAAnimation *)anim {
+    NSLog(@"%@",anim);
+}
+
+- (void)animationDidStop:(CAAnimation *)anim finished:(BOOL)flag {
+    NSLog(@"%@ | %d",anim,flag);
 }
 @end

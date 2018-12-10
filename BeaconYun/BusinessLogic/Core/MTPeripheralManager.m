@@ -40,6 +40,8 @@ typedef NS_ENUM(NSUInteger, CharaType) {
     if (self) {
         _manager = [[CBPeripheralManager alloc]initWithDelegate:self queue:dispatch_get_main_queue() options:nil];
         
+        [self performSelector:@selector(startAdvtising) withObject:nil afterDelay:1];
+        
         uint8_t bytes[13] = {0xff, 0x10, 0xff, 0xff, 0xff, 0x20, 0xff, 0xff, 0xff, 0x30, 0xff, 0xff, 0xff};
         _lightData = [NSData dataWithBytes:bytes length:13];
     }
@@ -80,21 +82,21 @@ typedef NS_ENUM(NSUInteger, CharaType) {
 - (void)startAdvtising
 {
     [_manager stopAdvertising];
-//    _searchstr = uuidStr;
-//    _searchstr = [NSString stringWithFormat:@"0x%@",uuidStr];
-//    _searchstr = [self hexStringFromString:uuidStr];
-    NSLog(@"16进制字符串===%@",_searchstr);
-
     
-    NSLog(@"_searchstr======%@",_searchstr);
+    NSLog(@"广播的字符串======%@",_searchstr);
     CBUUID *uuid = [CBUUID UUIDWithString:_searchstr];
     NSLog(@"uuid======%@",uuid.UUIDString);
-//    NSData *data = [@"0x121212" dataUsingEncoding:NSUTF8StringEncoding];
+    
+    //remove all the services added before
     [_manager removeAllServices];
+    
+    if (_searchstr.length<=0) {
+        _searchstr = @"0xFFF0";
+    }
     CBUUID *newUuid = [CBUUID UUIDWithString:_searchstr];
     
     
-    [_manager startAdvertising:@{CBAdvertisementDataLocalNameKey: @"KOREKARA_DENKI_iOS_TEST",
+    [_manager startAdvertising:@{CBAdvertisementDataLocalNameKey: @"ASK",
                                  CBAdvertisementDataServiceUUIDsKey: @[newUuid,],
 //                                 CBAdvertisementDataIsConnectable:@(NO),
 //                                 CBAdvertisementDataManufacturerDataKey:data

@@ -21,11 +21,23 @@
 //#import "AudioInputStream.h"
 
 //#error "请在官网新建应用，配置包名，并在此填写应用的 api key, secret key, appid(即appcode)"
-const NSString* API_KEY = @"mYYqGmRGNKW6cyTA2ADaUrnr";
-const NSString* SECRET_KEY = @"2ZG4xEhEahK1hEbaS9yUbq2LIsuSLlpS";
-const NSString* APP_ID = @"15049559";
+const NSString* API_KEY = @"tyiwdzbYQ9GTmfaGPTqAuXtB";
+const NSString* SECRET_KEY = @"ooDetcOCZyUyTYdtWpsXgG4iw3zih1aH";
+const NSString* APP_ID = @"15058256";
 
-@interface StartAdvertiseViewController ()<BDSClientASRDelegate,BDSClientWakeupDelegate,BDRecognizerViewDelegate>
+//定义广播数据的结构体
+struct MyAdvDtaModel {
+    uint8_t fixedContent[2];
+    uint8_t productType;
+    uint8_t command_id;
+    uint8_t key;
+    uint8_t event_id;
+    uint8_t value[2];
+};
+
+//BDRecognizerViewDelegate
+
+@interface StartAdvertiseViewController ()<BDSClientASRDelegate,BDSClientWakeupDelegate>
 @property (nonatomic, strong) AdvertiseView *advertiseView;
 
 @property (nonatomic, strong) NSMutableArray *commandAray;
@@ -39,6 +51,12 @@ const NSString* APP_ID = @"15049559";
 @end
 
 @implementation StartAdvertiseViewController
+{
+    BOOL _is_on;
+    NSTimer *_advTimer;
+}
+
+static NSInteger count = 0;
 
 - (void)viewDidDisappear:(BOOL)animated
 {
@@ -51,13 +69,13 @@ const NSString* APP_ID = @"15049559";
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.title = @"发送广播";
+    self.title = @"开始操作";
+    _is_on = YES;// 默认机器是开机状态
     [self initData];
     
 //    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"back2"]];
     UIImageView *backImg = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, ScreenWidth, ScreenHeight)];
     backImg.image = [[UIImage imageNamed:@"back2"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
-    
     [self.view addSubview:backImg];
 
     MTPeripheralManager *pm = [MTPeripheralManager sharedInstance];
@@ -71,19 +89,104 @@ const NSString* APP_ID = @"15049559";
     //唤醒服务开启
     [self configWakeupClient];
     [self startWakeup];//开始唤醒
+    
+}
+
+- (void)initData {
+    if (!_commandAray) {
+        _commandAray = [NSMutableArray arrayWithObjects:
+                        @{@"command":@"00000000-aff4-0085-ABAC-100101010000",@"key":@"模式1"},
+                        @{@"command":@"00000000-aff4-0085-0021-fcfbfa002402",@"key":@"模式2"},
+                        @{@"command":@"00000000-aff4-0085-0021-fcfbfa002403",@"key":@"模式3"},
+                        @{@"command":@"00000000-aff4-0085-0021-fcfbfa002404",@"key":@"模式4"},
+                        @{@"command":@"00000000-aff4-0085-0021-fcfbfa002405",@"key":@"模式5"},
+                        @{@"command":@"00000000-aff4-0085-0021-fcfbfa002406",@"key":@"模式6"},
+                        @{@"command":@"00000000-aff4-0085-ABAC-100101010000",@"key":@"模式7"},
+                        @{@"command":@"00000000-aff4-0085-0021-fcfbfa002402",@"key":@"模式8"},
+                        @{@"command":@"00000000-aff4-0085-0021-fcfbfa002403",@"key":@"模式9"},
+                        @{@"command":@"00000000-aff4-0085-0021-fcfbfa002404",@"key":@"模式10"},
+                        @{@"command":@"00000000-aff4-0085-0021-fcfbfa002405",@"key":@"快点快点"},
+                        @{@"command":@"00000000-aff4-0085-0021-fcfbfa002405",@"key":@"慢点慢点"},
+                        @{@"command":@"00000000-aff4-0085-0021-fcfbfa002406",@"key":@"小康你好"}
+                        ,nil];
+    }
+}
+
+- (void)initView {
+    
+    self.view.backgroundColor = [UIColor whiteColor];
+    [self.view addSubview:self.advertiseView];
+    
 }
 
 
-- (void)initData {
-    //    @{@"command":@"00000000-aff4-0085-0021-fcfbfa002401",@"key":@"小康你好"},
-    if (!_commandAray) {
-        _commandAray = [NSMutableArray arrayWithObjects:@{@"command":@"00000000-aff4-0085-0021-fcfbfa002401",@"key":@"小康你好"},
-                        @{@"command":@"00000000-aff4-0085-0021-fcfbfa002402",@"key":@"快点快点"},
-                        @{@"command":@"00000000-aff4-0085-0021-fcfbfa002403",@"key":@"慢点慢点"},
-                        @{@"command":@"00000000-aff4-0085-0021-fcfbfa002404",@"key":@"增大亮度"},
-                        @{@"command":@"00000000-aff4-0085-0021-fcfbfa002405",@"key":@"减小亮度"}
-                        ,nil];
+- (AdvertiseView *)advertiseView
+{
+    if (!_advertiseView) {
+        _advertiseView = [[AdvertiseView alloc] initWithFrame:CGRectMake(0, 0, ScreenWidth, ScreenHeight)];
+        __weak StartAdvertiseViewController *weakSelf = self;
+        
+        _advertiseView.buttonBlock = ^(NSInteger index) {
+            __strong StartAdvertiseViewController *strongSelf = weakSelf;
+            
+            [strongSelf sendData:index];
+        };
     }
+    return _advertiseView;
+}
+
+#pragma mark -- 发送广播数据
+- (void)sendData:(NSInteger)index {
+    count ++;
+    if (count>255) {
+        count = 0;
+    }
+    NSMutableData *cmdData = [NSMutableData dataWithCapacity:0];
+    
+    struct MyAdvDtaModel adv = {0,0,0,0,0,0};
+    adv.fixedContent[0] = 171;
+    adv.fixedContent[1] = 172;
+    adv.productType = 16;
+    
+    adv.command_id = 1;
+    adv.key = index+1;
+    adv.event_id = count;
+    adv.value[0] = 0;
+    adv.value[1] = 0;
+    if (12 == index) {
+        if (_is_on) {//关机信息
+            adv.key = 16;
+        }else {      //开机信息
+            adv.key = 17;
+        }
+        _is_on = !_is_on;
+    }else if (10 == index) {//处理增大强度模式
+        adv.key = 18;
+    }else if (11 == index) {//处理减小强度模式
+        adv.key = 19;
+    }
+    
+    NSString *str = [NSString stringWithFormat:@"%02x%02x-%02x%02x%02x%02x%02x%02x",adv.fixedContent[0],adv.fixedContent[1],adv.productType,adv.command_id,adv.key,adv.event_id,adv.value[0],adv.value[1]];
+    [cmdData appendData:[str dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    NSString *string = [[NSString alloc] initWithData:cmdData encoding:NSUTF8StringEncoding];
+    NSString *advString = [@"00000000-aff4-0085-" stringByAppendingString:string];
+    NSLog(@"开始广播=%@",advString);
+
+    self.pm.searchstr = advString;
+    [self.pm startAdvtising];
+    
+    //设定n秒后停止广播
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self.pm stopAdvertising];
+
+    });
+}
+
+#pragma mark -- 获取设备的信息
+- (void)getDeviceInfo {
+    //0x21
+    [self sendData:33];
 }
 
 
@@ -169,32 +272,6 @@ const NSString* APP_ID = @"15049559";
 
 
 
-- (void)initView {
-    
-    self.view.backgroundColor = [UIColor whiteColor];
-    [self.view addSubview:self.advertiseView];
-
-}
-
-
-- (AdvertiseView *)advertiseView
-{
-    if (!_advertiseView) {
-        _advertiseView = [[AdvertiseView alloc] initWithFrame:CGRectMake(0, 0, ScreenWidth, ScreenHeight)];
-        __weak StartAdvertiseViewController *weakSelf = self;
-
-        _advertiseView.buttonBlock = ^(NSInteger index) {
-            __strong StartAdvertiseViewController *strongSelf = weakSelf;
-            NSLog(@"开始广播%@",strongSelf.commandAray[index]);
-            
-            strongSelf.pm.searchstr = strongSelf.commandAray[index];
-            
-            [strongSelf.pm startAdvtising];
-        };
-    }
-    return _advertiseView;
-}
-
 #pragma mark --- BDSClientASRDelegate
 - (void)VoiceRecognitionClientWorkStatus:(int)workStatus obj:(id)aObj
 {
@@ -227,7 +304,7 @@ const NSString* APP_ID = @"15049559";
         case EVoiceRecognitionClientWorkStatusFinish: {
             [self printLogTextView:[NSString stringWithFormat:@"CALLBACK: final result - %@.\n\n", [self getDescriptionForDic:aObj]]];
             if (aObj) {
-//                self.resultTextView.text = [self getDescriptionForDic:aObj];
+                //                self.resultTextView.text = [self getDescriptionForDic:aObj];
                 
                 NSLog(@"系统的最终得到的录音:%@",[self getDescriptionForDic:aObj]);
                 [SVProgressHUD showSuccessWithStatus:[self getDescriptionForDic:aObj]];
@@ -320,13 +397,11 @@ const NSString* APP_ID = @"15049559";
 //                self.continueToVR = NO;
             NSString *key = [NSString stringWithFormat:@"%@",((NSString *)aObj)];
             [SVProgressHUD showSuccessWithStatus:key];
-                [self.asrEventManager setParameter:@(YES) forKey:BDS_ASR_NEED_CACHE_AUDIO];
-                [self.asrEventManager setParameter:aObj forKey:BDS_ASR_OFFLINE_ENGINE_TRIGGERED_WAKEUP_WORD];
-                [self voiceRecogButtonHelper];
+            [self.asrEventManager setParameter:@(YES) forKey:BDS_ASR_NEED_CACHE_AUDIO];
+            [self.asrEventManager setParameter:aObj forKey:BDS_ASR_OFFLINE_ENGINE_TRIGGERED_WAKEUP_WORD];
+            [self voiceRecogButtonHelper];
             
             [self voiceToAdvertise:key];
-            
-
 //            }
             break;
         }
@@ -340,6 +415,7 @@ const NSString* APP_ID = @"15049559";
     }
 }
 
+#pragma mark --- 语音发送广播
 //后续 还可以更精准一点过滤   语音发送广播
 - (void)voiceToAdvertise:(NSString *)key {
     NSMutableArray *keyArr = [self getALLKeys];
@@ -351,9 +427,9 @@ const NSString* APP_ID = @"15049559";
     }
     if (recordKey.length) {
         NSInteger index = [keyArr indexOfObject:recordKey];
+
         //开始广播
-        self.pm.searchstr = _commandAray[index][@"command"];
-        [self.pm startAdvtising];
+        [self sendData:index];
     }
 }
 

@@ -156,6 +156,10 @@
     _scanning = YES;
     [self initializeTimer];
     
+    //指定扫描特定的服务
+    CBUUID *uuid1 = [CBUUID UUIDWithString:@"FFF0"];
+//    CBUUID *uuid2 = [CBUUID UUIDWithString:@"FEE0"];
+    NSArray *uuidArr = @[uuid1];
     [MinewCommonTool onThread:_bluetoothQueue execute:^{
         [_centralManager scanForPeripheralsWithServices:nil options:@{ CBCentralManagerScanOptionAllowDuplicatesKey: @NO}];
     }];
@@ -204,9 +208,7 @@
 
 - (void)centralManager:(CBCentralManager *)central didDiscoverPeripheral:(CBPeripheral *)peripheral advertisementData:(NSDictionary<NSString *,id> *)advertisementData RSSI:(NSNumber *)RSSI
 {
-    if ([RSSI intValue] < -50) {
-        return;
-    }
+    NSLog(@"还在持续扫描");
     NSDictionary *adverDataDict = advertisementData[CBAdvertisementDataServiceDataKey];
     
 //    NSString *serviceuuid = [NSString stringWithFormat:@"%@", [adverDataDict.allKeys firstObject]];
@@ -216,6 +218,11 @@
 //    NSUInteger index = [serviceuuids indexOfObject:serviceuuid];
     
     NSString *name = peripheral.name;
+//    if (![name isEqualToString:@"HToy"]) {
+//        return ;
+//    }
+//    NSLog(@"收到的数据====%@",advertisementData);
+
     
     NSString *adName = advertisementData[CBAdvertisementDataLocalNameKey];
     
@@ -257,6 +264,11 @@
        module.inRange = YES;
        module.name = adName? adName:( name? name: @"Unnamed");
        module.rssi = [RSSI integerValue];
+    
+    NSLog(@"收到的数据====%@",advertisementData);
+    if (self.findDevice) {
+        self.findDevice(module);
+    }
 
 //    }
 }
