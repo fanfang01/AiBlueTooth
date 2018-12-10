@@ -53,7 +53,9 @@ struct MyAdvDtaModel {
 @implementation StartAdvertiseViewController
 {
     BOOL _is_on;
-    NSTimer *_advTimer;
+
+//    NSTimer *_advTimer;
+
 }
 
 static NSInteger count = 0;

@@ -44,6 +44,7 @@
 
 @property (nonatomic, strong) UIView *noneDeviceView;
 
+
 @property(nonatomic,strong) NSMutableArray *tempArr ;//存放当前扫描到的设备
 
 @end
@@ -55,7 +56,8 @@
     NSString *_deviceName;
     UIImageView *_scanBGImageView;
     UILabel *showLabel;
-    UILabel *TitleLabel;
+
+    UILabel *_titleLabel;
 
 }
 
@@ -106,6 +108,9 @@ static NSInteger scanCount;
     
     
     UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, ScreenWidth, 60)];
+
+    _titleLabel = titleLabel;
+
     titleLabel.center = CGPointMake(ScreenWidth/2, 70);
     titleLabel.text = @"使用前请先打开手机蓝牙";
     titleLabel.textAlignment = NSTextAlignmentCenter;
@@ -195,8 +200,13 @@ static NSInteger scanCount;
                 [SVProgressHUD showSuccessWithStatus:[NSString stringWithFormat:@"扫描到%@",module.name]];
 
 //                [weakSelf.manager stopScan];
-                [weakSelf startToAdertise];
-                scanCount ++;
+
+//                if ([module.name isEqualToString:@"HToy"]) {
+                    [weakSelf startToAdertise];
+                    scanCount ++;
+
+//                }
+
             }
         });
         
