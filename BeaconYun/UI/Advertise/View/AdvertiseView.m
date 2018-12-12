@@ -54,9 +54,9 @@
                        @{@"icon":@"icon_Randomcolor",@"title":NSLocalizedString(@"模式8", nil)},
                        @{@"icon":@"icon_Randomcolor",@"title":NSLocalizedString(@"模式9", nil)},
                        @{@"icon":@"icon_Randomcolor",@"title":NSLocalizedString(@"模式10", nil)},
-                       @{@"icon":@"icon_Suspendplay",@"title":NSLocalizedString(@"增大强度", nil)},
-                       @{@"icon":@"icon_Thenext",@"title":NSLocalizedString(@"减小强度", nil)},
-                       @{@"icon":@"icon_Switchlight",@"title":NSLocalizedString(@"开／关灯", nil)},
+//                       @{@"icon":@"icon_Suspendplay",@"title":NSLocalizedString(@"增大强度", nil)},
+//                       @{@"icon":@"icon_Thenext",@"title":NSLocalizedString(@"减小强度", nil)},
+//                       @{@"icon":@"icon_Switchlight",@"title":NSLocalizedString(@"开／关", nil)},
                        nil];
     }
     if (!_totalsBtnArray) {
@@ -88,10 +88,11 @@
     _scrollView.contentSize = CGSizeMake(ScreenWidth, [UIScreen mainScreen].bounds.size.height);
     
     UIImageView *backImg = [[UIImageView alloc] initWithFrame:[UIScreen mainScreen].bounds];
-    [backImg setImage:[UIImage imageNamed:@"icon_backimg"]];
+    [backImg setImage:[UIImage imageNamed:@"all_background"]];
     [_scrollView addSubview:backImg];
+    
 
-    if (ScreenHeight<667) {
+    if (ScreenHeight < 667) {
         _scrollView.contentSize = CGSizeMake(ScreenWidth, 667);
         backImg.frame = CGRectMake(0, 0, ScreenWidth, 667);
     }
@@ -108,10 +109,11 @@
 //    [phoneImgView setImage:[UIImage imageNamed:@"icon_Shakeashake"]];
     
     NSInteger count = self.imageArray.count;
-    for (NSInteger i = 0; i < count; i++) {
+    for (NSInteger i = 0; i <= count; i++) {
         [self createImageView:i];
+
     }
-    
+
 }
 
 - (UIView *)createImageView:(NSInteger)index
@@ -123,31 +125,72 @@
     CGFloat horSpacing = 54;
     CGFloat imageSpacing = (ScreenWidth - horSpacing*2-viewWidth*3)/2;
     
-    ShakeSelectView *shakeView = [[ShakeSelectView alloc] initWithFrame:CGRectMake(horSpacing+(viewWidth+imageSpacing)*(index%3), 50 + (viewHeight+verSpacing)*(index/3), viewWidth, viewHeight)];
-    if (index == _imageArray.count-1) {
-        shakeView.frame = CGRectMake((ScreenWidth-viewWidth)/2., 50 + (viewHeight+verSpacing)*(index/3), viewWidth, viewHeight);
-    }
-    [self.totalsBtnArray addObject:shakeView.selButton];
-    if (0 == index) {
-        _currentSelBtn = shakeView.selButton;
-        _currenthakeView = shakeView;
-    }
     
-    [_scrollView addSubview:shakeView];
-    
-    shakeView.titleName = self.imageArray[index][@"title"];
-    shakeView.btnImageName = self.imageArray[index][@"icon"];
-    
-    [shakeView setShakeToSelect:^(UIButton *btn) {
-        _currenthakeView.isSelect = NO;
-        _currenthakeView = shakeView;
-
-        NSInteger index = [self.totalsBtnArray indexOfObject:btn];
-        if (self.buttonBlock) {
-            self.buttonBlock(index);
+    if (index == self.imageArray.count ) {
+        UILabel *nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(horSpacing+(viewWidth+imageSpacing)*2-50, 50 + (viewHeight+verSpacing)*(index/3)+20, 50, 37)];
+        nameLabel.text = @"开/关";
+        nameLabel.font = [UIFont systemFontOfSize:13];
+        nameLabel.textColor = [UIColor whiteColor];
+        [_scrollView addSubview:nameLabel];
+        
+        UISwitch *onSwitch = [[UISwitch alloc] initWithFrame:CGRectMake(nameLabel.frame.origin.x+50, 60, 37, 41)];
+        onSwitch.center = CGPointMake(nameLabel.center.x+(50+41)/2, nameLabel.center.y);
+        _onSwitch = onSwitch;
+        onSwitch.onTintColor = [UIColor cyanColor];
+        [_scrollView addSubview:onSwitch];
+        
+    }else {
+        ShakeSelectView *shakeView = [[ShakeSelectView alloc] initWithFrame:CGRectMake(horSpacing+(viewWidth+imageSpacing)*(index%3), 50 + (viewHeight+verSpacing)*(index/3), viewWidth, viewHeight)];
+//        if (index == _imageArray.count-1) {
+//            shakeView.frame = CGRectMake(horSpacing+(viewWidth+imageSpacing)*2, 50 + (viewHeight+verSpacing)*(index/3), viewWidth, viewHeight);
+//        }
+        [self.totalsBtnArray addObject:shakeView.selButton];
+        if (0 == index) {
+            _currentSelBtn = shakeView.selButton;
+            _currenthakeView = shakeView;
         }
-    }];
-    return shakeView;
+        
+        [_scrollView addSubview:shakeView];
+        
+        shakeView.titleName = self.imageArray[index][@"title"];
+        shakeView.btnImageName = self.imageArray[index][@"icon"];
+        
+        [shakeView setShakeToSelect:^(UIButton *btn) {
+            
+            
+            NSInteger index = [self.totalsBtnArray indexOfObject:btn];
+            _currenthakeView.isSelect = NO;//取消上一个view的选中效果
+            _currenthakeView = shakeView;
+            
+            
+            if (self.buttonBlock) {
+                self.buttonBlock(index);
+            }
+            
+        }];
+        return shakeView;
+
+    }
+    return nil;
+}
+
+- (void)setSelectedIndex:(NSInteger)selectedIndex
+{
+    if (selectedIndex<0) {
+        selectedIndex = 0;
+    }
+    if (selectedIndex > self.imageArray.count) {
+        selectedIndex = self.imageArray.count - 1;
+    }
+    _selectedIndex = selectedIndex;
+
+    UIButton *selBtn = self.totalsBtnArray[selectedIndex];
+    ShakeSelectView *shakeView = (ShakeSelectView *)selBtn.superview;
+    _currenthakeView.isSelect = NO;
+    
+    shakeView.isSelect = YES;
+    _currenthakeView = shakeView;
+    
 }
 
 //- (void)buttonClick:(UIButton *)btn {

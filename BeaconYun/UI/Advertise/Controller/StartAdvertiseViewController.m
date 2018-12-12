@@ -16,9 +16,7 @@
 #import "BDSWakeupDefines.h"
 #import "BDSWakeupParameters.h"
 #import "BDRecognizerViewController.h"
-//#import "BDVRSettings.h"
-//#import "fcntl.h"
-//#import "AudioInputStream.h"
+
 
 //#error "请在官网新建应用，配置包名，并在此填写应用的 api key, secret key, appid(即appcode)"
 const NSString* API_KEY = @"tyiwdzbYQ9GTmfaGPTqAuXtB";
@@ -54,8 +52,12 @@ struct MyAdvDtaModel {
 {
     BOOL _is_on;
 
-//    NSTimer *_advTimer;
+    NSTimer *_advTimer;
 
+    NSInteger _countDownTime;
+    
+    NSInteger _currentTime;
+    NSInteger _currentIndex;//配合语音部分的使用
 }
 
 static NSInteger count = 0;
@@ -72,16 +74,16 @@ static NSInteger count = 0;
     [super viewDidLoad];
     
     self.title = @"开始操作";
-    _is_on = YES;// 默认机器是开机状态
+    _is_on = NO;// 默认机器是开机状态
+    _countDownTime = 5;
+    _currentTime = 0;
+    _currentIndex = 0;//default
     [self initData];
     
 //    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"back2"]];
-    UIImageView *backImg = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, ScreenWidth, ScreenHeight)];
-    backImg.image = [[UIImage imageNamed:@"back2"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
-    [self.view addSubview:backImg];
 
     MTPeripheralManager *pm = [MTPeripheralManager sharedInstance];
-    pm.searchstr = [_commandAray firstObject][@"command"];
+//    pm.searchstr = [_commandAray firstObject][@"command"];
     _pm = pm;
     
     [self initView];
@@ -116,6 +118,11 @@ static NSInteger count = 0;
 
 - (void)initView {
     
+    UIImageView *backImg = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, ScreenWidth, ScreenHeight)];
+    backImg.image = [[UIImage imageNamed:@"all_background"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    [self.view addSubview:backImg];
+
+    
     self.view.backgroundColor = [UIColor whiteColor];
     [self.view addSubview:self.advertiseView];
     
@@ -126,19 +133,23 @@ static NSInteger count = 0;
 {
     if (!_advertiseView) {
         _advertiseView = [[AdvertiseView alloc] initWithFrame:CGRectMake(0, 0, ScreenWidth, ScreenHeight)];
-        __weak StartAdvertiseViewController *weakSelf = self;
         
+        __weak StartAdvertiseViewController *weakSelf = self;
         _advertiseView.buttonBlock = ^(NSInteger index) {
             __strong StartAdvertiseViewController *strongSelf = weakSelf;
-            
+            _currentIndex = index;
+           
             [strongSelf sendData:index];
         };
+        [_advertiseView.onSwitch addTarget:self action:@selector(switchOnOff:) forControlEvents:UIControlEventValueChanged];
     }
     return _advertiseView;
 }
 
 #pragma mark -- 发送广播数据
 - (void)sendData:(NSInteger)index {
+    [self stopTimer];
+    
     count ++;
     if (count>255) {
         count = 0;
@@ -155,14 +166,14 @@ static NSInteger count = 0;
     adv.event_id = count;
     adv.value[0] = 0;
     adv.value[1] = 0;
-    if (12 == index) {
-        if (_is_on) {//关机信息
-            adv.key = 16;
-        }else {      //开机信息
+    if (12 == index) {//为开关机的状态
+        if (_is_on) {//开机信息
             adv.key = 17;
+        }else {      //关机信息
+            adv.key = 16;
         }
-        _is_on = !_is_on;
-    }else if (10 == index) {//处理增大强度模式
+    }
+    else if (10 == index) {//处理增大强度模式
         adv.key = 18;
     }else if (11 == index) {//处理减小强度模式
         adv.key = 19;
@@ -179,10 +190,11 @@ static NSInteger count = 0;
     [self.pm startAdvtising];
     
     //设定n秒后停止广播
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [self.pm stopAdvertising];
-
-    });
+//    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//        [self.pm stopAdvertising];
+//
+//    });
+    [self startAdvTimer];
 }
 
 #pragma mark -- 获取设备的信息
@@ -425,15 +437,30 @@ static NSInteger count = 0;
     for (NSString *okey in keyArr) {
         if ([okey containsString:key] || [key containsString:okey]) {
             recordKey = okey;
+            NSInteger index = [keyArr indexOfObject:recordKey];
+            if (index >= 0) {
+                //开始广播
+                _currentIndex = index;
+                if (index == 10) {
+                    _currentIndex --;
+                    self.advertiseView.selectedIndex = _currentIndex;
+                }else if (index == 11) {
+                    _currentIndex ++;
+                    self.advertiseView.selectedIndex = _currentIndex;
+                }else if (index == 12) {
+                    _currentIndex = 10;
+                    _is_on = !_is_on;
+                    [self.advertiseView.onSwitch setOn:_is_on];
+                }
+                [self sendData:_currentIndex];
+
+                break;
+            }
+            
         }
     }
-    if (recordKey.length) {
-        NSInteger index = [keyArr indexOfObject:recordKey];
-
-        //开始广播
-        [self sendData:index];
-    }
 }
+
 
 - (NSMutableArray *)getALLKeys {
     NSMutableArray *tempArr = [NSMutableArray array];
@@ -486,5 +513,35 @@ static NSInteger count = 0;
 - (void)printLogTextView:(NSString *)logString
 {
     NSLog(@"打印log===%@",logString);
+}
+
+#pragma mark -- Timer
+- (void)startAdvTimer {
+    if (!_advTimer) {
+        _advTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(startCountTimer) userInfo:nil repeats:YES];
+    }
+}
+
+- (void)startCountTimer {
+    if (_currentTime < _countDownTime ) {
+        _currentTime ++;
+        NSLog(@"广播还在继续");
+    }else {
+        [self stopTimer];
+    }
+}
+
+- (void)stopTimer {
+    [self.pm stopAdvertising];
+    _currentTime = 0;
+    [_advTimer invalidate];
+    _advTimer = nil;
+    NSLog(@"广播已经停止");
+}
+
+- (void)switchOnOff:(UISwitch *)sw {
+    _is_on = sw.on;
+    
+    [self sendData:12];
 }
 @end

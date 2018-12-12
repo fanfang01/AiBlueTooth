@@ -40,7 +40,7 @@ typedef NS_ENUM(NSUInteger, CharaType) {
     if (self) {
         _manager = [[CBPeripheralManager alloc]initWithDelegate:self queue:dispatch_get_main_queue() options:nil];
         
-        [self performSelector:@selector(startAdvtising) withObject:nil afterDelay:1];
+//        [self performSelector:@selector(startAdvtising) withObject:nil afterDelay:1];
         
         uint8_t bytes[13] = {0xff, 0x10, 0xff, 0xff, 0xff, 0x20, 0xff, 0xff, 0xff, 0x30, 0xff, 0xff, 0xff};
         _lightData = [NSData dataWithBytes:bytes length:13];
@@ -48,49 +48,18 @@ typedef NS_ENUM(NSUInteger, CharaType) {
     return self;
 }
 
-- (void)setUp
-{
-    _centrals = [NSMutableArray array];
-    
-    CBMutableCharacteristic *energy = [[CBMutableCharacteristic alloc]initWithType:[CBUUID UUIDWithString:@"0001"] properties:CBCharacteristicPropertyNotify|CBCharacteristicPropertyRead value:nil permissions:CBAttributePermissionsReadable];
-    _energyCharac = energy;
-    
-    CBMutableCharacteristic *charge = [[CBMutableCharacteristic alloc]initWithType:[CBUUID UUIDWithString:@"0002"] properties:CBCharacteristicPropertyWrite value:nil permissions:CBAttributePermissionsReadable|CBAttributePermissionsWriteable];
-    
-    
-    CBMutableCharacteristic *unpari = [[CBMutableCharacteristic alloc]initWithType:[CBUUID UUIDWithString:@"0003"] properties:CBCharacteristicPropertyNotify value:nil permissions:CBAttributePermissionsReadable];
-    _unpairCharac = unpari;
-    
-    CBMutableService *oem = [[CBMutableService alloc]initWithType:[CBUUID UUIDWithString:@"0000"] primary:YES];
-    
-    
-    CBMutableCharacteristic *otaChar = [[CBMutableCharacteristic alloc]initWithType:[CBUUID UUIDWithString:@"1111"] properties:CBCharacteristicPropertyNotify value:nil permissions:CBAttributePermissionsReadable];
-    CBMutableCharacteristic *macChar = [[CBMutableCharacteristic alloc]initWithType:[CBUUID UUIDWithString:@"1112"] properties:CBCharacteristicPropertyWrite value:nil permissions:CBAttributePermissionsWriteable];
-    
-    [oem setCharacteristics:@[energy, charge, unpari, otaChar, macChar]];
-//    [_manager addService:oem];
-
-    _otaCharac = otaChar;
-}
-
-- (void)setLightData:(NSData *)lightData
-{
-    _lightData = lightData;
-    [_manager updateValue:lightData forCharacteristic:_energyCharac onSubscribedCentrals:_centrals];
-}
 
 - (void)startAdvtising
 {
     [_manager stopAdvertising];
     
-    NSLog(@"广播的字符串======%@",_searchstr);
     CBUUID *uuid = [CBUUID UUIDWithString:_searchstr];
-    NSLog(@"uuid======%@",uuid.UUIDString);
+    NSLog(@"广播的字符串======%@",uuid.UUIDString);
     
     //remove all the services added before
     [_manager removeAllServices];
     
-    if (_searchstr.length<=0) {
+    if (_searchstr.length <= 0) {
         _searchstr = @"0xFFF0";
     }
     CBUUID *newUuid = [CBUUID UUIDWithString:_searchstr];
@@ -132,7 +101,7 @@ typedef NS_ENUM(NSUInteger, CharaType) {
 {
     switch (peripheral.state) {
         case 5:
-            [self setUp];
+//            [self setUp];
             break;
         case 4:
             NSLog(@"已关闭");

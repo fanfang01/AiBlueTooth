@@ -27,7 +27,7 @@
 
 - (void) initView {
     UIImageView *backImg = [[UIImageView alloc] initWithFrame:[UIScreen mainScreen].bounds];
-    [backImg setImage:[UIImage imageNamed:@"icon_backimg"]];
+    [backImg setImage:[UIImage imageNamed:@"all_background"]];
     [self.view addSubview:backImg];
     
     CGFloat buttonWidth = (ScreenWidth-40)/2;

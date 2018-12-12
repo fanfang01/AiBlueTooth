@@ -44,19 +44,18 @@
 
 @property (nonatomic, strong) UIView *noneDeviceView;
 
-
 @property(nonatomic,strong) NSMutableArray *tempArr ;//存放当前扫描到的设备
 
 @end
 
+// iPhone bind device mac Address
 @implementation BYScanDeviceViewController
 {
     UITextField *_contentTF;
     NSString *_testString;
     NSString *_deviceName;
     UIImageView *_scanBGImageView;
-    UILabel *showLabel;
-
+    UILabel *_showLabel;
     UILabel *_titleLabel;
 
 }
@@ -73,7 +72,7 @@ static NSInteger scanCount;
     [self initGUI];
     [self initCore];
     
-    //add notofication for keyBoard
+    //add notification for keyBoard
     [self addNoticeForKeyboard];
 }
 
@@ -82,7 +81,7 @@ static NSInteger scanCount;
     [super viewDidAppear:animated];
     if (scanCount != 0) {
         [_manager stopScan];
-        showLabel.text = @"请点击上方按钮开始扫描";
+        _showLabel.text = @"请点击上方按钮开始扫描";
     }
     scanCount = 0;
 }
@@ -100,15 +99,14 @@ static NSInteger scanCount;
 
 - (void)initGUI
 {
-    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"设置" style:UIBarButtonItemStylePlain target:self action:@selector(startToSetup)];
+//    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"设置" style:UIBarButtonItemStylePlain target:self action:@selector(startToSetup)];
 
-    UIImageView *backgroundImageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, ScreenWidth, ScreenHeight)];
+    UIImageView *backgroundImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, ScreenWidth, ScreenHeight)];
     backgroundImageView.image = [UIImage imageNamed:@"all_background"];
     [self.view addSubview:backgroundImageView];
     
     
-    UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, ScreenWidth, 60)];
-
+    UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, ScreenWidth, 60)];
     _titleLabel = titleLabel;
 
     titleLabel.center = CGPointMake(ScreenWidth/2, 70);
@@ -123,30 +121,35 @@ static NSInteger scanCount;
     scanBGImageView.layer.masksToBounds = YES;
     _scanBGImageView = scanBGImageView;
     scanBGImageView.center = CGPointMake(ScreenWidth/2.0, ScreenHeight/2.0);
-    scanBGImageView.image = [UIImage imageNamed:@"scanBack"];
+    scanBGImageView.image = [UIImage imageNamed:@"scan"];
     [self.view addSubview:scanBGImageView];
     
     UIControl *scanControl = [[UIControl alloc] initWithFrame:scanBGImageView.frame];
     [scanControl addTarget:self action:@selector(startToScan) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:scanControl];
     
-    showLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, ScreenWidth, 60)];
-    showLabel.center = CGPointMake(scanBGImageView.center.x, ScreenHeight - 100);
+    UILabel *showLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, ScreenWidth, 60)];
+    _showLabel = showLabel;
+    
+    showLabel.center = CGPointMake(scanBGImageView.center.x, ScreenHeight - 160);
     showLabel.numberOfLines = 0;
     showLabel.textAlignment = NSTextAlignmentCenter;
     showLabel.textColor = COLOR_RGBA(160, 160, 160, 1);
     showLabel.font = [UIFont boldSystemFontOfSize:18.0f];
     [self.view addSubview:showLabel];
     showLabel.text = @"请点击上方按钮开始扫描";
-
-    
-
 }
 
 - (void)startToScan {
     [_manager stopScan];
     [_manager startScan];
     [self scanAction];
+    
+    
+#ifdef debug
+
+#else
+#endif
 }
 
 #pragma mark --- 动画开始
@@ -165,7 +168,7 @@ static NSInteger scanCount;
     theAnimation.delegate = self;
     [_scanBGImageView.layer addAnimation:theAnimation forKey:@"transform"];
     
-    showLabel.text = @"开始扫描";
+    _showLabel.text = @"开始扫描";
 }
 
 //- (void)reloadData {
@@ -190,23 +193,24 @@ static NSInteger scanCount;
     _manager = [MinewModuleManager sharedInstance];
     _manager.delegaate = self;
 //    [_manager startScan];
+    [self startToScan];
     
     __weak BYScanDeviceViewController *weakSelf = self;
     _manager.findDevice = ^(MinewModule *module) {
         __strong BYScanDeviceViewController *strongSelf = weakSelf;
         dispatch_async(dispatch_get_main_queue(), ^{
-            showLabel.text = [NSString stringWithFormat:@"扫描到%@",module.name];
+            _showLabel.text = [NSString stringWithFormat:@"扫描到%@",module.name];
             if (scanCount == 0) {
-                [SVProgressHUD showSuccessWithStatus:[NSString stringWithFormat:@"扫描到%@",module.name]];
-
-//                [weakSelf.manager stopScan];
-
-//                if ([module.name isEqualToString:@"HToy"]) {
-                    [weakSelf startToAdertise];
-                    scanCount ++;
-
-//                }
-
+                [SVProgressHUD showSuccessWithStatus:[NSString stringWithFormat:@"成功扫描到设备%@",module.name]];
+                
+                //                [weakSelf.manager stopScan];
+                
+                //                if ([module.name isEqualToString:@"HToy"]) {
+                [weakSelf startToAdertise];
+                scanCount ++;
+                
+                //                }
+                
             }
         });
         
@@ -219,7 +223,6 @@ static NSInteger scanCount;
     
     [_timer fire];
 }
-
 
 - (void)reloadTableView
 {
@@ -239,7 +242,7 @@ static NSInteger scanCount;
     }
     
     if (_tempArr.count>0) {
-        MinewModule *module = [_tempArr firstObject];
+//        MinewModule *module = [_tempArr firstObject];
         
     }
 
