@@ -462,7 +462,6 @@
 			isa = PBXGroup;
 			children = (
 				286D6BB721B7B771000DB7C8 /* Controller */,
-				286D6BBA21B7B771000DB7C8 /* Model */,
 				286D6BBB21B7B771000DB7C8 /* View */,
 			);
 			path = Advertise;
@@ -473,6 +472,7 @@
 			children = (
 				286D6BB821B7B771000DB7C8 /* StartAdvertiseViewController.h */,
 				286D6BB921B7B771000DB7C8 /* StartAdvertiseViewController.m */,
+				286D6BBA21B7B771000DB7C8 /* Model */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -837,7 +837,7 @@
 				TargetAttributes = {
 					E56992961E5EB60B00C76E42 = {
 						CreatedOnToolsVersion = 8.2.1;
-						DevelopmentTeam = 7V7KVUW3JN;
+						DevelopmentTeam = KMD2P8B7WV;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
@@ -1201,7 +1201,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 7V7KVUW3JN;
+				DEVELOPMENT_TEAM = KMD2P8B7WV;
 				GCC_PREFIX_HEADER = $SRCROOT/BeaconYun/Configs/PrefixHeader.pch;
 				INFOPLIST_FILE = "$(SRCROOT)/BeaconYun/Configs/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
@@ -1224,7 +1224,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 7V7KVUW3JN;
+				DEVELOPMENT_TEAM = KMD2P8B7WV;
 				GCC_PREFIX_HEADER = $SRCROOT/BeaconYun/Configs/PrefixHeader.pch;
 				INFOPLIST_FILE = "$(SRCROOT)/BeaconYun/Configs/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;

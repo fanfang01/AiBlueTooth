@@ -176,16 +176,25 @@
 
 - (void)setSelectedIndex:(NSInteger)selectedIndex
 {
-    if (selectedIndex<0) {
-        selectedIndex = 0;
+    if (selectedIndex < 0) {
+        if (selectedIndex == -1) {
+
+            _currenthakeView.isSelect = NO;
+            _currenthakeView = nil;
+            return;
+        }else {
+            selectedIndex = 0;
+        }
     }
     if (selectedIndex > self.imageArray.count) {
         selectedIndex = self.imageArray.count - 1;
     }
     _selectedIndex = selectedIndex;
+    
+    [SVProgressHUD showSuccessWithStatus:[NSString stringWithFormat:@"当前模式为%ld",(long)_selectedIndex+1]];
 
     UIButton *selBtn = self.totalsBtnArray[selectedIndex];
-    ShakeSelectView *shakeView = (ShakeSelectView *)selBtn.superview;
+    ShakeSelectView *shakeView = (ShakeSelectView *)[selBtn.superview superview];
     _currenthakeView.isSelect = NO;
     
     shakeView.isSelect = YES;

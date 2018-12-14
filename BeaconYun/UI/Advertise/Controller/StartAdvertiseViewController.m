@@ -58,6 +58,9 @@ struct MyAdvDtaModel {
     
     NSInteger _currentTime;
     NSInteger _currentIndex;//配合语音部分的使用
+    
+    NSInteger _count;
+    NSTimer *_powerTimer;
 }
 
 static NSInteger count = 0;
@@ -74,16 +77,18 @@ static NSInteger count = 0;
     [super viewDidLoad];
     
     self.title = @"开始操作";
+    
     _is_on = NO;// 默认机器是开机状态
+    //设定5秒后停止广播
     _countDownTime = 5;
     _currentTime = 0;
-    _currentIndex = 0;//default
+    _currentIndex = 0;//default 当前选中的模式
+    
     [self initData];
     
 //    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"back2"]];
 
     MTPeripheralManager *pm = [MTPeripheralManager sharedInstance];
-//    pm.searchstr = [_commandAray firstObject][@"command"];
     _pm = pm;
     
     [self initView];
@@ -99,7 +104,7 @@ static NSInteger count = 0;
 - (void)initData {
     if (!_commandAray) {
         _commandAray = [NSMutableArray arrayWithObjects:
-                        @{@"command":@"00000000-aff4-0085-ABAC-100101010000",@"key":@"模式1"},
+                        @{@"command":@"00000000-aff4-0085-ABAC-100101010001",@"key":@"模式1"},
                         @{@"command":@"00000000-aff4-0085-0021-fcfbfa002402",@"key":@"模式2"},
                         @{@"command":@"00000000-aff4-0085-0021-fcfbfa002403",@"key":@"模式3"},
                         @{@"command":@"00000000-aff4-0085-0021-fcfbfa002404",@"key":@"模式4"},
@@ -138,7 +143,7 @@ static NSInteger count = 0;
         _advertiseView.buttonBlock = ^(NSInteger index) {
             __strong StartAdvertiseViewController *strongSelf = weakSelf;
             _currentIndex = index;
-           
+            
             [strongSelf sendData:index];
         };
         [_advertiseView.onSwitch addTarget:self action:@selector(switchOnOff:) forControlEvents:UIControlEventValueChanged];
@@ -166,11 +171,19 @@ static NSInteger count = 0;
     adv.event_id = count;
     adv.value[0] = 0;
     adv.value[1] = 0;
+    
+    if (index < 12) {
+        _is_on = YES;
+        [self.advertiseView.onSwitch setOn:YES];
+    }
+    
     if (12 == index) {//为开关机的状态
         if (_is_on) {//开机信息
             adv.key = 17;
+            self.advertiseView.selectedIndex = _currentIndex;
         }else {      //关机信息
             adv.key = 16;
+            self.advertiseView.selectedIndex = -1;
         }
     }
     else if (10 == index) {//处理增大强度模式
@@ -189,12 +202,30 @@ static NSInteger count = 0;
     self.pm.searchstr = advString;
     [self.pm startAdvtising];
     
-    //设定n秒后停止广播
-//    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-//        [self.pm stopAdvertising];
-//
-//    });
     [self startAdvTimer];
+}
+
+- (void)testForPowerOff {
+//    NSTimer *timer = [NSTimer sche];
+//    NSArray *arr = @[@16,@17];
+//    for (NSInteger i=0; i<arr.count; i++) {
+//        [self sendData:12];
+//    }
+    _count = 0;
+    if (!_powerTimer) {
+        NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(testForPower) userInfo:nil repeats:YES];
+        _powerTimer = timer;
+    }
+
+}
+
+- (void)testForPower {
+    [self sendData:12];
+    _count ++;
+    if (_count > 5) {
+        [_powerTimer invalidate];
+        _powerTimer = nil;
+    }
 }
 
 #pragma mark -- 获取设备的信息
@@ -440,19 +471,24 @@ static NSInteger count = 0;
             NSInteger index = [keyArr indexOfObject:recordKey];
             if (index >= 0) {
                 //开始广播
-                _currentIndex = index;
-                if (index == 10) {
-                    _currentIndex --;
-                    self.advertiseView.selectedIndex = _currentIndex;
-                }else if (index == 11) {
+//                _currentIndex = index;
+                if (index == 10) {//fast
                     _currentIndex ++;
                     self.advertiseView.selectedIndex = _currentIndex;
+                    [self sendData:_currentIndex];
+                    break;
+                }else if (index == 11) {//slow
+                    if (_currentIndex>0) {
+                        _currentIndex --;
+                        self.advertiseView.selectedIndex = _currentIndex;
+                        [self sendData:_currentIndex];
+                        break;
+                    }
                 }else if (index == 12) {
-                    _currentIndex = 10;
                     _is_on = !_is_on;
                     [self.advertiseView.onSwitch setOn:_is_on];
                 }
-                [self sendData:_currentIndex];
+                [self sendData:index];
 
                 break;
             }
@@ -541,7 +577,7 @@ static NSInteger count = 0;
 
 - (void)switchOnOff:(UISwitch *)sw {
     _is_on = sw.on;
-    
+    NSLog(@"广播的状态：sw.isOn==%d  _is_on==%d",sw.isOn,_is_on);
     [self sendData:12];
 }
 @end

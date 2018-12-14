@@ -208,6 +208,7 @@ static NSInteger scanCount;
                 //                if ([module.name isEqualToString:@"HToy"]) {
                 [weakSelf startToAdertise];
                 scanCount ++;
+                [_manager stopScan];
                 
                 //                }
                 
@@ -293,6 +294,8 @@ static NSInteger scanCount;
     StartAdvertiseViewController *adVC = [[StartAdvertiseViewController alloc] init];
     
     [self.navigationController pushViewController:adVC animated:YES];
+    
+    [_manager stopScan];
 }
 
 - (NSString *)hexStringFromString:(NSString *)string

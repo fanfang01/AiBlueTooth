@@ -227,9 +227,9 @@
     NSString *adName = advertisementData[CBAdvertisementDataLocalNameKey];
     
     
-//    if (index != NSNotFound )
+//    if (![adName isEqualToString:@"HToy"])
 //    {
-    
+//
         MinewModule *module = [self moduleExist:peripheral.identifier.UUIDString];
         
         if ( module.connecting)
