@@ -1,12 +1,10 @@
 PODS:
-  - Masonry (1.0.2)
+  - Masonry (1.1.0)
   - SDWebImage (3.7.5):
     - SDWebImage/Core (= 3.7.5)
   - SDWebImage/Core (3.7.5)
-  - SocketRocket (0.5.1)
-  - SVProgressHUD (2.1.2)
-  - WeexSDK (0.11.0):
-    - SocketRocket
+  - SVProgressHUD (2.2.5)
+  - WeexSDK (0.20.1)
 
 DEPENDENCIES:
   - Masonry
@@ -14,13 +12,19 @@ DEPENDENCIES:
   - SVProgressHUD
   - WeexSDK
 
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - Masonry
+    - SDWebImage
+    - SVProgressHUD
+    - WeexSDK
+
 SPEC CHECKSUMS:
-  Masonry: 7c429b56da9d4ee0bbb3ed77a5ea710d6a5df39e
+  Masonry: 678fab65091a9290e40e2832a55e7ab731aad201
   SDWebImage: 69c6303e3348fba97e03f65d65d4fbc26740f461
-  SocketRocket: d57c7159b83c3c6655745cd15302aa24b6bae531
-  SVProgressHUD: c404a55d78acbeb7ebb78b76d3faf986475a6994
-  WeexSDK: f9cfe6adc91fba3ca5e36bc9808bf1b6e8be2106
+  SVProgressHUD: 1428aafac632c1f86f62aa4243ec12008d7a51d6
+  WeexSDK: ced3f2ef2f0cb48d1d76fd2f03c645572c632d21
 
 PODFILE CHECKSUM: 9e4d74dc7bd5d96c9dcfac043454163ec1b9c0df
 
-COCOAPODS: 1.0.1
+COCOAPODS: 1.5.3

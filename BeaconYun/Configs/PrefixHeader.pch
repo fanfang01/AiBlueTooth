@@ -12,11 +12,23 @@
 #import <SVProgressHUD.h>
 #import <Masonry.h>
 
+#import "BDSEventManager.h"
+#import "BDSASRDefines.h"
+#import "BDSASRParameters.h"
+#import "BDSWakeupDefines.h"
+#import "BDSWakeupParameters.h"
+
+
 #define ScreenWidth  ([[UIScreen mainScreen] bounds].size.width)
 #define ScreenHeight  ([[UIScreen mainScreen] bounds].size.height)
 
 #define COLOR_RGBA(r,g,b,a) ([UIColor colorWithRed:(r)/255.0 green:(g)/255.0 blue:(b)/255.0 alpha:a])
 #define COLOR_RGB(r,g,b) ([UIColor colorWithRed:(r)/255.0 green:(g)/255.0 blue:(b)/255.0 alpha:1])
+
+//Baidu SDK config
+#define API_KEY @"tyiwdzbYQ9GTmfaGPTqAuXtB"
+#define SECRET_KEY @"ooDetcOCZyUyTYdtWpsXgG4iw3zih1aH"
+#define APP_ID @"15058256"
 
 // Include any system framework and library headers here that should be included in all compilation units.
 // You will also need to set the Prefix Header build setting of one or more of your targets to reference this file.

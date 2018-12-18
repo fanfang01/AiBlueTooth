@@ -9,19 +9,8 @@
 #import "StartAdvertiseViewController.h"
 #import "AdvertiseView.h"
 #import "MTPeripheralManager.h"
-
-#import "BDSEventManager.h"
-#import "BDSASRDefines.h"
-#import "BDSASRParameters.h"
-#import "BDSWakeupDefines.h"
-#import "BDSWakeupParameters.h"
-#import "BDRecognizerViewController.h"
-
-
-//#error "请在官网新建应用，配置包名，并在此填写应用的 api key, secret key, appid(即appcode)"
-const NSString* API_KEY = @"tyiwdzbYQ9GTmfaGPTqAuXtB";
-const NSString* SECRET_KEY = @"ooDetcOCZyUyTYdtWpsXgG4iw3zih1aH";
-const NSString* APP_ID = @"15058256";
+#import "WakeUpManager.h"
+#import "RecognizeManager.h"
 
 //定义广播数据的结构体
 struct MyAdvDtaModel {
@@ -35,17 +24,16 @@ struct MyAdvDtaModel {
 
 //BDRecognizerViewDelegate
 
-@interface StartAdvertiseViewController ()<BDSClientASRDelegate,BDSClientWakeupDelegate>
+@interface StartAdvertiseViewController ()
 @property (nonatomic, strong) AdvertiseView *advertiseView;
 
 @property (nonatomic, strong) NSMutableArray *commandAray;
 
 @property (nonatomic, strong) MTPeripheralManager *pm;
 
-@property (strong, nonatomic) BDSEventManager *asrEventManager;
-@property (strong, nonatomic) BDSEventManager *wakeupEventManager;
+@property (nonatomic, strong) WakeUpManager *wakeupManager;
 
-
+@property (nonatomic, strong) RecognizeManager *recognizeManager;
 @end
 
 @implementation StartAdvertiseViewController
@@ -78,7 +66,7 @@ static NSInteger count = 0;
     
     self.title = @"开始操作";
     
-    _is_on = NO;// 默认机器是开机状态
+    _is_on = NO;// 默认机器是关机状态
     //设定5秒后停止广播
     _countDownTime = 5;
     _currentTime = 0;
@@ -86,19 +74,47 @@ static NSInteger count = 0;
     
     [self initData];
     
-//    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"back2"]];
 
     MTPeripheralManager *pm = [MTPeripheralManager sharedInstance];
     _pm = pm;
     
     [self initView];
     
-//    [self initCore];//开始语音识别
+    [self wakeupConfiguration];
     
-    //唤醒服务开启
-    [self configWakeupClient];
-    [self startWakeup];//开始唤醒
+//    [self recognizeConfiguration];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
+    
+}
+
+- (void)wakeupConfiguration {
+    _wakeupManager = [WakeUpManager sharedInstance];
+    
+    [_wakeupManager startWakeup];
+    
+    __weak StartAdvertiseViewController *weakSelf = self;
+    _wakeupManager.voiceWakeUp = ^(NSString * _Nonnull keywords) {
+        
+        __strong StartAdvertiseViewController *strongSelf = weakSelf;
+        
+        [strongSelf voiceToAdvertise:keywords];
+    };
+}
+
+- (void)recognizeConfiguration {
+    _recognizeManager = [RecognizeManager sharedInstance];
+    
+}
+
+- (void)applicationDidBecomeActive {
+    [_wakeupManager startWakeup];
+}
+
+- (void)applicationDidEnterBackground {
+    NSLog(@"进入后台");
 }
 
 - (void)initData {
@@ -205,259 +221,10 @@ static NSInteger count = 0;
     [self startAdvTimer];
 }
 
-- (void)testForPowerOff {
-//    NSTimer *timer = [NSTimer sche];
-//    NSArray *arr = @[@16,@17];
-//    for (NSInteger i=0; i<arr.count; i++) {
-//        [self sendData:12];
-//    }
-    _count = 0;
-    if (!_powerTimer) {
-        NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(testForPower) userInfo:nil repeats:YES];
-        _powerTimer = timer;
-    }
-
-}
-
-- (void)testForPower {
-    [self sendData:12];
-    _count ++;
-    if (_count > 5) {
-        [_powerTimer invalidate];
-        _powerTimer = nil;
-    }
-}
-
 #pragma mark -- 获取设备的信息
 - (void)getDeviceInfo {
     //0x21
     [self sendData:33];
-}
-
-
-- (void)initCore {
-    //创建语音识别对象
-    self.asrEventManager = [BDSEventManager createEventManagerWithName:BDS_ASR_NAME];
-    //设置语音识别代理
-    [self.asrEventManager setDelegate:self];
-    
-    //参数配置
-    //1.设置DEBUG_LOG的级别
-    [self.asrEventManager setParameter:@(EVRDebugLogLevelTrace) forKey:BDS_ASR_DEBUG_LOG_LEVEL];
-
-    [self.asrEventManager setParameter:@[API_KEY,SECRET_KEY] forKey:BDS_ASR_API_SECRET_KEYS];
-    //设置 APPID
-    [self.asrEventManager setParameter:APP_ID forKey:BDS_ASR_OFFLINE_APP_CODE];
-
-//    self.wakeupEventManager = [BDSEventManager createEventManagerWithName:BDS_WAKEUP_NAME];
-    
-    NSLog(@"Current SDK version: %@",[self.asrEventManager libver]);
-    
-    NSString *modelVAD_filepath = [[NSBundle mainBundle] pathForResource:@"bds_easr_basic_model" ofType:@"dat"];
-    
-    [self.asrEventManager setParameter:modelVAD_filepath forKey:BDS_ASR_MODEL_VAD_DAT_FILE];
-    
-    [self.asrEventManager setParameter:@(YES) forKey:BDS_ASR_ENABLE_MODEL_VAD];
-    
-    //4.开启语义了解
-    [self.asrEventManager setParameter:@(YES) forKey:BDS_ASR_ENABLE_NLU];
-    
-    [self.asrEventManager setParameter:@"15361" forKey:BDS_ASR_PRODUCT_ID];
-    
-    //发送指令：启动识别
-    [self.asrEventManager sendCommand:BDS_ASR_CMD_START];
-}
-
-//唤醒机制的配置
-- (void)configWakeupClient {
-    self.wakeupEventManager = [BDSEventManager createEventManagerWithName:BDS_WAKEUP_NAME];
-    [self.wakeupEventManager setDelegate:self];
-    [self.wakeupEventManager setParameter:APP_ID forKey:BDS_WAKEUP_APP_CODE];
-    
-    [self configWakeupSettings];
-}
-
-- (void)configWakeupSettings {
-    NSString* dat = [[NSBundle mainBundle] pathForResource:@"bds_easr_basic_model" ofType:@"dat"];
-    
-    // 默认的唤醒词为"百度一下"，如需自定义唤醒词，请在 http://ai.baidu.com/tech/speech/wake 中评估并下载唤醒词，替换此参数
-//    NSString* words = [[NSBundle mainBundle] pathForResource:@"bds_easr_wakeup_words" ofType:@"dat"];
-    
-    NSString* keywords = [[NSBundle mainBundle] pathForResource:@"WakeUp" ofType:@"bin"];
-    [self.wakeupEventManager setParameter:dat forKey:BDS_WAKEUP_DAT_FILE_PATH];
-    [self.wakeupEventManager setParameter:keywords forKey:BDS_WAKEUP_WORDS_FILE_PATH];
-}
-
-- (void)startWakeup
-{
-//    [self configWakeupClient];
-    [self.wakeupEventManager setParameter:nil forKey:BDS_WAKEUP_AUDIO_FILE_PATH];
-    [self.wakeupEventManager setParameter:nil forKey:BDS_WAKEUP_AUDIO_INPUT_STREAM];
-    [self.wakeupEventManager sendCommand:BDS_WP_CMD_LOAD_ENGINE];
-    [self.wakeupEventManager sendCommand:BDS_WP_CMD_START];
-}
-
-- (void)dealloc {
-    [self stopWakeup];
-}
-
-- (void)stopWakeup {
-    [self.wakeupEventManager sendCommand:BDS_WP_CMD_STOP];
-}
-
-- (void)voiceRecogButtonHelper
-{
-    //    [self configFileHandler];
-    [self.asrEventManager setDelegate:self];
-    [self.asrEventManager setParameter:nil forKey:BDS_ASR_AUDIO_FILE_PATH];
-    [self.asrEventManager setParameter:nil forKey:BDS_ASR_AUDIO_INPUT_STREAM];
-    [self.asrEventManager sendCommand:BDS_ASR_CMD_START];
-    [self onInitializing];
-}
-
-
-
-#pragma mark --- BDSClientASRDelegate
-- (void)VoiceRecognitionClientWorkStatus:(int)workStatus obj:(id)aObj
-{
-    switch (workStatus) {
-        case EVoiceRecognitionClientWorkStatusNewRecordData:
-        {
-            NSLog(@"进入EVoiceRecognitionClientWorkStatusNewRecordData 状态");
-            break;
-        }
-        case EVoiceRecognitionClientWorkStatusStartWorkIng:{
-            NSDictionary *logDic = [self parseLogToDic:aObj];
-            NSLog(@"开始识别 === %@",logDic);
-            [SVProgressHUD showSuccessWithStatus:@"开始识别"];
-
-            [self onStartWorking];
-            break;
-        }
-        case EVoiceRecognitionClientWorkStatusStart: {
-            [self printLogTextView:@"CALLBACK: detect voice start point.\n"];
-            break;
-        }
-        case EVoiceRecognitionClientWorkStatusEnd: {
-            [self printLogTextView:@"CALLBACK: detect voice end point.\n"];
-            break;
-        }
-        case EVoiceRecognitionClientWorkStatusFlushData: {
-            [self printLogTextView:[NSString stringWithFormat:@"CALLBACK: partial result - %@.\n\n", [self getDescriptionForDic:aObj]]];
-            break;
-        }
-        case EVoiceRecognitionClientWorkStatusFinish: {
-            [self printLogTextView:[NSString stringWithFormat:@"CALLBACK: final result - %@.\n\n", [self getDescriptionForDic:aObj]]];
-            if (aObj) {
-                //                self.resultTextView.text = [self getDescriptionForDic:aObj];
-                
-                NSLog(@"系统的最终得到的录音:%@",[self getDescriptionForDic:aObj]);
-                [SVProgressHUD showSuccessWithStatus:[self getDescriptionForDic:aObj]];
-            }
-//            if (!self.longSpeechFlag) {
-//                [self onEnd];
-//            }
-            break;
-        }
-        case EVoiceRecognitionClientWorkStatusMeterLevel: {
-            break;
-        }
-        case EVoiceRecognitionClientWorkStatusCancel: {
-            [self printLogTextView:@"CALLBACK: user press cancel.\n"];
-            [self onEnd];
-            break;
-        }
-        case EVoiceRecognitionClientWorkStatusError: {
-            [self printLogTextView:[NSString stringWithFormat:@"CALLBACK: encount error - %@.\n", (NSError *)aObj]];
-            [self onEnd];
-            break;
-        }
-        case EVoiceRecognitionClientWorkStatusLoaded: {
-            [self printLogTextView:@"CALLBACK: offline engine loaded.\n"];
-            break;
-        }
-        case EVoiceRecognitionClientWorkStatusUnLoaded: {
-            [self printLogTextView:@"CALLBACK: offline engine unLoaded.\n"];
-            break;
-        }
-        case EVoiceRecognitionClientWorkStatusChunkThirdData: {
-            [self printLogTextView:[NSString stringWithFormat:@"CALLBACK: Chunk 3-party data length: %lu\n", (unsigned long)[(NSData *)aObj length]]];
-            break;
-        }
-        case EVoiceRecognitionClientWorkStatusChunkNlu: {
-            NSString *nlu = [[NSString alloc] initWithData:(NSData *)aObj encoding:NSUTF8StringEncoding];
-            [self printLogTextView:[NSString stringWithFormat:@"CALLBACK: Chunk NLU data: %@\n", nlu]];
-            NSLog(@"%@", nlu);
-            break;
-        }
-        case EVoiceRecognitionClientWorkStatusChunkEnd: {
-            [self printLogTextView:[NSString stringWithFormat:@"CALLBACK: Chunk end, sn: %@.\n", aObj]];
-//            if (!self.longSpeechFlag) {
-//                [self onEnd];
-//            }
-            break;
-        }
-        case EVoiceRecognitionClientWorkStatusFeedback: {
-            NSDictionary *logDic = [self parseLogToDic:aObj];
-            [self printLogTextView:[NSString stringWithFormat:@"CALLBACK Feedback: %@\n", logDic]];
-            break;
-        }
-        case EVoiceRecognitionClientWorkStatusRecorderEnd: {
-            [self printLogTextView:@"CALLBACK: recorder closed.\n"];
-            break;
-        }
-        case EVoiceRecognitionClientWorkStatusLongSpeechEnd: {
-            [self printLogTextView:@"CALLBACK: Long Speech end.\n"];
-            [self onEnd];
-            break;
-        }
-        default:
-            break;
-    }
-}
-
-#pragma mark --- BDSClientWakeupDelegate
-- (void)WakeupClientWorkStatus:(int)workStatus obj:(id)aObj
-{
-    switch (workStatus) {
-        case EWakeupEngineWorkStatusStarted: {
-            [self printLogTextView:@"WAKEUP CALLBACK: Started.\n"];
-            break;
-        }
-        case EWakeupEngineWorkStatusStopped: {
-            [self printLogTextView:@"WAKEUP CALLBACK: Stopped.\n"];
-            break;
-        }
-        case EWakeupEngineWorkStatusLoaded: {
-            [self printLogTextView:@"WAKEUP CALLBACK: Loaded.\n"];
-            break;
-        }
-        case EWakeupEngineWorkStatusUnLoaded: {
-            [self printLogTextView:@"WAKEUP CALLBACK: UnLoaded.\n"];
-            break;
-        }
-        case EWakeupEngineWorkStatusTriggered: {
-            [self printLogTextView:[NSString stringWithFormat:@"WAKEUP CALLBACK: Triggered - %@.\n", (NSString *)aObj]];
-//            if (self.continueToVR) {
-//                self.continueToVR = NO;
-            NSString *key = [NSString stringWithFormat:@"%@",((NSString *)aObj)];
-            [SVProgressHUD showSuccessWithStatus:key];
-            [self.asrEventManager setParameter:@(YES) forKey:BDS_ASR_NEED_CACHE_AUDIO];
-            [self.asrEventManager setParameter:aObj forKey:BDS_ASR_OFFLINE_ENGINE_TRIGGERED_WAKEUP_WORD];
-            [self voiceRecogButtonHelper];
-            
-            [self voiceToAdvertise:key];
-//            }
-            break;
-        }
-        case EWakeupEngineWorkStatusError: {
-            [self printLogTextView:[NSString stringWithFormat:@"WAKEUP CALLBACK: encount error - %@.\n", (NSError *)aObj]];
-            break;
-        }
-            
-        default:
-            break;
-    }
 }
 
 #pragma mark --- 语音发送广播
@@ -472,12 +239,12 @@ static NSInteger count = 0;
             if (index >= 0) {
                 //开始广播
 //                _currentIndex = index;
-                if (index == 10) {//fast
+                if (index == 10) {//fast //发送的是当前的模式
                     _currentIndex ++;
                     self.advertiseView.selectedIndex = _currentIndex;
                     [self sendData:_currentIndex];
                     break;
-                }else if (index == 11) {//slow
+                }else if (index == 11) {//slow //发送的是当前的模式
                     if (_currentIndex>0) {
                         _currentIndex --;
                         self.advertiseView.selectedIndex = _currentIndex;
@@ -497,7 +264,6 @@ static NSInteger count = 0;
     }
 }
 
-
 - (NSMutableArray *)getALLKeys {
     NSMutableArray *tempArr = [NSMutableArray array];
     for (NSDictionary *dic in _commandAray) {
@@ -507,49 +273,9 @@ static NSInteger count = 0;
     return tempArr;
 }
 
-//唤醒的初始化操作
-- (void)onInitializing
-{
-    
-}
 
-//开始识别的一些操作
-- (void)onStartWorking {
-    
-}
 
-//语音识别结束的操作
-- (void)onEnd {
-    
-}
 
-- (NSDictionary *)parseLogToDic:(NSString *)logString
-{
-    NSArray *tmp = NULL;
-    NSMutableDictionary *logDic = [[NSMutableDictionary alloc] initWithCapacity:3];
-    NSArray *items = [logString componentsSeparatedByString:@"&"];
-    for (NSString *item in items) {
-        tmp = [item componentsSeparatedByString:@"="];
-        if (tmp.count == 2) {
-            [logDic setObject:tmp.lastObject forKey:tmp.firstObject];
-        }
-    }
-    return logDic;
-}
-
-- (NSString *)getDescriptionForDic:(NSDictionary *)dic {
-    if (dic) {
-        return [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:dic
-                                                                              options:NSJSONWritingPrettyPrinted
-                                                                                error:nil] encoding:NSUTF8StringEncoding];
-    }
-    return nil;
-}
-
-- (void)printLogTextView:(NSString *)logString
-{
-    NSLog(@"打印log===%@",logString);
-}
 
 #pragma mark -- Timer
 - (void)startAdvTimer {
@@ -577,7 +303,7 @@ static NSInteger count = 0;
 
 - (void)switchOnOff:(UISwitch *)sw {
     _is_on = sw.on;
-    NSLog(@"广播的状态：sw.isOn==%d  _is_on==%d",sw.isOn,_is_on);
+    NSLog(@"开关的状态：sw.isOn==%d  _is_on==%d",sw.isOn,_is_on);
     [self sendData:12];
 }
 @end

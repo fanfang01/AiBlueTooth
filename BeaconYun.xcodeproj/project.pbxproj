@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		282D97F421B7D404004E9D39 /* WakeUp.bin in Resources */ = {isa = PBXBuildFile; fileRef = 282D97F321B7D404004E9D39 /* WakeUp.bin */; };
-		284212F621B910C500B36B94 /* AdvDataModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 284212F521B910C500B36B94 /* AdvDataModel.m */; };
 		286D6B1021B7AC2F000DB7C8 /* MTBeaconManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 286D6B0C21B7AC2F000DB7C8 /* MTBeaconManager.m */; };
 		286D6B1121B7AC2F000DB7C8 /* MTCommonTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 286D6B0D21B7AC2F000DB7C8 /* MTCommonTool.m */; };
 		286D6B1221B7AC2F000DB7C8 /* MTPeripheralManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 286D6B0E21B7AC2F000DB7C8 /* MTPeripheralManager.m */; };
@@ -54,6 +53,8 @@
 		286D6BC021B7B771000DB7C8 /* StartAdvertiseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 286D6BB921B7B771000DB7C8 /* StartAdvertiseViewController.m */; };
 		286D6BC121B7B771000DB7C8 /* AdvertiseView.m in Sources */ = {isa = PBXBuildFile; fileRef = 286D6BBC21B7B771000DB7C8 /* AdvertiseView.m */; };
 		286D6BC221B7B771000DB7C8 /* ShakeSelectView.m in Sources */ = {isa = PBXBuildFile; fileRef = 286D6BBD21B7B771000DB7C8 /* ShakeSelectView.m */; };
+		2887B5BC21C890330022A99E /* RecognizeManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2887B5BB21C890330022A99E /* RecognizeManager.m */; };
+		28AA847E21C88B5F00351BA3 /* WakeUpManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 28AA847D21C88B5F00351BA3 /* WakeUpManager.m */; };
 		B1CFC9764E4898520C187548 /* libPods-BeaconYun.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F5851AABDA97E315A353A0BF /* libPods-BeaconYun.a */; };
 		E532AFD01E9B92290001BE28 /* lock.js in Resources */ = {isa = PBXBuildFile; fileRef = E532AFCF1E9B92290001BE28 /* lock.js */; };
 		E539CF0D1E762AA800B9D731 /* ui2.js in Resources */ = {isa = PBXBuildFile; fileRef = E539CF0C1E762AA800B9D731 /* ui2.js */; };
@@ -125,8 +126,6 @@
 
 /* Begin PBXFileReference section */
 		282D97F321B7D404004E9D39 /* WakeUp.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; path = WakeUp.bin; sourceTree = "<group>"; };
-		284212F421B910C500B36B94 /* AdvDataModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AdvDataModel.h; sourceTree = "<group>"; };
-		284212F521B910C500B36B94 /* AdvDataModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AdvDataModel.m; sourceTree = "<group>"; };
 		286D6B0921B7AC2F000DB7C8 /* MTPeripheralManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTPeripheralManager.h; sourceTree = "<group>"; };
 		286D6B0A21B7AC2F000DB7C8 /* MTCommonTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTCommonTool.h; sourceTree = "<group>"; };
 		286D6B0B21B7AC2F000DB7C8 /* MTBeaconManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTBeaconManager.h; sourceTree = "<group>"; };
@@ -207,6 +206,10 @@
 		286D6BBD21B7B771000DB7C8 /* ShakeSelectView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShakeSelectView.m; sourceTree = "<group>"; };
 		286D6BBE21B7B771000DB7C8 /* AdvertiseView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AdvertiseView.h; sourceTree = "<group>"; };
 		286D6BBF21B7B771000DB7C8 /* ShakeSelectView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShakeSelectView.h; sourceTree = "<group>"; };
+		2887B5BA21C890330022A99E /* RecognizeManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RecognizeManager.h; sourceTree = "<group>"; };
+		2887B5BB21C890330022A99E /* RecognizeManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RecognizeManager.m; sourceTree = "<group>"; };
+		28AA847C21C88B5F00351BA3 /* WakeUpManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WakeUpManager.h; sourceTree = "<group>"; };
+		28AA847D21C88B5F00351BA3 /* WakeUpManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WakeUpManager.m; sourceTree = "<group>"; };
 		49E0A3CD57A1B7DE50179925 /* Pods-BeaconYun.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BeaconYun.debug.xcconfig"; path = "Pods/Target Support Files/Pods-BeaconYun/Pods-BeaconYun.debug.xcconfig"; sourceTree = "<group>"; };
 		B370C1B698562C91509A8E8F /* Pods-BeaconYun.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BeaconYun.release.xcconfig"; path = "Pods/Target Support Files/Pods-BeaconYun/Pods-BeaconYun.release.xcconfig"; sourceTree = "<group>"; };
 		E532AFCF1E9B92290001BE28 /* lock.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = lock.js; sourceTree = "<group>"; };
@@ -480,8 +483,10 @@
 		286D6BBA21B7B771000DB7C8 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				284212F421B910C500B36B94 /* AdvDataModel.h */,
-				284212F521B910C500B36B94 /* AdvDataModel.m */,
+				28AA847C21C88B5F00351BA3 /* WakeUpManager.h */,
+				28AA847D21C88B5F00351BA3 /* WakeUpManager.m */,
+				2887B5BA21C890330022A99E /* RecognizeManager.h */,
+				2887B5BB21C890330022A99E /* RecognizeManager.m */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -608,7 +613,6 @@
 				E56992FC1E5ECA4200C76E42 /* BusinessLogic */,
 				E5E4BDAC1E710B780086472B /* Category */,
 				E5A7E1EC1E60252F00D72212 /* Localization */,
-				E56992FE1E5ECA4200C76E42 /* ThirdPartys */,
 				E53B58641E642AA200860CBB /* Resources */,
 				E56992D21E5EB91500C76E42 /* Configs */,
 				E569929A1E5EB60B00C76E42 /* Supporting Files */,
@@ -739,14 +743,6 @@
 			path = BeaconYun/Models;
 			sourceTree = SOURCE_ROOT;
 		};
-		E56992FE1E5ECA4200C76E42 /* ThirdPartys */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = ThirdPartys;
-			path = BeaconYun/ThirdPartys;
-			sourceTree = SOURCE_ROOT;
-		};
 		E5A7E1EC1E60252F00D72212 /* Localization */ = {
 			isa = PBXGroup;
 			children = (
@@ -778,7 +774,6 @@
 				E56992931E5EB60B00C76E42 /* Sources */,
 				E56992941E5EB60B00C76E42 /* Frameworks */,
 				E56992951E5EB60B00C76E42 /* Resources */,
-				0758451E4EBEEE629C220A49 /* [CP] Embed Pods Frameworks */,
 				6C1752D2F747B3A2EAA5C441 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
@@ -958,34 +953,22 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		0758451E4EBEEE629C220A49 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-BeaconYun/Pods-BeaconYun-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		1FEA3CDF1FF43481B3C9398D /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
 			);
 			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-BeaconYun-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
 		6C1752D2F747B3A2EAA5C441 /* [CP] Copy Pods Resources */ = {
@@ -994,9 +977,22 @@
 			files = (
 			);
 			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-BeaconYun/Pods-BeaconYun-resources.sh",
+				"${PODS_ROOT}/SVProgressHUD/SVProgressHUD/SVProgressHUD.bundle",
+				"${PODS_ROOT}/WeexSDK/pre-build/native-bundle-main.js",
+				"${PODS_ROOT}/WeexSDK/pre-build/weex-main-jsfm.js",
+				"${PODS_ROOT}/WeexSDK/pre-build/weex-polyfill.js",
+				"${PODS_ROOT}/WeexSDK/pre-build/weex-rax-api.js",
+				"${PODS_ROOT}/WeexSDK/ios/sdk/WeexSDK/Resources/wx_load_error@3x.png",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/SVProgressHUD.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/native-bundle-main.js",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/weex-main-jsfm.js",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/weex-polyfill.js",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/weex-rax-api.js",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/wx_load_error@3x.png",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -1011,6 +1007,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E545202D1E67FFB700C0D46E /* MinewModuleManager.m in Sources */,
+				28AA847E21C88B5F00351BA3 /* WakeUpManager.m in Sources */,
 				286D6B1021B7AC2F000DB7C8 /* MTBeaconManager.m in Sources */,
 				E56992EF1E5EB97100C76E42 /* BYCommonTools.m in Sources */,
 				E5A7E1EF1E602A6300D72212 /* BYHeaderView.m in Sources */,
@@ -1019,13 +1016,13 @@
 				E54520301E68000000C0D46E /* MinewModuleAPI.m in Sources */,
 				286D6BC121B7B771000DB7C8 /* AdvertiseView.m in Sources */,
 				286D6B1221B7AC2F000DB7C8 /* MTPeripheralManager.m in Sources */,
-				284212F621B910C500B36B94 /* AdvDataModel.m in Sources */,
 				E56992F11E5EB97100C76E42 /* BYCustomManager.m in Sources */,
 				E5BF8E721EB040A300AF94DC /* ColorPickerView.m in Sources */,
 				286D6B2721B7ACD2000DB7C8 /* BYNavigationController.m in Sources */,
 				E56992DC1E5EB91500C76E42 /* AppDelegate.m in Sources */,
 				286D6B2521B7ACD2000DB7C8 /* BYInfoViewController.m in Sources */,
 				E5E4BDAF1E710B780086472B /* NSTimer+Blocks.m in Sources */,
+				2887B5BC21C890330022A99E /* RecognizeManager.m in Sources */,
 				286D6BC221B7B771000DB7C8 /* ShakeSelectView.m in Sources */,
 				286D6B2F21B7ACDD000DB7C8 /* SettingViewController.m in Sources */,
 				286D6BC021B7B771000DB7C8 /* StartAdvertiseViewController.m in Sources */,
@@ -1202,7 +1199,8 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = KMD2P8B7WV;
-				GCC_PREFIX_HEADER = $SRCROOT/BeaconYun/Configs/PrefixHeader.pch;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREFIX_HEADER = "$(SRCROOT)/BeaconYun/Configs/PrefixHeader.pch";
 				INFOPLIST_FILE = "$(SRCROOT)/BeaconYun/Configs/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1225,7 +1223,8 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = KMD2P8B7WV;
-				GCC_PREFIX_HEADER = $SRCROOT/BeaconYun/Configs/PrefixHeader.pch;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREFIX_HEADER = "$(SRCROOT)/BeaconYun/Configs/PrefixHeader.pch";
 				INFOPLIST_FILE = "$(SRCROOT)/BeaconYun/Configs/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
