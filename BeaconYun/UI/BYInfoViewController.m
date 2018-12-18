@@ -48,7 +48,7 @@
         make.top.equalTo(logoView.mas_bottom).offset(5.f);
         make.height.mas_equalTo(30);
     }];
-    appNameLabel.text = NSLocalizedString(@"Minew Lock", nil);
+    appNameLabel.text = NSLocalizedString(@"ASK", nil);
     appNameLabel.textColor = [UIColor blackColor];
     appNameLabel.textAlignment = NSTextAlignmentCenter;
     
@@ -75,24 +75,10 @@
         make.bottom.equalTo(self.view.mas_bottom).offset( -10.f);
         make.height.mas_equalTo(30);
     }];
-    copyrightLabel.text = NSLocalizedString(@"Copyright Minewtech. All Rights Reserved", nil);
+    copyrightLabel.text = NSLocalizedString(@"Copyright ASK. All Rights Reserved", nil);
     copyrightLabel.textColor = [UIColor grayColor];
     copyrightLabel.textAlignment = NSTextAlignmentCenter;
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 @end

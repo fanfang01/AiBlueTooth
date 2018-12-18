@@ -7,19 +7,13 @@
 //
 
 #import "BYScanDeviceViewController.h"
-#import "BYTableViewModel.h"
-#import "BYSectionModel.h"
-#import "BYHeaderView.h"
 #import "BYCommonMacros.h"
-#import "BYCellModel.h"
-#import <Masonry.h>
 #import "BYCommonTools.h"
-#import "BYSetDeviceViewController.h"
 #import "MinewModuleManager.h"
 #import "MinewModule.h"
-#import "BYDeviceDetailViewController.h"
 #import "MinewModuleAPI.h"
 #import "BYInfoViewController.h"
+
 #import "MTPeripheralManager.h"
 #import "AdvertiseView.h"
 #import "StartAdvertiseViewController.h"
@@ -29,12 +23,6 @@
 #define INTERVAL_KEYBOARD 0
 
 @interface BYScanDeviceViewController ()<MinewModuleManagerDelegate,UITextFieldDelegate,CAAnimationDelegate>
-
-@property (nonatomic, strong) BYTableViewModel *tvModel;
-
-@property (nonatomic, strong) UITableView *tableView;
-
-@property (nonatomic, strong) BYSectionModel *sectionModel;
 
 @property (nonatomic, strong) MinewModuleManager *manager;
 
@@ -46,6 +34,8 @@
 
 @property(nonatomic,strong) NSMutableArray *tempArr ;//存放当前扫描到的设备
 
+@property (nonatomic, strong) UILabel *showLabel;
+
 @end
 
 // iPhone bind device mac Address
@@ -55,7 +45,6 @@
     NSString *_testString;
     NSString *_deviceName;
     UIImageView *_scanBGImageView;
-    UILabel *_showLabel;
     UILabel *_titleLabel;
 
 }
@@ -90,11 +79,6 @@ static NSInteger scanCount;
 {
     [super viewWillAppear:animated];
     
-//    if (@available(iOS 11.0, *)) {
-//
-//    }else {
-//        self.automaticallyAdjustsScrollViewInsets = NO;
-//    }
 }
 
 - (void)initGUI
@@ -145,7 +129,6 @@ static NSInteger scanCount;
     [_manager startScan];
     [self scanAction];
     
-    
 #ifdef debug
 
 #else
@@ -171,23 +154,6 @@ static NSInteger scanCount;
     _showLabel.text = @"开始扫描";
 }
 
-//- (void)reloadData {
-//    __weak NSArray *weakModules = _moduleArray;
-//
-//    _tvModel.cellModel = ^( NSIndexPath *indexpath){
-//
-//        __strong NSArray *strongModules = weakModules;
-//
-//        MinewModule *module = strongModules[indexpath.row];
-//
-//        BYCellModel *cm = [[BYCellModel alloc]init];
-//        cm.title = module.name;
-//        cm.detailText = _testString;
-//        return cm;
-//    };
-//
-//}
-
 - (void)initCore
 {
     _manager = [MinewModuleManager sharedInstance];
@@ -199,7 +165,7 @@ static NSInteger scanCount;
     _manager.findDevice = ^(MinewModule *module) {
         __strong BYScanDeviceViewController *strongSelf = weakSelf;
         dispatch_async(dispatch_get_main_queue(), ^{
-            _showLabel.text = [NSString stringWithFormat:@"扫描到%@",module.name];
+            strongSelf.showLabel.text = [NSString stringWithFormat:@"扫描到%@",module.name];
             if (scanCount == 0) {
                 [SVProgressHUD showSuccessWithStatus:[NSString stringWithFormat:@"成功扫描到设备%@",module.name]];
                 
@@ -208,7 +174,7 @@ static NSInteger scanCount;
                 //                if ([module.name isEqualToString:@"HToy"]) {
                 [weakSelf startToAdertise];
                 scanCount ++;
-                [_manager stopScan];
+                [strongSelf.manager stopScan];
                 
                 //                }
                 
@@ -228,7 +194,6 @@ static NSInteger scanCount;
 - (void)reloadTableView
 {
     _moduleArray = [_manager.allModules copy];
-    _sectionModel.rowAtitude = _moduleArray.count;
     
 #warning 添加HToy的测试  记录所有的设备
     if (!_tempArr) {
@@ -246,50 +211,9 @@ static NSInteger scanCount;
 //        MinewModule *module = [_tempArr firstObject];
         
     }
-
-    
-    
-//    BYHeaderView *header = [[BYHeaderView alloc]initWithType:HeaderViewTypeNormal title:[NSString stringWithFormat:@"%@: %lu",NSLocalizedString(@"All Devices", nil), (unsigned long)_moduleArray.count]];
-//    header.tapped = ^(){ BYLog(@"don't touche me, Bitch!");};
-//    _sectionModel.header = header;
-//
-//    __weak NSArray *weakModules = _moduleArray;
-//    _tvModel.cellModel = ^( NSIndexPath *indexpath){
-//
-//        __strong NSArray *strongModules = weakModules;
-//
-//        MinewModule *module = strongModules[indexpath.row];
-//
-//        BYCellModel *cm = [[BYCellModel alloc]init];
-//        cm.title = module.name;
-//        cm.detailText = [NSString stringWithFormat:@"RSSI: %lddBm", (long)module.rssi];
-//        return cm;
-//    };
-//
-//    [_tableView reloadData];
 }
 
 - (void) startToAdertise {
-//    [_manager stopScan];
-//    MTPeripheralManager *pm = [MTPeripheralManager sharedInstance];
-//
-//    NSString *adverStr = [self hexStringFromString:_contentTF.text];
-//    NSLog(@"转换后的16进制字符串===%@",adverStr);
-//    if (_contentTF.text.length > 0) {
-//        NSString *first = [_contentTF.text substringToIndex:1];
-////        if ([first integerValue] >= [@"D" integerValue]) {
-////            first = @"D";
-////        }
-//        //        _searchstr = [NSString stringWithFormat:@"0x180%@",first];
-//
-//        pm.searchstr = [NSString stringWithFormat:@"0x180%@",first];
-//    }else {
-//        pm.searchstr = @"0x180D";
-//    }
-////    NSString *testStr = _contentTF.text.length>0?_contentTF.text:@"TestUUID_8888";
-//    [pm startAdvtising];
-    
-//    [_manager stopScan];
     
     StartAdvertiseViewController *adVC = [[StartAdvertiseViewController alloc] init];
     
@@ -315,8 +239,6 @@ static NSInteger scanCount;
     }
     return hexStr;
 }
-
-
 
 - (void)startToSetup {
     SettingViewController *setVC = [[SettingViewController alloc] init];

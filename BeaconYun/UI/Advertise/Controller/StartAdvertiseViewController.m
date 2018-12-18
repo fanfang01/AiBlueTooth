@@ -142,7 +142,7 @@ static NSInteger count = 0;
     UIImageView *backImg = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, ScreenWidth, ScreenHeight)];
     backImg.image = [[UIImage imageNamed:@"all_background"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
     [self.view addSubview:backImg];
-
+    
     
     self.view.backgroundColor = [UIColor whiteColor];
     [self.view addSubview:self.advertiseView];
@@ -158,6 +158,7 @@ static NSInteger count = 0;
         __weak StartAdvertiseViewController *weakSelf = self;
         _advertiseView.buttonBlock = ^(NSInteger index) {
             __strong StartAdvertiseViewController *strongSelf = weakSelf;
+            
             _currentIndex = index;
             
             [strongSelf sendData:index];
@@ -272,10 +273,6 @@ static NSInteger count = 0;
     }
     return tempArr;
 }
-
-
-
-
 
 #pragma mark -- Timer
 - (void)startAdvTimer {
