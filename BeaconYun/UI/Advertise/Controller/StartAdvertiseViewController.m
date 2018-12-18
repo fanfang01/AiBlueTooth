@@ -82,7 +82,7 @@ static NSInteger count = 0;
     
     [self wakeupConfiguration];
     
-//    [self recognizeConfiguration];
+    [self recognizeConfiguration];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
     
@@ -106,7 +106,12 @@ static NSInteger count = 0;
 
 - (void)recognizeConfiguration {
     _recognizeManager = [RecognizeManager sharedInstance];
+    __weak StartAdvertiseViewController *weakSelf = self;
     
+    _recognizeManager.voiceReco = ^(NSString * _Nonnull voice) {
+        __strong StartAdvertiseViewController *strongSelf = weakSelf;
+        [strongSelf voiceToAdvertise:voice];
+    };
 }
 
 - (void)applicationDidBecomeActive {
@@ -120,20 +125,35 @@ static NSInteger count = 0;
 - (void)initData {
     if (!_commandAray) {
         _commandAray = [NSMutableArray arrayWithObjects:
-                        @{@"command":@"00000000-aff4-0085-ABAC-100101010001",@"key":@"模式1"},
-                        @{@"command":@"00000000-aff4-0085-0021-fcfbfa002402",@"key":@"模式2"},
-                        @{@"command":@"00000000-aff4-0085-0021-fcfbfa002403",@"key":@"模式3"},
-                        @{@"command":@"00000000-aff4-0085-0021-fcfbfa002404",@"key":@"模式4"},
-                        @{@"command":@"00000000-aff4-0085-0021-fcfbfa002405",@"key":@"模式5"},
-                        @{@"command":@"00000000-aff4-0085-0021-fcfbfa002406",@"key":@"模式6"},
-                        @{@"command":@"00000000-aff4-0085-ABAC-100101010000",@"key":@"模式7"},
-                        @{@"command":@"00000000-aff4-0085-0021-fcfbfa002402",@"key":@"模式8"},
-                        @{@"command":@"00000000-aff4-0085-0021-fcfbfa002403",@"key":@"模式9"},
-                        @{@"command":@"00000000-aff4-0085-0021-fcfbfa002404",@"key":@"模式10"},
-                        @{@"command":@"00000000-aff4-0085-0021-fcfbfa002405",@"key":@"快点快点"},
-                        @{@"command":@"00000000-aff4-0085-0021-fcfbfa002405",@"key":@"慢点慢点"},
-                        @{@"command":@"00000000-aff4-0085-0021-fcfbfa002406",@"key":@"小康你好"}
+                        @{@"key":@"模式1"},
+                        @{@"key":@"模式2"},
+                        @{@"key":@"模式3"},
+                        @{@"key":@"模式4"},
+                        @{@"key":@"模式5"},
+                        @{@"key":@"模式6"},
+                        @{@"key":@"模式7"},
+                        @{@"key":@"模式8"},
+                        @{@"key":@"模式9"},
+                        @{@"key":@"模式10"},
+                        @{@"key":@"快点快点"},
+                        @{@"key":@"慢点慢点"},
+                        @{@"key":@"小康你好"}
                         ,nil];
+//        _commandAray = [NSMutableArray arrayWithObjects:
+//                        @{@"key":@"模式1"},
+//                        @{@"key":@"模式2"},
+//                        @{@"key":@"模式3"},
+//                        @{@"key":@"模式4"},
+//                        @{@"key":@"模式5"},
+//                        @{@"key":@"模式6"},
+//                        @{@"key":@"模式7"},
+//                        @{@"key":@"模式8"},
+//                        @{@"key":@"模式9"},
+//                        @{@"key":@"模式10"},
+//                        @{@"key":@"快点快点"},
+//                        @{@"key":@"慢点慢点"},
+//                        @{@"key":@"小康你好"}
+//                        ,nil];
     }
 }
 

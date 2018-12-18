@@ -207,7 +207,7 @@ static NSInteger scanCount;
         }
     }
     
-    if (_tempArr.count>0) {
+    if (_tempArr.count > 0) {
 //        MinewModule *module = [_tempArr firstObject];
         
     }
@@ -223,7 +223,6 @@ static NSInteger scanCount;
 }
 
 - (NSString *)hexStringFromString:(NSString *)string
-
 {
     NSData *myD = [string dataUsingEncoding:NSUTF8StringEncoding];
     Byte *bytes = (Byte *)[myD bytes];

@@ -67,8 +67,7 @@ typedef NS_ENUM(NSUInteger, CharaType) {
     
     [_manager startAdvertising:@{CBAdvertisementDataLocalNameKey: @"ASK",
                                  CBAdvertisementDataServiceUUIDsKey: @[newUuid,],
-//                                 CBAdvertisementDataIsConnectable:@(NO),
-//                                 CBAdvertisementDataManufacturerDataKey:data
+
                                  }];
 }
 
