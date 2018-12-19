@@ -226,10 +226,11 @@
     
     NSString *adName = advertisementData[CBAdvertisementDataLocalNameKey];
     
+ 
     
-//    if (![adName isEqualToString:@"HToy"])
-//    {
-//
+    if (![adName isEqualToString:@"HToy"])
+    {
+
         MinewModule *module = [self moduleExist:peripheral.identifier.UUIDString];
         
         if ( module.connecting)
@@ -248,29 +249,30 @@
                     [self.delegaate manager:self appearModules:_appearModules];
                 }];
         }
-    
-       NSString *dataString =  [MinewCommonTool getDataString:adverDataDict[adverDataDict.allKeys[0]]];
-    
-        if (dataString.length >= 10)
-        {
-            module.updateTime = [NSDate date];
-            module.peripheral = peripheral;
-            
-            NSString *battery = [dataString substringToIndex:1];
-            module.battery = [MinewCommonTool decimalFromHexString:battery];
-            
-        }
+
 
        module.inRange = YES;
        module.name = adName? adName:( name? name: @"Unnamed");
        module.rssi = [RSSI integerValue];
+        
+        NSData *data = advertisementData[CBAdvertisementDataManufacturerDataKey];
+        NSString *dataString = [MinewCommonTool getDataString:data];
+        NSLog(@"得到的字符串为::%@",dataString);
+        Byte *testByte = (Byte *)[data bytes];
+        
+        _macBytes = 0;
+        for (NSInteger i=0; i < [data length] ; i++) {
+            _macBytes += testByte[i];
+            printf("testByte = %d\n",testByte[i]);
+        }
+        NSLog(@"%d  0x%04x",_macBytes,_macBytes);
     
     NSLog(@"收到的数据====%@",advertisementData);
     if (self.findDevice) {
         self.findDevice(module);
     }
 
-//    }
+    }
 }
 
 - (void)centralManager:(CBCentralManager *)central didDisconnectPeripheral:(CBPeripheral *)peripheral error:(NSError *)error

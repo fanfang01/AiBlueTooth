@@ -59,10 +59,13 @@
     [self.asrEventManager setParameter:@(YES) forKey:BDS_ASR_ENABLE_MODEL_VAD];
     
     //4.开启语义了解
+    //开启离线语义（本地语义）
     [self.asrEventManager setParameter:@(YES) forKey:BDS_ASR_ENABLE_NLU];
     
-    [self.asrEventManager setParameter:@"15361" forKey:BDS_ASR_PRODUCT_ID];
     
+//    [self.asrEventManager setParameter:@"1536" forKey:BDS_ASR_PRODUCT_ID];
+    [self.asrEventManager setParameter:@"1537" forKey:BDS_ASR_PRODUCT_ID];
+
     //发送指令：启动识别
     [self.asrEventManager sendCommand:BDS_ASR_CMD_START];
 }
@@ -80,7 +83,7 @@
         case EVoiceRecognitionClientWorkStatusStartWorkIng:{
             NSDictionary *logDic = [self parseLogToDic:aObj];
             NSLog(@"开始识别 === %@",logDic);
-            [SVProgressHUD showSuccessWithStatus:@"开始识别"];
+//            [SVProgressHUD showSuccessWithStatus:@"开始识别"];
             
             [self onStartWorking];
             break;

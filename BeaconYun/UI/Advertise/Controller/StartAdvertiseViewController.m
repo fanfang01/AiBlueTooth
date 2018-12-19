@@ -11,6 +11,7 @@
 #import "MTPeripheralManager.h"
 #import "WakeUpManager.h"
 #import "RecognizeManager.h"
+#import "MinewModuleManager.h"
 
 //定义广播数据的结构体
 struct MyAdvDtaModel {
@@ -19,7 +20,7 @@ struct MyAdvDtaModel {
     uint8_t command_id;
     uint8_t key;
     uint8_t event_id;
-    uint8_t value[2];
+    uint16_t values;
 };
 
 //BDRecognizerViewDelegate
@@ -29,11 +30,16 @@ struct MyAdvDtaModel {
 
 @property (nonatomic, strong) NSMutableArray *commandAray;
 
+//英文指令
+@property (nonatomic, strong) NSMutableArray *enCommandAray;
+
 @property (nonatomic, strong) MTPeripheralManager *pm;
 
 @property (nonatomic, strong) WakeUpManager *wakeupManager;
 
 @property (nonatomic, strong) RecognizeManager *recognizeManager;
+
+@property (nonatomic, strong) MinewModuleManager *minewManager;
 @end
 
 @implementation StartAdvertiseViewController
@@ -73,16 +79,17 @@ static NSInteger count = 0;
     _currentIndex = 0;//default 当前选中的模式
     
     [self initData];
-    
 
     MTPeripheralManager *pm = [MTPeripheralManager sharedInstance];
     _pm = pm;
+    _minewManager = [MinewModuleManager sharedInstance];
     
     [self initView];
     
-    [self wakeupConfiguration];
-    
+//    [self wakeupConfiguration];
     [self recognizeConfiguration];
+
+    
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
     
@@ -101,6 +108,10 @@ static NSInteger count = 0;
         __strong StartAdvertiseViewController *strongSelf = weakSelf;
         
         [strongSelf voiceToAdvertise:keywords];
+        
+        
+        //语音识别
+
     };
 }
 
@@ -110,7 +121,7 @@ static NSInteger count = 0;
     
     _recognizeManager.voiceReco = ^(NSString * _Nonnull voice) {
         __strong StartAdvertiseViewController *strongSelf = weakSelf;
-        [strongSelf voiceToAdvertise:voice];
+        [strongSelf voiceToRecognize:voice];
     };
 }
 
@@ -139,21 +150,9 @@ static NSInteger count = 0;
                         @{@"key":@"慢点慢点"},
                         @{@"key":@"小康你好"}
                         ,nil];
-//        _commandAray = [NSMutableArray arrayWithObjects:
-//                        @{@"key":@"模式1"},
-//                        @{@"key":@"模式2"},
-//                        @{@"key":@"模式3"},
-//                        @{@"key":@"模式4"},
-//                        @{@"key":@"模式5"},
-//                        @{@"key":@"模式6"},
-//                        @{@"key":@"模式7"},
-//                        @{@"key":@"模式8"},
-//                        @{@"key":@"模式9"},
-//                        @{@"key":@"模式10"},
-//                        @{@"key":@"快点快点"},
-//                        @{@"key":@"慢点慢点"},
-//                        @{@"key":@"小康你好"}
-//                        ,nil];
+    }
+    if (!_enCommandAray) {
+        _enCommandAray = [NSMutableArray arrayWithObjects:@{@"key":@[@"quick",@"fast",@"increase"]},@{@"key":@[@"slow"]},@{@"key":@[@"power on"]},@{@"key":@[@"power off"]} ,@{@"key":@[@"power on"]} ,nil];
     }
 }
 
@@ -206,8 +205,7 @@ static NSInteger count = 0;
     adv.command_id = 1;
     adv.key = index+1;
     adv.event_id = count;
-    adv.value[0] = 0;
-    adv.value[1] = 0;
+    adv.values = _minewManager.macBytes;
     
     if (index < 12) {
         _is_on = YES;
@@ -229,7 +227,8 @@ static NSInteger count = 0;
         adv.key = 19;
     }
     
-    NSString *str = [NSString stringWithFormat:@"%02x%02x-%02x%02x%02x%02x%02x%02x",adv.fixedContent[0],adv.fixedContent[1],adv.productType,adv.command_id,adv.key,adv.event_id,adv.value[0],adv.value[1]];
+//    00000000-aff4-0085-0000
+    NSString *str = [NSString stringWithFormat:@"%02x%02x-%02x%02x%02x%02x%04x",adv.fixedContent[0],adv.fixedContent[1],adv.productType,adv.command_id,adv.key,adv.event_id,adv.values];
     [cmdData appendData:[str dataUsingEncoding:NSUTF8StringEncoding]];
     
     NSString *string = [[NSString alloc] initWithData:cmdData encoding:NSUTF8StringEncoding];
@@ -284,6 +283,51 @@ static NSInteger count = 0;
         }
     }
 }
+
+//voice recognize 发送指令
+- (void)voiceToRecognize:(NSString *)key {
+    NSString *recordKey = @"";
+    for (NSInteger i =0; i<_enCommandAray.count; i++) {
+        NSArray *array = _enCommandAray[i][@"key"];
+        for (NSString *okey in array) {
+            if ([okey containsString:key] || [key containsString:okey]) {
+                recordKey = okey;
+                NSInteger index = [array indexOfObject:recordKey];
+                if (index >= 0) {
+                    //开始广播
+                    //                _currentIndex = index;
+                    if (index == 0) {//fast //发送的是当前的模式
+                        _currentIndex ++;
+                        self.advertiseView.selectedIndex = _currentIndex;
+                        [self sendData:_currentIndex];
+                        break;
+                    }else if (index == 1) {//slow //发送的是当前的模式
+                        if (_currentIndex>0) {
+                            _currentIndex --;
+                            self.advertiseView.selectedIndex = _currentIndex;
+                            [self sendData:_currentIndex];
+                            break;
+                        }
+                    }else if (index == 2) {//off
+                        _is_on = !_is_on;
+                        [self.advertiseView.onSwitch setOn:_is_on];
+                        [self sendData:10];
+                        break;
+                    }else if (3 == index) {//on
+                        _is_on = !_is_on;
+                        [self.advertiseView.onSwitch setOn:_is_on];
+                        [self sendData:11];
+                    }
+                    
+                    break;
+                }
+                
+            }
+        }
+    }
+}
+
+
 
 - (NSMutableArray *)getALLKeys {
     NSMutableArray *tempArr = [NSMutableArray array];

@@ -20,6 +20,9 @@ typedef void(^VoiceWakeUp)(NSString *keywords);
 //开始唤醒
 - (void)startWakeup;
 
+//结束唤醒
+- (void)stopWakeup ;
+
 @end
 
 NS_ASSUME_NONNULL_END

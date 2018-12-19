@@ -727,7 +727,7 @@
 				TargetAttributes = {
 					E56992961E5EB60B00C76E42 = {
 						CreatedOnToolsVersion = 8.2.1;
-						DevelopmentTeam = 83VU4859BK;
+						DevelopmentTeam = KMD2P8B7WV;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
@@ -1063,7 +1063,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 83VU4859BK;
+				DEVELOPMENT_TEAM = KMD2P8B7WV;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/BeaconYun/Configs/PrefixHeader.pch";
 				INFOPLIST_FILE = "$(SRCROOT)/BeaconYun/Configs/Info.plist";
@@ -1073,7 +1073,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/BeaconYun/BaiduSDK/BDSClientLib",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.anshunkang.Aitesttest;
+				PRODUCT_BUNDLE_IDENTIFIER = com.anshunkang.Aitest;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = 1;
@@ -1087,7 +1087,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 83VU4859BK;
+				DEVELOPMENT_TEAM = KMD2P8B7WV;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/BeaconYun/Configs/PrefixHeader.pch";
 				INFOPLIST_FILE = "$(SRCROOT)/BeaconYun/Configs/Info.plist";
@@ -1097,7 +1097,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/BeaconYun/BaiduSDK/BDSClientLib",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.anshunkang.Aitesttest;
+				PRODUCT_BUNDLE_IDENTIFIER = com.anshunkang.Aitest;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = 1;

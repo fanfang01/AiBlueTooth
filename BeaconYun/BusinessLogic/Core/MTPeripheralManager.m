@@ -59,19 +59,16 @@ typedef NS_ENUM(NSUInteger, CharaType) {
     //remove all the services added before
     [_manager removeAllServices];
     
+    //没有实际意义，单纯防止意外操作，程序崩溃.
     if (_searchstr.length <= 0) {
         _searchstr = @"0xFFF0";
     }
     CBUUID *newUuid = [CBUUID UUIDWithString:_searchstr];
     
-    
-    [_manager startAdvertising:@{CBAdvertisementDataLocalNameKey: @"ASK",
+      [_manager startAdvertising:@{CBAdvertisementDataLocalNameKey: @"ASK",
                                  CBAdvertisementDataServiceUUIDsKey: @[newUuid,],
-
                                  }];
 }
-
-
 
 - (void)stopAdvertising {
     [_manager stopAdvertising];

@@ -72,6 +72,9 @@ typedef void(^FindDevice)(MinewModule *module);
 @interface MinewModuleManager : NSObject
 @property (nonatomic, copy)FindDevice findDevice;
 
+@property (nonatomic, copy)NSString *macString;
+@property (nonatomic, assign) uint16_t macBytes;
+
 // current bluetooth status
 @property (nonatomic, assign) BluetoothStatus status;
 

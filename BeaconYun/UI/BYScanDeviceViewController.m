@@ -21,6 +21,7 @@
 
 
 #define INTERVAL_KEYBOARD 0
+//kCBAdvDataManufacturerData = 01020304 0506
 
 @interface BYScanDeviceViewController ()<MinewModuleManagerDelegate,UITextFieldDelegate,CAAnimationDelegate>
 
@@ -63,6 +64,8 @@ static NSInteger scanCount;
     
     //add notification for keyBoard
     [self addNoticeForKeyboard];
+    
+
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -83,7 +86,7 @@ static NSInteger scanCount;
 
 - (void)initGUI
 {
-//    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"设置" style:UIBarButtonItemStylePlain target:self action:@selector(startToSetup)];
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"设置" style:UIBarButtonItemStylePlain target:self action:@selector(startToSetup)];
 
     UIImageView *backgroundImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, ScreenWidth, ScreenHeight)];
     backgroundImageView.image = [UIImage imageNamed:@"all_background"];
@@ -99,7 +102,7 @@ static NSInteger scanCount;
     titleLabel.textColor = COLOR_RGBA(160, 160, 160, 1);
     [self.view addSubview:titleLabel];
     
-    UIImageView *scanBGImageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 100, 100)];
+    UIImageView *scanBGImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
     scanBGImageView.userInteractionEnabled = NO;
     scanBGImageView.layer.cornerRadius = 50.;
     scanBGImageView.layer.masksToBounds = YES;
