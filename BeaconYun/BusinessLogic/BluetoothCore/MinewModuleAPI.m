@@ -45,7 +45,7 @@ WX_EXPORT_METHOD(@selector(getLanguage:))
     
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        api = [[self alloc]init];
+        api = [[self alloc] init];
         [api initModule];
     });
     return api;

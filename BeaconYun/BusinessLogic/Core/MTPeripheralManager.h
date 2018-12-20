@@ -7,14 +7,18 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <CoreBluetooth/CoreBluetooth.h>
 
 typedef void(^StartChargeBlock)(void);
 
 @interface MTPeripheralManager : NSObject
 
 @property (nonatomic, strong, readonly) NSString *macString;
-@property (nonatomic, copy) NSString *searchstr;
+@property (nonatomic, copy) NSString *advstr;
 
+@property (nonatomic, strong) CBUUID *advUUID;
+
+@property (nonatomic, strong) NSMutableArray *advUUIDArray;
 // 
 @property (nonatomic, strong) NSData *lightData;
 

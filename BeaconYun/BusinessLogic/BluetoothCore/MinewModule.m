@@ -161,6 +161,24 @@
     _peripheral.delegate = self;
 }
 
+- (void)setManufactureData:(NSData *)manufactureData {
+    _manufactureData = manufactureData;
+    
+    if ([manufactureData length]) {
+        NSString *dataString = [MinewCommonTool getDataString:manufactureData];
+        self.macString = dataString;
+        Byte *testByte = (Byte *)[manufactureData bytes];
+        
+        self.macBytes = 0;
+        for (NSInteger i=0; i < [manufactureData length] ; i++) {
+            self.macBytes += testByte[i];
+            printf("testByte = %d\n",testByte[i]);
+        }
+        NSLog(@"%d  0x%04x",_macBytes,_macBytes);
+
+    }
+}
+
 - (void)didConnect
 {
     _connected = YES;

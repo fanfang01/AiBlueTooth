@@ -37,11 +37,18 @@ typedef void(^Send)(BOOL result);
 
 @property (nonatomic, strong) NSString *customName;
 
+//目前只有MacAddress
+@property (nonatomic, strong) NSData *manufactureData;
+@property (nonatomic, strong) NSString *macString;
+@property (nonatomic, assign) uint16_t macBytes;
+
 @property (nonatomic, assign) NSInteger rssi;
 
 @property (nonatomic, assign) NSInteger battery;
 
 @property (nonatomic, assign) BOOL inRange;
+
+@property (nonatomic, assign) BOOL isBind;
 
 @property (nonatomic, assign) BOOL connected;
 

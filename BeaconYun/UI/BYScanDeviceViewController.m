@@ -172,14 +172,9 @@ static NSInteger scanCount;
             if (scanCount == 0) {
                 [SVProgressHUD showSuccessWithStatus:[NSString stringWithFormat:@"成功扫描到设备%@",module.name]];
                 
-                //                [weakSelf.manager stopScan];
-                
-                //                if ([module.name isEqualToString:@"HToy"]) {
-                [weakSelf startToAdertise];
+                [weakSelf startToAdertise:module];
                 scanCount ++;
-                [strongSelf.manager stopScan];
-                
-                //                }
+//                [strongSelf.manager stopScan];
                 
             }
         });
@@ -216,13 +211,13 @@ static NSInteger scanCount;
     }
 }
 
-- (void) startToAdertise {
+- (void) startToAdertise:(MinewModule *)module {
     
     StartAdvertiseViewController *adVC = [[StartAdvertiseViewController alloc] init];
-    
+    adVC.module = module;
     [self.navigationController pushViewController:adVC animated:YES];
     
-    [_manager stopScan];
+//    [_manager stopScan];
 }
 
 - (NSString *)hexStringFromString:(NSString *)string

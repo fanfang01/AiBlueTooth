@@ -7,11 +7,13 @@
 //
 
 #import "StartAdvertiseViewController.h"
+#import <CoreBluetooth/CoreBluetooth.h>
 #import "AdvertiseView.h"
 #import "MTPeripheralManager.h"
 #import "WakeUpManager.h"
 #import "RecognizeManager.h"
 #import "MinewModuleManager.h"
+#import "MinewModule.h"
 
 //定义广播数据的结构体
 struct MyAdvDtaModel {
@@ -28,6 +30,7 @@ struct MyAdvDtaModel {
 @interface StartAdvertiseViewController ()
 @property (nonatomic, strong) AdvertiseView *advertiseView;
 
+//中文唤醒
 @property (nonatomic, strong) NSMutableArray *commandAray;
 
 //英文指令
@@ -40,21 +43,22 @@ struct MyAdvDtaModel {
 @property (nonatomic, strong) RecognizeManager *recognizeManager;
 
 @property (nonatomic, strong) MinewModuleManager *minewManager;
+@property (nonatomic, strong) NSMutableArray *uuidArray;
 @end
 
 @implementation StartAdvertiseViewController
 {
-    BOOL _is_on;
+    BOOL _is_on;//记录开关的状态
 
-    NSTimer *_advTimer;
+    NSTimer *_advTimer;//
 
-    NSInteger _countDownTime;
+    NSInteger _countDownTime;//用于广播几秒后停止的倒计时
     
-    NSInteger _currentTime;
+    NSInteger _currentTime;//记录当前广播了多久了;
     NSInteger _currentIndex;//配合语音部分的使用
     
-    NSInteger _count;
-    NSTimer *_powerTimer;
+    NSTimer *_advCouplesTimer;
+    NSInteger _couplesTimeCount;
 }
 
 static NSInteger count = 0;
@@ -86,10 +90,9 @@ static NSInteger count = 0;
     
     [self initView];
     
-//    [self wakeupConfiguration];
-    [self recognizeConfiguration];
+    [self wakeupConfiguration];
+//    [self recognizeConfiguration];
 
-    
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
     
@@ -109,9 +112,6 @@ static NSInteger count = 0;
         
         [strongSelf voiceToAdvertise:keywords];
         
-        
-        //语音识别
-
     };
 }
 
@@ -134,6 +134,10 @@ static NSInteger count = 0;
 }
 
 - (void)initData {
+    if (!_uuidArray) {
+        _uuidArray = [NSMutableArray array];
+    }
+   
     if (!_commandAray) {
         _commandAray = [NSMutableArray arrayWithObjects:
                         @{@"key":@"模式1"},
@@ -161,7 +165,6 @@ static NSInteger count = 0;
     UIImageView *backImg = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, ScreenWidth, ScreenHeight)];
     backImg.image = [[UIImage imageNamed:@"all_background"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
     [self.view addSubview:backImg];
-    
     
     self.view.backgroundColor = [UIColor whiteColor];
     [self.view addSubview:self.advertiseView];
@@ -192,53 +195,88 @@ static NSInteger count = 0;
     [self stopTimer];
     
     count ++;
-    if (count>255) {
+    if (count > 255) {
         count = 0;
     }
-    NSMutableData *cmdData = [NSMutableData dataWithCapacity:0];
-    
-    struct MyAdvDtaModel adv = {0,0,0,0,0,0};
-    adv.fixedContent[0] = 171;
-    adv.fixedContent[1] = 172;
-    adv.productType = 16;
-    
-    adv.command_id = 1;
-    adv.key = index+1;
-    adv.event_id = count;
-    adv.values = _minewManager.macBytes;
-    
-    if (index < 12) {
-        _is_on = YES;
-        [self.advertiseView.onSwitch setOn:YES];
-    }
-    
-    if (12 == index) {//为开关机的状态
-        if (_is_on) {//开机信息
-            adv.key = 17;
-            self.advertiseView.selectedIndex = _currentIndex;
-        }else {      //关机信息
-            adv.key = 16;
-            self.advertiseView.selectedIndex = -1;
+    [_uuidArray removeAllObjects];
+    for (MinewModule *module in _minewManager.bindModules) {
+        NSMutableData *cmdData = [NSMutableData dataWithCapacity:0];
+        
+        struct MyAdvDtaModel adv = {0,0,0,0,0,0};
+        adv.fixedContent[0] = 171;
+        adv.fixedContent[1] = 172;
+        adv.productType = 16;
+        
+        adv.command_id = 1;
+        adv.key = index+1;
+        adv.event_id = count;
+        adv.values = module.macBytes;
+        
+        if (index < 12) {
+            _is_on = YES;
+            [self.advertiseView.onSwitch setOn:YES];
         }
-    }
-    else if (10 == index) {//处理增大强度模式
-        adv.key = 18;
-    }else if (11 == index) {//处理减小强度模式
-        adv.key = 19;
+        
+        if (12 == index) {//为开关机的状态
+            if (_is_on) {//开机信息
+                adv.key = _currentIndex+1;
+                self.advertiseView.selectedIndex = _currentIndex;
+            }else {      //关机信息
+                adv.key = 16;
+                self.advertiseView.selectedIndex = -1;
+            }
+        }
+        //    else if (10 == index) {//处理增大强度模式
+        //        adv.key = 18;
+        //    }else if (11 == index) {//处理减小强度模式
+        //        adv.key = 19;
+        //    }
+        
+        NSString *str = [NSString stringWithFormat:@"%02x%02x-%02x%02x%02x%02x%04x",adv.fixedContent[0],adv.fixedContent[1],adv.productType,adv.command_id,adv.key,adv.event_id,adv.values];
+        [cmdData appendData:[str dataUsingEncoding:NSUTF8StringEncoding]];
+        
+        NSString *string = [[NSString alloc] initWithData:cmdData encoding:NSUTF8StringEncoding];
+        NSString *advString = [@"00000000-aff4-0085-" stringByAppendingString:string];
+        NSLog(@"开始广播=%@",advString);
+        
+        CBUUID *newUuid = [CBUUID UUIDWithString:advString];
+        [_uuidArray addObject:newUuid];
     }
     
-//    00000000-aff4-0085-0000
-    NSString *str = [NSString stringWithFormat:@"%02x%02x-%02x%02x%02x%02x%04x",adv.fixedContent[0],adv.fixedContent[1],adv.productType,adv.command_id,adv.key,adv.event_id,adv.values];
-    [cmdData appendData:[str dataUsingEncoding:NSUTF8StringEncoding]];
+    NSLog(@"uuid的数组大小为:%ld",_uuidArray.count);
+    [self advertiseCouplesOfUUIDs];
     
-    NSString *string = [[NSString alloc] initWithData:cmdData encoding:NSUTF8StringEncoding];
-    NSString *advString = [@"00000000-aff4-0085-" stringByAppendingString:string];
-    NSLog(@"开始广播=%@",advString);
 
-    self.pm.searchstr = advString;
-    [self.pm startAdvtising];
     
     [self startAdvTimer];
+    
+}
+
+- (void)advertiseCouplesOfUUIDs {
+    [self startCouplesTimer];
+}
+
+- (void)startCouplesTimer {
+    _couplesTimeCount = 0;
+    _advCouplesTimer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(couplesAdvStart) userInfo:nil repeats:YES];
+}
+
+- (void)couplesAdvStart {
+    NSInteger count = _uuidArray.count;
+    static NSInteger i = 0;
+    if (count == i) {
+        i = 0;
+    }else{
+        _pm.advUUID = [_uuidArray objectAtIndex:i];
+        [_pm startAdvtising];
+        NSLog(@"i的大小==%ld",i);
+        i ++;
+    }
+}
+
+- (void)stopCouplesTimer {
+    [_advCouplesTimer invalidate];
+    _advCouplesTimer = nil;
 }
 
 #pragma mark -- 获取设备的信息
@@ -359,6 +397,9 @@ static NSInteger count = 0;
     _currentTime = 0;
     [_advTimer invalidate];
     _advTimer = nil;
+    
+    
+    [self stopCouplesTimer];
     NSLog(@"广播已经停止");
 }
 

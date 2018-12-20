@@ -8,6 +8,8 @@
 
 #import "MTPeripheralManagerEx.h"
 #import "MTCommonTool.h"
+#import "MinewModuleManager.h"
+#import "MinewModule.h"
 
 #define sCharacUUIDs @[@"0001", @"0002", @"0003", @"1111", @"1112"]
 
@@ -53,20 +55,12 @@ typedef NS_ENUM(NSUInteger, CharaType) {
 {
     [_manager stopAdvertising];
     
-    CBUUID *uuid = [CBUUID UUIDWithString:_searchstr];
-    NSLog(@"广播的字符串======%@",uuid.UUIDString);
     
     //remove all the services added before
     [_manager removeAllServices];
-    
-    //没有实际意义，单纯防止意外操作，程序崩溃.
-    if (_searchstr.length <= 0) {
-        _searchstr = @"0xFFF0";
-    }
-    CBUUID *newUuid = [CBUUID UUIDWithString:_searchstr];
-    
+    NSLog(@"广播的字符串===%@",_advUUID.UUIDString);
       [_manager startAdvertising:@{CBAdvertisementDataLocalNameKey: @"ASK",
-                                 CBAdvertisementDataServiceUUIDsKey: @[newUuid,],
+                                 CBAdvertisementDataServiceUUIDsKey: @[_advUUID],
                                  }];
 }
 

@@ -125,28 +125,28 @@
     
     [_bindModulesDict setValue:module forKey:module.UUID];
     
-    NSDictionary *info = nil;
-    
-    if (module.customName)
-       info = @{@"customName": module.customName};
-    else
-        info = @{@"who are you": @"i don't care."};
-
-    [_bindUUIDs setValue:info forKey:module.UUID];
-    
-    
-    if ([NSKeyedArchiver archiveRootObject:_bindUUIDs toFile:sBindDataFile])
-        NSLog(@"====Archive Bind UUIDs success!");
-    else
-        NSLog(@"====Archive Bind UUIDs failed!");
+//    NSDictionary *info = nil;
+//
+//    if (module.customName)
+//       info = @{@"customName": module.customName};
+//    else
+//        info = @{@"who are you": @"i don't care."};
+//
+//    [_bindUUIDs setValue:info forKey:module.UUID];
+//
+//
+//    if ([NSKeyedArchiver archiveRootObject:_bindUUIDs toFile:sBindDataFile])
+//        NSLog(@"====Archive Bind UUIDs success!");
+//    else
+//        NSLog(@"====Archive Bind UUIDs failed!");
 }
 
 - (void)removeBindModule:(MinewModule *)module
 {
     [_bindModulesDict removeObjectForKey:module.UUID];
     
-    [_bindUUIDs removeObjectForKey:module.UUID];
-    [NSKeyedArchiver archiveRootObject:_bindModulesDict toFile:sBindDataFile];
+//    [_bindUUIDs removeObjectForKey:module.UUID];
+//    [NSKeyedArchiver archiveRootObject:_bindModulesDict toFile:sBindDataFile];
 }
 
 
@@ -155,11 +155,12 @@
 {
     _scanning = YES;
     [self initializeTimer];
+//    [_scannedModules removeAllObjects];
     
     //指定扫描特定的服务
-    CBUUID *uuid1 = [CBUUID UUIDWithString:@"FFF0"];
-//    CBUUID *uuid2 = [CBUUID UUIDWithString:@"FEE0"];
-    NSArray *uuidArr = @[uuid1];
+//    CBUUID *uuid1 = [CBUUID UUIDWithString:@"FFF0"];
+//    NSArray *uuidArr = @[uuid1];
+    
     [MinewCommonTool onThread:_bluetoothQueue execute:^{
         [_centralManager scanForPeripheralsWithServices:nil options:@{ CBCentralManagerScanOptionAllowDuplicatesKey: @NO}];
     }];
@@ -167,7 +168,7 @@
 
 - (void)stopScan
 {
-    [_scannedModules removeAllObjects];
+//    [_scannedModules removeAllObjects];
     [_appearModules removeAllObjects];
     
     _scanning = NO;
@@ -209,32 +210,15 @@
 - (void)centralManager:(CBCentralManager *)central didDiscoverPeripheral:(CBPeripheral *)peripheral advertisementData:(NSDictionary<NSString *,id> *)advertisementData RSSI:(NSNumber *)RSSI
 {
     NSLog(@"还在持续扫描");
-    NSDictionary *adverDataDict = advertisementData[CBAdvertisementDataServiceDataKey];
-    
-//    NSString *serviceuuid = [NSString stringWithFormat:@"%@", [adverDataDict.allKeys firstObject]];
-//    
-//    NSArray *serviceuuids = @[ @"FFF0"];
-    
-//    NSUInteger index = [serviceuuids indexOfObject:serviceuuid];
     
     NSString *name = peripheral.name;
-//    if (![name isEqualToString:@"HToy"]) {
-//        return ;
-//    }
-//    NSLog(@"收到的数据====%@",advertisementData);
-
     
     NSString *adName = advertisementData[CBAdvertisementDataLocalNameKey];
     
- 
-    
-    if (![adName isEqualToString:@"HToy"])
+    if ([adName isEqualToString:@"HToy"])
     {
 
         MinewModule *module = [self moduleExist:peripheral.identifier.UUIDString];
-        
-        if ( module.connecting)
-            return ;
         
         if (!module)
         {
@@ -243,34 +227,27 @@
             
             [_appearModules addObject:module];
             [_scannedModules addObject:module];
+            module.isBind = YES;
+            [self addBindModule:module];
             
             if ([self.delegaate respondsToSelector:@selector(manager:appearModules:)])
                 [MinewCommonTool onMainThread:^{
                     [self.delegaate manager:self appearModules:_appearModules];
                 }];
+            NSLog(@"开始添加设备");
         }
-
 
        module.inRange = YES;
        module.name = adName? adName:( name? name: @"Unnamed");
        module.rssi = [RSSI integerValue];
         
         NSData *data = advertisementData[CBAdvertisementDataManufacturerDataKey];
-        NSString *dataString = [MinewCommonTool getDataString:data];
-        NSLog(@"得到的字符串为::%@",dataString);
-        Byte *testByte = (Byte *)[data bytes];
-        
-        _macBytes = 0;
-        for (NSInteger i=0; i < [data length] ; i++) {
-            _macBytes += testByte[i];
-            printf("testByte = %d\n",testByte[i]);
-        }
-        NSLog(@"%d  0x%04x",_macBytes,_macBytes);
+        module.manufactureData = data;
     
-    NSLog(@"收到的数据====%@",advertisementData);
-    if (self.findDevice) {
-        self.findDevice(module);
-    }
+        NSLog(@"收到的数据====%@",advertisementData);
+        if (self.findDevice) {
+            self.findDevice(module);
+        }
 
     }
 }
