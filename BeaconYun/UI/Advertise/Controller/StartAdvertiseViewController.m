@@ -14,6 +14,7 @@
 #import "RecognizeManager.h"
 #import "MinewModuleManager.h"
 #import "MinewModule.h"
+#import "SettingViewController.h"
 
 //定义广播数据的结构体
 struct MyAdvDtaModel {
@@ -26,6 +27,7 @@ struct MyAdvDtaModel {
 };
 
 //BDRecognizerViewDelegate
+static NSInteger i = 0;
 
 @interface StartAdvertiseViewController ()
 @property (nonatomic, strong) AdvertiseView *advertiseView;
@@ -43,7 +45,7 @@ struct MyAdvDtaModel {
 @property (nonatomic, strong) RecognizeManager *recognizeManager;
 
 @property (nonatomic, strong) MinewModuleManager *minewManager;
-@property (nonatomic, strong) NSMutableArray *uuidArray;
+@property (nonatomic, strong) NSMutableArray *uuidArray;//存放需要发送的UUID
 @end
 
 @implementation StartAdvertiseViewController
@@ -77,8 +79,8 @@ static NSInteger count = 0;
     self.title = @"开始操作";
     
     _is_on = NO;// 默认机器是关机状态
-    //设定5秒后停止广播
-    _countDownTime = 5;
+    
+    _countDownTime = 5;//设定5秒后停止广播
     _currentTime = 0;
     _currentIndex = 0;//default 当前选中的模式
     
@@ -88,6 +90,8 @@ static NSInteger count = 0;
     _pm = pm;
     _minewManager = [MinewModuleManager sharedInstance];
     
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"设置" style:UIBarButtonItemStylePlain target:self action:@selector(startToSetup)];
+
     [self initView];
     
     [self wakeupConfiguration];
@@ -97,6 +101,14 @@ static NSInteger count = 0;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
+    
+}
+
+
+- (void)startToSetup {
+    SettingViewController *setVC = [[SettingViewController alloc] init];
+    
+    [self.navigationController pushViewController:setVC animated:YES];
     
 }
 
@@ -226,11 +238,6 @@ static NSInteger count = 0;
                 self.advertiseView.selectedIndex = -1;
             }
         }
-        //    else if (10 == index) {//处理增大强度模式
-        //        adv.key = 18;
-        //    }else if (11 == index) {//处理减小强度模式
-        //        adv.key = 19;
-        //    }
         
         NSString *str = [NSString stringWithFormat:@"%02x%02x-%02x%02x%02x%02x%04x",adv.fixedContent[0],adv.fixedContent[1],adv.productType,adv.command_id,adv.key,adv.event_id,adv.values];
         [cmdData appendData:[str dataUsingEncoding:NSUTF8StringEncoding]];
@@ -246,8 +253,6 @@ static NSInteger count = 0;
     NSLog(@"uuid的数组大小为:%ld",_uuidArray.count);
     [self advertiseCouplesOfUUIDs];
     
-
-    
     [self startAdvTimer];
     
 }
@@ -256,28 +261,6 @@ static NSInteger count = 0;
     [self startCouplesTimer];
 }
 
-- (void)startCouplesTimer {
-    _couplesTimeCount = 0;
-    _advCouplesTimer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(couplesAdvStart) userInfo:nil repeats:YES];
-}
-
-- (void)couplesAdvStart {
-    NSInteger count = _uuidArray.count;
-    static NSInteger i = 0;
-    if (count == i) {
-        i = 0;
-    }else{
-        _pm.advUUID = [_uuidArray objectAtIndex:i];
-        [_pm startAdvtising];
-        NSLog(@"i的大小==%ld",i);
-        i ++;
-    }
-}
-
-- (void)stopCouplesTimer {
-    [_advCouplesTimer invalidate];
-    _advCouplesTimer = nil;
-}
 
 #pragma mark -- 获取设备的信息
 - (void)getDeviceInfo {
@@ -365,8 +348,6 @@ static NSInteger count = 0;
     }
 }
 
-
-
 - (NSMutableArray *)getALLKeys {
     NSMutableArray *tempArr = [NSMutableArray array];
     for (NSDictionary *dic in _commandAray) {
@@ -376,7 +357,7 @@ static NSInteger count = 0;
     return tempArr;
 }
 
-#pragma mark -- Timer
+#pragma mark -- 广播总时长的Timer 倒计时
 - (void)startAdvTimer {
     if (!_advTimer) {
         _advTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(startCountTimer) userInfo:nil repeats:YES];
@@ -398,9 +379,33 @@ static NSInteger count = 0;
     [_advTimer invalidate];
     _advTimer = nil;
     
-    
     [self stopCouplesTimer];
     NSLog(@"广播已经停止");
+}
+
+#pragma mark --- 多个设备广播的情况
+- (void)startCouplesTimer {
+    _couplesTimeCount = 0;
+    _advCouplesTimer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(couplesAdvStart) userInfo:nil repeats:YES];
+}
+
+- (void)couplesAdvStart {
+    NSInteger count = _uuidArray.count;
+    if (count == i) {
+        i = 0;
+    }else {
+        _pm.advUUID = [_uuidArray objectAtIndex:i];
+        [_pm startAdvtising];
+        NSLog(@"i的大小==%ld",i);
+        i ++;
+    }
+}
+
+- (void)stopCouplesTimer {
+    i = 0; //每次恢复成0，每次保证从0开始。 又一次测试的崩溃，原因可能在此
+
+    [_advCouplesTimer invalidate];
+    _advCouplesTimer = nil;
 }
 
 - (void)switchOnOff:(UISwitch *)sw {

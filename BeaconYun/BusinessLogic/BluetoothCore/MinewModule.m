@@ -151,8 +151,6 @@
     }
 }
 
-
-
 #pragma mark ***********************************Setter
 - (void)setPeripheral:(CBPeripheral *)peripheral
 {
@@ -200,6 +198,7 @@
 {
     _connecting = NO;
     _connected = NO;
+    
     [self executeConnectionHandler:NO];
 }
 

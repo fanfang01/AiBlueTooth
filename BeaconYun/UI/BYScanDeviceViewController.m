@@ -17,11 +17,9 @@
 #import "MTPeripheralManager.h"
 #import "AdvertiseView.h"
 #import "StartAdvertiseViewController.h"
-#import "SettingViewController.h"
 
 
 #define INTERVAL_KEYBOARD 0
-//kCBAdvDataManufacturerData = 01020304 0506
 
 @interface BYScanDeviceViewController ()<MinewModuleManagerDelegate,UITextFieldDelegate,CAAnimationDelegate>
 
@@ -86,7 +84,6 @@ static NSInteger scanCount;
 
 - (void)initGUI
 {
-    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"设置" style:UIBarButtonItemStylePlain target:self action:@selector(startToSetup)];
 
     UIImageView *backgroundImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, ScreenWidth, ScreenHeight)];
     backgroundImageView.image = [UIImage imageNamed:@"all_background"];
@@ -172,7 +169,7 @@ static NSInteger scanCount;
             if (scanCount == 0) {
                 [SVProgressHUD showSuccessWithStatus:[NSString stringWithFormat:@"成功扫描到设备%@",module.name]];
                 
-                [weakSelf startToAdertise:module];
+                [weakSelf startToAdertise];
                 scanCount ++;
 //                [strongSelf.manager stopScan];
                 
@@ -211,10 +208,9 @@ static NSInteger scanCount;
     }
 }
 
-- (void) startToAdertise:(MinewModule *)module {
+- (void) startToAdertise {
     
     StartAdvertiseViewController *adVC = [[StartAdvertiseViewController alloc] init];
-    adVC.module = module;
     [self.navigationController pushViewController:adVC animated:YES];
     
 //    [_manager stopScan];
@@ -237,12 +233,6 @@ static NSInteger scanCount;
     return hexStr;
 }
 
-- (void)startToSetup {
-    SettingViewController *setVC = [[SettingViewController alloc] init];
-    
-    [self.navigationController pushViewController:setVC animated:YES];
-
-}
 
 - (void)infoButtonClick:(UIButton *)sender
 {

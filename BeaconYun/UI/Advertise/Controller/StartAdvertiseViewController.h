@@ -12,7 +12,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface StartAdvertiseViewController : UIViewController
-@property (nonatomic, strong)MinewModule *module;
+
 @end
 
 NS_ASSUME_NONNULL_END

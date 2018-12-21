@@ -227,8 +227,13 @@
             
             [_appearModules addObject:module];
             [_scannedModules addObject:module];
-            module.isBind = YES;
-            [self addBindModule:module];
+            
+            //扫描到就绑定，默认全部绑定  
+            if (_bindModulesDict.count <= MAX_DEVICE) {
+                module.isBind = YES;
+                [self addBindModule:module];
+            }
+
             
             if ([self.delegaate respondsToSelector:@selector(manager:appearModules:)])
                 [MinewCommonTool onMainThread:^{
@@ -248,7 +253,6 @@
         if (self.findDevice) {
             self.findDevice(module);
         }
-
     }
 }
 

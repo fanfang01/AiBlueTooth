@@ -30,6 +30,8 @@
 #define SECRET_KEY @"ooDetcOCZyUyTYdtWpsXgG4iw3zih1aH"
 #define APP_ID @"15058256"
 
+#define MAX_DEVICE 10 //能添加的最大设备数
+
 // Include any system framework and library headers here that should be included in all compilation units.
 // You will also need to set the Prefix Header build setting of one or more of your targets to reference this file.
 
