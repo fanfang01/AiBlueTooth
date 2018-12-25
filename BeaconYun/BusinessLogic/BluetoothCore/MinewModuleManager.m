@@ -134,7 +134,7 @@
     
     if (module ) {
         NSDictionary *info = @{@"customName": module.name,@"is_bind":@(module.isBind),@"macString":module.macString,@"macByte":@(module.macBytes)};
-//        NSData *data = [NSKeyedArchiver archivedDataWithRootObject:module];
+
         [_bindModulesDict setValue:info forKey:module.macString];
     }
     NSUserDefaults *stand = [NSUserDefaults standardUserDefaults];

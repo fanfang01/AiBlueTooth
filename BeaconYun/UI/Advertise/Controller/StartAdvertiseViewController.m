@@ -113,8 +113,7 @@ static NSInteger count = 0;
     
     [self initData];
 
-    MTPeripheralManager *pm = [MTPeripheralManager sharedInstance];
-    _pm = pm;
+    _pm = [MTPeripheralManager sharedInstance];
     _minewManager = [MinewModuleManager sharedInstance];
     
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"设置" style:UIBarButtonItemStylePlain target:self action:@selector(startToSetup)];
