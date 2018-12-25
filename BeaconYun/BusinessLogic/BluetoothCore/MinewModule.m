@@ -221,5 +221,14 @@
     return [NSDictionary dictionaryWithDictionary:infoOut];
 }
 
-
+//- (void)encodeWithCoder:(NSCoder *)aCoder {
+//    [self mj_encode:aCoder];
+//}
+//
+//- (nullable instancetype)initWithCoder:(NSCoder *)aDecoder {
+//    if (self = [super init]) {
+//        [self mj_decode:aDecoder];
+//    }
+//    return self;
+//}
 @end

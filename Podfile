@@ -3,4 +3,5 @@ target 'BeaconYun' do
   pod 'WeexSDK'
   pod 'SDWebImage', '3.7.5'
   pod 'SVProgressHUD'
+  pod 'MJExtension'
 end

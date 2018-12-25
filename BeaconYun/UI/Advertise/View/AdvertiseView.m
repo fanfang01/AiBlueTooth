@@ -186,12 +186,19 @@
             selectedIndex = 0;
         }
     }
+    if (selectedIndex == self.imageArray.count ) {
+        selectedIndex = 10;
+        [SVProgressHUD showSuccessWithStatus:[NSString stringWithFormat:@"最大模式为%ld",(long)self.imageArray.count]];
+        [self SVDismiss];
+        return;
+    }
     if (selectedIndex > self.imageArray.count) {
         selectedIndex = self.imageArray.count - 1;
     }
     _selectedIndex = selectedIndex;
     
     [SVProgressHUD showSuccessWithStatus:[NSString stringWithFormat:@"当前模式为%ld",(long)_selectedIndex+1]];
+    [self SVDismiss];
 
     UIButton *selBtn = self.totalsBtnArray[selectedIndex];
     ShakeSelectView *shakeView = (ShakeSelectView *)[selBtn.superview superview];
@@ -202,10 +209,10 @@
     
 }
 
-//- (void)buttonClick:(UIButton *)btn {
-//    NSInteger index = btn.tag - 100;
-//    if (self.buttonBlock) {
-//        self.buttonBlock(index);
-//    }
-//}
+- (void)SVDismiss {
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [SVProgressHUD dismiss];
+    });
+}
+
 @end

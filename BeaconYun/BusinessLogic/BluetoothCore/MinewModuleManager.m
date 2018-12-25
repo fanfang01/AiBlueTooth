@@ -58,7 +58,14 @@
 {
     _scannedModules = [[NSMutableArray alloc]init];
     _appearModules = [[NSMutableArray alloc]init];
-    _bindModulesDict = [[NSMutableDictionary alloc]init];
+    if (!_bindModulesDict) {
+        _bindModulesDict = [[NSMutableDictionary alloc]init];
+    }
+    NSUserDefaults *stand = [NSUserDefaults standardUserDefaults];
+    NSDictionary *dic = [stand objectForKey:BIND_DATA];
+    if (dic) {
+        _bindModulesDict = [NSMutableDictionary dictionaryWithDictionary:dic];
+    }
     _bindUUIDs = [[NSMutableDictionary alloc]init];
     _connectingModuleDict = [NSMutableDictionary dictionary];
     
@@ -123,30 +130,32 @@
 - (void)addBindModule:(MinewModule *)module
 {
     
-    [_bindModulesDict setValue:module forKey:module.UUID];
+//    [_bindModulesDict setValue:module forKey:module.UUID];
     
-//    NSDictionary *info = nil;
-//
-//    if (module.customName)
-//       info = @{@"customName": module.customName};
-//    else
-//        info = @{@"who are you": @"i don't care."};
-//
-//    [_bindUUIDs setValue:info forKey:module.UUID];
-//
-//
-//    if ([NSKeyedArchiver archiveRootObject:_bindUUIDs toFile:sBindDataFile])
-//        NSLog(@"====Archive Bind UUIDs success!");
-//    else
-//        NSLog(@"====Archive Bind UUIDs failed!");
+    if (module ) {
+        NSDictionary *info = @{@"customName": module.name,@"is_bind":@(module.isBind),@"macString":module.macString,@"macByte":@(module.macBytes)};
+//        NSData *data = [NSKeyedArchiver archivedDataWithRootObject:module];
+        [_bindModulesDict setValue:info forKey:module.macString];
+    }
+    NSUserDefaults *stand = [NSUserDefaults standardUserDefaults];
+    [stand setObject:_bindModulesDict forKey:BIND_DATA];
+    
+    BOOL archiveSuccess = [NSKeyedArchiver archiveRootObject:_bindModulesDict toFile:sBindDataFile];
+    if (archiveSuccess)
+        NSLog(@"====Archive Bind UUIDs success!");
+    else
+        NSLog(@"====Archive Bind UUIDs failed!");
 }
 
 - (void)removeBindModule:(MinewModule *)module
 {
-    [_bindModulesDict removeObjectForKey:module.UUID];
+    [_bindModulesDict removeObjectForKey:module.macString];
     
-//    [_bindUUIDs removeObjectForKey:module.UUID];
-//    [NSKeyedArchiver archiveRootObject:_bindModulesDict toFile:sBindDataFile];
+//    [_bindUUIDs removeObjectForKey:module.macString];
+    [NSKeyedArchiver archiveRootObject:_bindModulesDict toFile:sBindDataFile];
+    
+    NSUserDefaults *stand = [NSUserDefaults standardUserDefaults];
+    [stand setObject:_bindModulesDict forKey:BIND_DATA];
 }
 
 
@@ -228,11 +237,12 @@
             [_appearModules addObject:module];
             [_scannedModules addObject:module];
             
-            //扫描到就绑定，默认全部绑定  
-            if (_bindModulesDict.count <= MAX_DEVICE) {
-                module.isBind = YES;
-                [self addBindModule:module];
-            }
+            module.isBind = NO;
+//            //扫描到就绑定，默认全部绑定
+//            if (_bindModulesDict.count <= MAX_DEVICE) {
+//                module.isBind = YES;
+//                [self addBindModule:module];
+//            }
 
             
             if ([self.delegaate respondsToSelector:@selector(manager:appearModules:)])

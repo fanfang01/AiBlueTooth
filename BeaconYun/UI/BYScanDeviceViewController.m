@@ -168,6 +168,9 @@ static NSInteger scanCount;
             strongSelf.showLabel.text = [NSString stringWithFormat:@"扫描到%@",module.name];
             if (scanCount == 0) {
                 [SVProgressHUD showSuccessWithStatus:[NSString stringWithFormat:@"成功扫描到设备%@",module.name]];
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    [SVProgressHUD dismiss];
+                });
                 
                 [weakSelf startToAdertise];
                 scanCount ++;

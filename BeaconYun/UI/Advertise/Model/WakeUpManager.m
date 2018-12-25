@@ -90,7 +90,7 @@
             //            if (self.continueToVR) {
             //                self.continueToVR = NO;
             NSString *key = [NSString stringWithFormat:@"%@",((NSString *)aObj)];
-            [SVProgressHUD showSuccessWithStatus:key];
+//            [SVProgressHUD showSuccessWithStatus:key];
 //            [self.asrEventManager setParameter:@(YES) forKey:BDS_ASR_NEED_CACHE_AUDIO];
 //            [self.asrEventManager setParameter:aObj forKey:BDS_ASR_OFFLINE_ENGINE_TRIGGERED_WAKEUP_WORD];
 //            [self voiceRecogButtonHelper];

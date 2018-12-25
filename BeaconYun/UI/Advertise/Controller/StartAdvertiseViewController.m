@@ -73,6 +73,33 @@ static NSInteger count = 0;
     [_pm stopAdvertising];
 }
 
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    
+    [self isExistsBindDevicesToAdvertise];
+}
+
+- (void)isExistsBindDevicesToAdvertise {
+    MinewModuleManager *manager = [MinewModuleManager sharedInstance];
+    NSArray *bindArray = manager.bindModules;
+    if (0 == bindArray.count) {
+        [self showNoDeviceAlert];
+    }
+}
+
+- (void)showNoDeviceAlert {
+    UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"温馨提示" message:@"你还没有绑定设备，快去绑定吧!" preferredStyle:UIAlertControllerStyleAlert];
+    
+    UIAlertAction *confirmAction = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        [self startToSetup];
+    }];
+    
+    [alertVC addAction:confirmAction];
+    
+    [self.navigationController presentViewController:alertVC animated:YES completion:nil];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     
@@ -204,6 +231,8 @@ static NSInteger count = 0;
 
 #pragma mark -- 发送广播数据
 - (void)sendData:(NSInteger)index {
+    [self isExistsBindDevicesToAdvertise];
+
     [self stopTimer];
     
     count ++;
@@ -211,7 +240,7 @@ static NSInteger count = 0;
         count = 0;
     }
     [_uuidArray removeAllObjects];
-    for (MinewModule *module in _minewManager.bindModules) {
+    for (NSDictionary *info in _minewManager.bindModules) {
         NSMutableData *cmdData = [NSMutableData dataWithCapacity:0];
         
         struct MyAdvDtaModel adv = {0,0,0,0,0,0};
@@ -222,7 +251,7 @@ static NSInteger count = 0;
         adv.command_id = 1;
         adv.key = index+1;
         adv.event_id = count;
-        adv.values = module.macBytes;
+        adv.values = [info[@"macByte"] intValue];
         
         if (index < 12) {
             _is_on = YES;
