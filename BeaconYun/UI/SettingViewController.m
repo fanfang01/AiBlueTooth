@@ -67,6 +67,31 @@
         }
         [button addTarget:self action:@selector(buttonClick:) forControlEvents:UIControlEventTouchUpInside];
     }
+    
+    NSArray *bindNotinRangeArr = [[MinewModuleManager sharedInstance] isExisModuleOutofSacnnedModules];
+    for (NSInteger i=0; i<bindNotinRangeArr.count; i++) {
+        NSDictionary *info = bindNotinRangeArr[i];
+        
+        UIButton *button = [UIButton buttonWithType:UIButtonTypeSystem];
+        [button setFrame:CGRectMake(10+(buttonWidth+20)*(i%2), 100+(buttonHeight+10)*(i/2+_allDevicesArray.count%2), buttonWidth, buttonHeight)];
+        
+        [button setTitle:info[@"customName"] forState:UIControlStateNormal];
+        [button setTitleColor:UIColor.blueColor forState:UIControlStateNormal];
+        button.backgroundColor = [UIColor lightGrayColor];
+        button.layer.cornerRadius = 10;
+        button.layer.masksToBounds = YES;
+        [self.view addSubview:button];
+        button.tag = 110 + i;
+        
+        [button addTarget:self action:@selector(offlineModuleAction:) forControlEvents:UIControlEventTouchUpInside];
+    }
+
+    NSLog(@"共有%ld个未扫描到的设备",bindNotinRangeArr.count);
+}
+
+- (void)offlineModuleAction:(UIButton *)btn {
+//    NSInteger index = btn.tag - 110;
+    [SVProgressHUD showErrorWithStatus:@"此设备没有开机或不在范围内,不可选择"];
 }
 
 - (void) initData {
@@ -108,6 +133,7 @@
     });
 }
 
+//在扫描的队列里，是否存在绑定的设备
 - (BOOL)isExistsModule:(MinewModule *)module {
     
         for (NSDictionary *info in _bindArray) {
@@ -125,9 +151,22 @@
 }
 
 - (void) clearAllSelectedDevices {
-    NSUserDefaults *stand = [NSUserDefaults standardUserDefaults];
     
-    [stand removeObjectForKey:BIND_DATA];
+    UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"提示" message:@"你确定要清除所有的绑定的设备吗?" preferredStyle:UIAlertControllerStyleAlert];
+    
+    UIAlertAction *confirmAction = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        [[MinewModuleManager sharedInstance] removeAllBindModules];
+        
+        for (UIView *subView in self.view.subviews) {
+            [subView removeFromSuperview];
+        }
+        [self initView];
+    }];
 
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil];
+    
+    [alertVC addAction:confirmAction];
+    [alertVC addAction:cancelAction];
+    [self.navigationController presentViewController:alertVC animated:YES completion:nil];
 }
 @end

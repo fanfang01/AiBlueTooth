@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		282D97F421B7D404004E9D39 /* WakeUp.bin in Resources */ = {isa = PBXBuildFile; fileRef = 282D97F321B7D404004E9D39 /* WakeUp.bin */; };
+		2838681321D61EBF00C56480 /* WakeUp-ch.bin in Resources */ = {isa = PBXBuildFile; fileRef = 2838681221D61EBF00C56480 /* WakeUp-ch.bin */; };
 		286D6B1021B7AC2F000DB7C8 /* MTBeaconManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 286D6B0C21B7AC2F000DB7C8 /* MTBeaconManager.m */; };
 		286D6B1121B7AC2F000DB7C8 /* MTCommonTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 286D6B0D21B7AC2F000DB7C8 /* MTCommonTool.m */; };
 		286D6B1221B7AC2F000DB7C8 /* MTPeripheralManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 286D6B0E21B7AC2F000DB7C8 /* MTPeripheralManager.m */; };
@@ -96,6 +97,7 @@
 
 /* Begin PBXFileReference section */
 		282D97F321B7D404004E9D39 /* WakeUp.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; path = WakeUp.bin; sourceTree = "<group>"; };
+		2838681221D61EBF00C56480 /* WakeUp-ch.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; path = "WakeUp-ch.bin"; sourceTree = "<group>"; };
 		286D6B0921B7AC2F000DB7C8 /* MTPeripheralManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTPeripheralManager.h; sourceTree = "<group>"; };
 		286D6B0A21B7AC2F000DB7C8 /* MTCommonTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTCommonTool.h; sourceTree = "<group>"; };
 		286D6B0B21B7AC2F000DB7C8 /* MTBeaconManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTBeaconManager.h; sourceTree = "<group>"; };
@@ -281,6 +283,7 @@
 		286D6B3521B7B2A7000DB7C8 /* BaiduSDK */ = {
 			isa = PBXGroup;
 			children = (
+				2838681221D61EBF00C56480 /* WakeUp-ch.bin */,
 				282D97F321B7D404004E9D39 /* WakeUp.bin */,
 				286D6B3621B7B2D3000DB7C8 /* BDSClientHeaders */,
 				286D6B7621B7B2D6000DB7C8 /* BDSClientLib */,
@@ -789,6 +792,7 @@
 				E5A7E1E81E60251900D72212 /* InfoPlist.strings in Resources */,
 				286D6B8221B7B2D6000DB7C8 /* bds_easr_dnn_wakeup_model.dat in Resources */,
 				286D6B7921B7B2D6000DB7C8 /* .gitIgnore in Resources */,
+				2838681321D61EBF00C56480 /* WakeUp-ch.bin in Resources */,
 				286D6B8121B7B2D6000DB7C8 /* bds_easr_wakeup_words.dat in Resources */,
 				286D6B3321B7AD1B000DB7C8 /* shake.xcassets in Resources */,
 				E56992F01E5EB97100C76E42 /* BYCustomConfig.plist in Resources */,

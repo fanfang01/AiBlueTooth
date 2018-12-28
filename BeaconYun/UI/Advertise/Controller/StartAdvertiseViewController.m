@@ -83,6 +83,7 @@ static NSInteger count = 0;
 - (void)isExistsBindDevicesToAdvertise {
     MinewModuleManager *manager = [MinewModuleManager sharedInstance];
     NSArray *bindArray = manager.bindModules;
+    
     if (0 == bindArray.count) {
         [self showNoDeviceAlert];
     }
@@ -228,6 +229,15 @@ static NSInteger count = 0;
     return _advertiseView;
 }
 
+//test 剔除不在范围内的 Module
+- (NSMutableArray *)allInBoundsModules {
+    NSMutableArray *allBindArr = [NSMutableArray arrayWithArray:_minewManager.bindModules];
+    //test 剔除不在范围内的 Module
+    NSArray *outOfBoundsArr = [_minewManager isExisModuleOutofSacnnedModules];
+    [allBindArr removeObjectsInArray:outOfBoundsArr];
+    return allBindArr;
+}
+
 #pragma mark -- 发送广播数据
 - (void)sendData:(NSInteger)index {
     [self isExistsBindDevicesToAdvertise];
@@ -239,7 +249,13 @@ static NSInteger count = 0;
         count = 0;
     }
     [_uuidArray removeAllObjects];
-    for (NSDictionary *info in _minewManager.bindModules) {
+    
+    NSMutableArray *allBindArr = [NSMutableArray arrayWithArray:_minewManager.bindModules];
+    
+    NSArray *outOfBoundsArr = [_minewManager isExisModuleOutofSacnnedModules];
+    [allBindArr removeObjectsInArray:outOfBoundsArr];
+    
+    for (NSDictionary *info in allBindArr) {
         NSMutableData *cmdData = [NSMutableData dataWithCapacity:0];
         
         struct MyAdvDtaModel adv = {0,0,0,0,0,0};
@@ -289,7 +305,6 @@ static NSInteger count = 0;
     [self startCouplesTimer];
 }
 
-
 #pragma mark -- 获取设备的信息
 - (void)getDeviceInfo {
     //0x21
@@ -310,16 +325,24 @@ static NSInteger count = 0;
 //                _currentIndex = index;
                 if (index == 10) {//fast //发送的是当前的模式
                     _currentIndex ++;
+
                     self.advertiseView.selectedIndex = _currentIndex;
+                    if (_currentIndex>9) {
+                        _currentIndex = 9;
+                    }
+
                     [self sendData:_currentIndex];
                     break;
                 }else if (index == 11) {//slow //发送的是当前的模式
-                    if (_currentIndex>0) {
-                        _currentIndex --;
-                        self.advertiseView.selectedIndex = _currentIndex;
-                        [self sendData:_currentIndex];
-                        break;
+                    _currentIndex --;
+                    if (_currentIndex < 0) {
+                        _currentIndex = 0;
                     }
+                    self.advertiseView.selectedIndex = _currentIndex;
+                    
+                    [self sendData:_currentIndex];
+
+                      break;
                 }else if (index == 12) {
                     _is_on = !_is_on;
                     [self.advertiseView.onSwitch setOn:_is_on];

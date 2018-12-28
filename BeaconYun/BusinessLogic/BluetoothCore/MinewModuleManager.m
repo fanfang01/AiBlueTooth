@@ -158,6 +158,13 @@
     [stand setObject:_bindModulesDict forKey:BIND_DATA];
 }
 
+- (void)removeAllBindModules {
+    
+    NSUserDefaults *stand = [NSUserDefaults standardUserDefaults];
+    
+    [stand removeObjectForKey:BIND_DATA];
+    [_bindModulesDict removeAllObjects];
+}
 
 #pragma mark ********************************Public
 - (void)startScan
@@ -268,7 +275,7 @@
 
 - (void)centralManager:(CBCentralManager *)central didDisconnectPeripheral:(CBPeripheral *)peripheral error:(NSError *)error
 {
-    MinewModule *module = _connectingModuleDict[peripheral.identifier.UUIDString];;
+    MinewModule *module = _connectingModuleDict[peripheral.identifier.UUIDString];
     
     if (module)
     {
@@ -445,6 +452,28 @@
            [self.delegaate manager:self didChangeModule:module linkStatus:status];
        }];
     }
+}
+
+- (NSArray *)isExisModuleOutofSacnnedModules {
+    NSMutableArray *tempArr = [NSMutableArray array];
+    
+    for (NSInteger i = 0; i < self.bindModules.count; i++) {
+        NSDictionary *info = self.bindModules[i];
+        
+        for (NSInteger j=0; j<_scannedModules.count; j++) {
+            MinewModule *module = _scannedModules[j];
+            
+            if ([info[@"macString"] isEqualToString:module.macString]) {
+                break;
+            }else {
+                if (j == _scannedModules.count-1) {
+                    [tempArr addObject:info];
+                }
+            }
+        }
+    }
+    
+    return tempArr;
 }
 
 

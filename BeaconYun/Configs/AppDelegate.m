@@ -23,8 +23,8 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    BYScanDeviceViewController *dvc = [[BYScanDeviceViewController alloc]init];
-    BYNavigationController *nvc = [[BYNavigationController alloc]initWithRootViewController:dvc];
+    BYScanDeviceViewController *dvc = [[BYScanDeviceViewController alloc] init];
+    BYNavigationController *nvc = [[BYNavigationController alloc] initWithRootViewController:dvc];
     nvc.navigationBar.barTintColor = [UIColor colorWithRed:0.20 green:0.20 blue:0.20 alpha:1.00];
     nvc.navigationBar.translucent = NO;
     nvc.navigationBar.titleTextAttributes = @{NSForegroundColorAttributeName: [UIColor whiteColor]};

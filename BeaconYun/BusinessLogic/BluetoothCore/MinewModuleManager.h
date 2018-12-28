@@ -106,7 +106,11 @@ typedef void(^FindDevice)(MinewModule *module);
 
 - (void)removeBindModule:(MinewModule *)module;
 
+- (void)removeAllBindModules;
+
 //
 - (MinewModule *)moduleExist:(NSString *)uuid;
+
+- (NSArray *)isExisModuleOutofSacnnedModules;
 
 @end
