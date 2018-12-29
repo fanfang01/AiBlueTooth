@@ -27,6 +27,11 @@
     
     [self initCore];
     [self initData];
+    
+    UIImageView *backImg = [[UIImageView alloc] initWithFrame:[UIScreen mainScreen].bounds];
+    [backImg setImage:[UIImage imageNamed:@"all_background"]];
+    [self.view addSubview:backImg];
+    
     [self initView];
     
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"清空" style:UIBarButtonItemStylePlain target:self action:@selector(clearAllSelectedDevices)];
@@ -41,9 +46,7 @@
 }
 
 - (void) initView {
-    UIImageView *backImg = [[UIImageView alloc] initWithFrame:[UIScreen mainScreen].bounds];
-    [backImg setImage:[UIImage imageNamed:@"all_background"]];
-    [self.view addSubview:backImg];
+    
     
     CGFloat buttonWidth = (ScreenWidth-40)/2;
     CGFloat buttonHeight = 50;
@@ -158,7 +161,13 @@
         [[MinewModuleManager sharedInstance] removeAllBindModules];
         
         for (UIView *subView in self.view.subviews) {
-            [subView removeFromSuperview];
+            if ([subView isKindOfClass:[UIButton class]]) {
+                [subView removeFromSuperview];
+            }
+        }
+        _bindArray = _manager.bindModules;
+        for (MinewModule *module in _allDevicesArray) {
+            module.isBind = NO;
         }
         [self initView];
     }];

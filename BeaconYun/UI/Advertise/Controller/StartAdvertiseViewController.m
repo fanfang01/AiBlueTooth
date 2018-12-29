@@ -71,6 +71,9 @@ static NSInteger count = 0;
     
     //退出页面，停止广播
     [_pm stopAdvertising];
+    
+    //
+    [self stopTimer];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -191,7 +194,7 @@ static NSInteger count = 0;
                         @{@"key":@"模式10"},
                         @{@"key":@"快点快点"},
                         @{@"key":@"慢点慢点"},
-                        @{@"key":@"小康你好"}
+                        @{@"key":@"小爱你好"}
                         ,nil];
     }
     if (!_enCommandAray) {

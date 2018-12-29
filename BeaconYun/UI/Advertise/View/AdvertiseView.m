@@ -128,7 +128,7 @@
     
     if (index == self.imageArray.count ) {
         UILabel *nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(horSpacing+(viewWidth+imageSpacing)*2-50, 50 + (viewHeight+verSpacing)*(index/3)+20, 50, 37)];
-        nameLabel.text = @"开/关";
+        nameLabel.text = NSLocalizedString(@"开/关", nil);
         nameLabel.font = [UIFont systemFontOfSize:13];
         nameLabel.textColor = [UIColor whiteColor];
         [_scrollView addSubview:nameLabel];
