@@ -18,7 +18,7 @@
 
 
 @interface MinewModuleManager () <CBCentralManagerDelegate>
-
+@property (nonatomic, strong) NSMutableArray *disappearModules;
 @end
 
 @implementation MinewModuleManager
@@ -58,6 +58,7 @@
 {
     _scannedModules = [[NSMutableArray alloc]init];
     _appearModules = [[NSMutableArray alloc]init];
+    _disappearModules = [NSMutableArray array];
     if (!_bindModulesDict) {
         _bindModulesDict = [[NSMutableDictionary alloc]init];
     }
@@ -235,22 +236,16 @@
     {
 
         MinewModule *module = [self moduleExist:peripheral.identifier.UUIDString];
-        
+
         if (!module)
         {
-            module = [[MinewModule alloc]init];
+            module = [[MinewModule alloc] init];
             module.peripheral = peripheral;
             
             [_appearModules addObject:module];
             [_scannedModules addObject:module];
             
             module.isBind = NO;
-//            //扫描到就绑定，默认全部绑定
-//            if (_bindModulesDict.count <= MAX_DEVICE) {
-//                module.isBind = YES;
-//                [self addBindModule:module];
-//            }
-
             
             if ([self.delegaate respondsToSelector:@selector(manager:appearModules:)])
                 [MinewCommonTool onMainThread:^{
@@ -258,7 +253,11 @@
                 }];
             NSLog(@"开始添加设备");
         }
-
+        //如果再次扫描到了，
+        if ([_disappearModules containsObject:module]) {
+            [_disappearModules removeObject:module];
+        }
+        module.updateTime = [NSDate date];
        module.inRange = YES;
        module.name = adName? adName:( name? name: @"Unnamed");
        module.rssi = [RSSI integerValue];
@@ -367,6 +366,19 @@
     return nil;
 }
 
+- (MinewModule *)moduleExistInDisappearModule:(NSString *)macString
+{
+    
+    for ( NSInteger i = 0; i < _scannedModules.count; i ++)
+    {
+        MinewModule *module = _scannedModules[i];
+        if ([module.macString isEqualToString:macString])
+            return module;
+    }
+    
+    return nil;
+}
+
 - (void)handleModules
 {
     // handle disappear beacons
@@ -375,12 +387,12 @@
     {
         static NSInteger count = 0;
         
-        if ( count > 8)
+        if ( count > 3)
         {
             disappearHandling = YES;
             
             NSArray *moduleArray = _scannedModules;
-            NSMutableArray *disappearmodules = [[NSMutableArray alloc]init];
+            [_disappearModules removeAllObjects];
             
             for ( NSInteger i = 0; i < moduleArray.count; i ++)
             {
@@ -388,19 +400,24 @@
                 
                 NSTimeInterval interval = [module.updateTime timeIntervalSinceNow];
                 
-                if ( interval < -10)
+                if ( interval < -3)
                 {
                     module.inRange = NO;
-                    [disappearmodules addObject:module];
+                    [_disappearModules addObject:module];
                 }
             }
             
-            if ( disappearmodules.count && [self.delegaate respondsToSelector:@selector(manager:disappearModules:)])
+            for (MinewModule *disModule in _disappearModules) {
+//                [_scannedModules removeObject:disModule];
+            }
+            
+            if (  [self.delegaate respondsToSelector:@selector(manager:disappearModules:)])
             {
                 [MinewCommonTool onMainThread:^{
-                    [self.delegaate manager:self disappearModules:disappearmodules];
+                    [self.delegaate manager:self disappearModules:_disappearModules];
                 }];
             }
+            
             
             disappearHandling = NO;
             count = -1;
@@ -476,5 +493,24 @@
     return tempArr;
 }
 
+- (NSArray *)advertiseModuleArray {
+    NSMutableArray *array = [_scannedModules mutableCopy];
+    
+    NSArray *tempArr = [self isExisModuleOutofSacnnedModules];
+    
+    for (NSInteger i = 0; i < tempArr.count; i++) {
+        NSDictionary *info = tempArr[i];
+        
+        for (NSInteger j=0; j<_scannedModules.count; j++) {
+            MinewModule *module = _scannedModules[j];
+            
+            if ([info[@"macString"] isEqualToString:module.macString]) {
+                [array removeObject:module];
+            }
+        }
+    }
+    
+    return array;
+}
 
 @end

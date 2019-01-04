@@ -136,6 +136,9 @@ static NSInteger count = 0;
 
 
 - (void)startToSetup {
+    
+    [self stopTimer];
+    
     SettingViewController *setVC = [[SettingViewController alloc] init];
     
     [self.navigationController pushViewController:setVC animated:YES];
@@ -197,9 +200,9 @@ static NSInteger count = 0;
                         @{@"key":@"小爱你好"}
                         ,nil];
     }
-    if (!_enCommandAray) {
-        _enCommandAray = [NSMutableArray arrayWithObjects:@{@"key":@[@"quick",@"fast",@"increase"]},@{@"key":@[@"slow"]},@{@"key":@[@"power on"]},@{@"key":@[@"power off"]} ,@{@"key":@[@"power on"]} ,nil];
-    }
+//    if (!_enCommandAray) {
+//        _enCommandAray = [NSMutableArray arrayWithObjects:@{@"key":@[@"quick",@"fast",@"increase"]},@{@"key":@[@"slow"]},@{@"key":@[@"power on"]},@{@"key":@[@"power off"]} ,@{@"key":@[@"power on"]} ,nil];
+//    }
 }
 
 - (void)initView {

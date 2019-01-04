@@ -113,4 +113,6 @@ typedef void(^FindDevice)(MinewModule *module);
 
 - (NSArray *)isExisModuleOutofSacnnedModules;
 
+//除掉不在范围内的广播
+- (NSArray *)advertiseModuleArray;
 @end

@@ -51,6 +51,8 @@
 		286D6BC021B7B771000DB7C8 /* StartAdvertiseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 286D6BB921B7B771000DB7C8 /* StartAdvertiseViewController.m */; };
 		286D6BC121B7B771000DB7C8 /* AdvertiseView.m in Sources */ = {isa = PBXBuildFile; fileRef = 286D6BBC21B7B771000DB7C8 /* AdvertiseView.m */; };
 		286D6BC221B7B771000DB7C8 /* ShakeSelectView.m in Sources */ = {isa = PBXBuildFile; fileRef = 286D6BBD21B7B771000DB7C8 /* ShakeSelectView.m */; };
+		28D9C96821DCCAEF004A552B /* SettingCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 28D9C96621DCCAEF004A552B /* SettingCollectionViewCell.m */; };
+		28D9C96921DCCAEF004A552B /* SettingCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 28D9C96721DCCAEF004A552B /* SettingCollectionViewCell.xib */; };
 		28FE6DE821C8A354008ED44F /* WakeUpManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 28FE6DE521C8A354008ED44F /* WakeUpManager.m */; };
 		28FE6DE921C8A354008ED44F /* RecognizeManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 28FE6DE721C8A354008ED44F /* RecognizeManager.m */; };
 		B1CFC9764E4898520C187548 /* libPods-BeaconYun.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F5851AABDA97E315A353A0BF /* libPods-BeaconYun.a */; };
@@ -172,6 +174,9 @@
 		286D6BBD21B7B771000DB7C8 /* ShakeSelectView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShakeSelectView.m; sourceTree = "<group>"; };
 		286D6BBE21B7B771000DB7C8 /* AdvertiseView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AdvertiseView.h; sourceTree = "<group>"; };
 		286D6BBF21B7B771000DB7C8 /* ShakeSelectView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShakeSelectView.h; sourceTree = "<group>"; };
+		28D9C96521DCCAEF004A552B /* SettingCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SettingCollectionViewCell.h; sourceTree = "<group>"; };
+		28D9C96621DCCAEF004A552B /* SettingCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SettingCollectionViewCell.m; sourceTree = "<group>"; };
+		28D9C96721DCCAEF004A552B /* SettingCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SettingCollectionViewCell.xib; sourceTree = "<group>"; };
 		28FE6DE421C8A354008ED44F /* RecognizeManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecognizeManager.h; sourceTree = "<group>"; };
 		28FE6DE521C8A354008ED44F /* WakeUpManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WakeUpManager.m; sourceTree = "<group>"; };
 		28FE6DE621C8A354008ED44F /* WakeUpManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WakeUpManager.h; sourceTree = "<group>"; };
@@ -427,6 +432,9 @@
 				286D6BBC21B7B771000DB7C8 /* AdvertiseView.m */,
 				286D6BBD21B7B771000DB7C8 /* ShakeSelectView.m */,
 				286D6BBF21B7B771000DB7C8 /* ShakeSelectView.h */,
+				28D9C96521DCCAEF004A552B /* SettingCollectionViewCell.h */,
+				28D9C96621DCCAEF004A552B /* SettingCollectionViewCell.m */,
+				28D9C96721DCCAEF004A552B /* SettingCollectionViewCell.xib */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -730,7 +738,7 @@
 				TargetAttributes = {
 					E56992961E5EB60B00C76E42 = {
 						CreatedOnToolsVersion = 8.2.1;
-						DevelopmentTeam = KMD2P8B7WV;
+						DevelopmentTeam = R4BAK83LRY;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
@@ -793,6 +801,7 @@
 				286D6B8221B7B2D6000DB7C8 /* bds_easr_dnn_wakeup_model.dat in Resources */,
 				286D6B7921B7B2D6000DB7C8 /* .gitIgnore in Resources */,
 				2838681321D61EBF00C56480 /* WakeUp-ch.bin in Resources */,
+				28D9C96921DCCAEF004A552B /* SettingCollectionViewCell.xib in Resources */,
 				286D6B8121B7B2D6000DB7C8 /* bds_easr_wakeup_words.dat in Resources */,
 				286D6B3321B7AD1B000DB7C8 /* shake.xcassets in Resources */,
 				E56992F01E5EB97100C76E42 /* BYCustomConfig.plist in Resources */,
@@ -889,6 +898,7 @@
 				286D6B1221B7AC2F000DB7C8 /* MTPeripheralManager.m in Sources */,
 				E56992F11E5EB97100C76E42 /* BYCustomManager.m in Sources */,
 				E5BF8E721EB040A300AF94DC /* ColorPickerView.m in Sources */,
+				28D9C96821DCCAEF004A552B /* SettingCollectionViewCell.m in Sources */,
 				286D6B2721B7ACD2000DB7C8 /* BYNavigationController.m in Sources */,
 				E56992DC1E5EB91500C76E42 /* AppDelegate.m in Sources */,
 				286D6B2521B7ACD2000DB7C8 /* BYInfoViewController.m in Sources */,
@@ -1067,7 +1077,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = KMD2P8B7WV;
+				DEVELOPMENT_TEAM = R4BAK83LRY;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/BeaconYun/Configs/PrefixHeader.pch";
 				INFOPLIST_FILE = "$(SRCROOT)/BeaconYun/Configs/Info.plist";
@@ -1091,7 +1101,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = KMD2P8B7WV;
+				DEVELOPMENT_TEAM = R4BAK83LRY;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/BeaconYun/Configs/PrefixHeader.pch";
 				INFOPLIST_FILE = "$(SRCROOT)/BeaconYun/Configs/Info.plist";
