@@ -134,7 +134,7 @@ static NSInteger count = 0;
     
 }
 
-
+//跳往设置界面
 - (void)startToSetup {
     
     [self stopTimer];

@@ -32,6 +32,7 @@
     NSMutableDictionary *_connectingModuleDict;
     NSTimer *_timer;
     BOOL _scanning;
+    NSInteger _scanTime;
 }
 
 #pragma mark *******************************Init
@@ -73,7 +74,6 @@
     _bluetoothQueue = dispatch_queue_create("com.minew.tech", DISPATCH_QUEUE_SERIAL);
     _centralManager = [[CBCentralManager alloc]initWithDelegate:self queue:_bluetoothQueue options:@{CBCentralManagerOptionShowPowerAlertKey: @NO}];
     
-    
     // try to retrieve devices
     
 //    NSDictionary *moduleDict = [NSKeyedUnarchiver unarchiveObjectWithFile:sBindDataFile];
@@ -101,7 +101,7 @@
 //    }
 }
 
-
+//config global for scan and deal with disappear modules
 - (void)initializeTimer
 {
     if ( !_timer)
@@ -110,6 +110,11 @@
         [[NSRunLoop currentRunLoop] addTimer:_timer forMode:NSDefaultRunLoopMode];
         [_timer fire];
     }
+}
+
+- (void)stopTimer {
+    [_timer invalidate];
+    _timer = nil;
 }
 
 - (NSArray *)bindModules
@@ -140,6 +145,7 @@
     }
     NSUserDefaults *stand = [NSUserDefaults standardUserDefaults];
     [stand setObject:_bindModulesDict forKey:BIND_DATA];
+    [stand synchronize];
     
     BOOL archiveSuccess = [NSKeyedArchiver archiveRootObject:_bindModulesDict toFile:sBindDataFile];
     if (archiveSuccess)
@@ -157,6 +163,7 @@
     
     NSUserDefaults *stand = [NSUserDefaults standardUserDefaults];
     [stand setObject:_bindModulesDict forKey:BIND_DATA];
+    [stand synchronize];
 }
 
 - (void)removeAllBindModules {
@@ -165,6 +172,8 @@
     
     [stand removeObjectForKey:BIND_DATA];
     [_bindModulesDict removeAllObjects];
+    
+    [stand synchronize];
 }
 
 #pragma mark ********************************Public
@@ -172,7 +181,7 @@
 {
     _scanning = YES;
     [self initializeTimer];
-//    [_scannedModules removeAllObjects];
+    [_scannedModules removeAllObjects];
     
     //指定扫描特定的服务
 //    CBUUID *uuid1 = [CBUUID UUIDWithString:@"FFF0"];
@@ -425,6 +434,13 @@
         count ++;
     }
     
+    //设置10s
+    if (_scanTime < 5) {
+        _scanTime ++;
+    }else {
+        [self startScan];
+        _scanTime = 0;
+    }
     
     // handle appear beacons
 //    static BOOL appearHandling = NO;

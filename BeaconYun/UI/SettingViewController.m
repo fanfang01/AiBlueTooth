@@ -57,6 +57,8 @@
     [super viewDidDisappear:animated];
     
     [self invalidateTimer];
+    
+    [_manager startScan];
 }
 
 
@@ -72,7 +74,7 @@
 //后台持续1s扫描
 - (void)initTimer {
     if (!_reloadTimer) {
-        _reloadTimer = [NSTimer scheduledTimerWithTimeInterval:1.4 target:self selector:@selector(refreshScannedDevices) userInfo:nil repeats:YES];
+        _reloadTimer = [NSTimer scheduledTimerWithTimeInterval:3 target:self selector:@selector(refreshScannedDevices) userInfo:nil repeats:YES];
     }
 }
 
@@ -97,10 +99,11 @@
     NSInteger sumCount = _allDevicesArray.count;
 
     for (NSInteger i=0; i < _allDevicesArray.count; i++) {
-        UIView *view = [[UIView alloc] initWithFrame:CGRectMake(10+(_buttonWidth+20)*(i%2), 100+(_buttonHeight+10)*(i/2), _buttonWidth, _viewHeight)];
+//        UIView *view = [[UIView alloc] initWithFrame:CGRectMake(10+(_buttonWidth+20)*(i%2), 100+(_buttonHeight+10)*(i/2), _buttonWidth, _viewHeight)];
+//        [self.view addSubview:view];
         
         UIButton *button = [UIButton buttonWithType:UIButtonTypeSystem];
-//        [button setFrame:CGRectMake(0, 0, buttonWidth, buttonHeight)];
+//        [button setFrame:CGRectMake(0, 0, _buttonWidth, 100)];
         [button setFrame:CGRectMake(10+(_buttonWidth+20)*(i%2), 100+(_buttonHeight+10)*(i/2), _buttonWidth, _buttonHeight)];
         
         [button setTitleColor:UIColor.blueColor forState:UIControlStateNormal];
@@ -108,9 +111,13 @@
         button.layer.cornerRadius = 10;
         button.layer.masksToBounds = YES;
         [self.view addSubview:button];
+        button.titleLabel.numberOfLines = 0;
         button.tag = 100 + i;
         
-//        UILabel *label;
+//        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, _buttonHeight, _buttonWidth, _buttonHeight)];
+//        label.textColor = UIColor.blueColor;
+//        label.font = [UIFont systemFontOfSize:14];
+//        [view addSubview:label];
         
         if (i < _allDevicesArray.count) {
             MinewModule *module = _allDevicesArray[i];
@@ -119,12 +126,11 @@
 
             if ([self isExistsModule:module]) {
                 button.selected = YES;
+                NSLog(@"应该被绑定的设备是:%@",module.macString);
+
             }
-        }else {
-            NSInteger index = i-_allDevicesArray.count;
-            NSDictionary *info = _bindArray[index];
-            
-            [button setTitle:[NSString stringWithFormat:@"设备 %ld\n%@",i+1 ,info[@"macString"]] forState:UIControlStateNormal];
+//            label.text = [NSString stringWithFormat:@"Mac:%@",module.macString];
+
         }
         
         [_scannedBtnArray addObject:button];
@@ -175,6 +181,7 @@
     button.layer.masksToBounds = YES;
     [self.view addSubview:button];
     button.tag = 100 + index;
+    button.titleLabel.numberOfLines = 0;
     
     MinewModule *module = _allDevicesArray[index];
     [button setTitle:[NSString stringWithFormat:@"设备 %ld\n%@",index+1 ,module.macString] forState:UIControlStateNormal];
@@ -189,9 +196,6 @@
 
 
 - (void)updateView {
-    for (MinewModule *module in _disappearModules) {
-        module.isBind = NO;
-    }
     //扫描，删除 不在范围内的设备
     if (_scannedBtnArray.count > _allDevicesArray.count) {
         for (NSInteger i=_scannedBtnArray.count-1; i>=_allDevicesArray.count; i--) {
@@ -205,43 +209,26 @@
         MinewModule *module = [_allDevicesArray objectAtIndex:i];
         if (_scannedBtnArray.count > i) {
             UIButton *btn = _scannedBtnArray[i];
-            btn.selected = module.isBind;
+            NSString *titleString = btn.titleLabel.text;
+            NSString *subString = [[titleString componentsSeparatedByString:@"\n"] lastObject];
+            
+            if ([subString isEqualToString:module.macString]) {
+                btn.selected = [self isExistsModule:module];
+            }
+
+            //当所有的设备都清空了
+            if (_bindArray.count == 0) {
+                btn.selected = NO;
+            }
+       
+//            btn.selected = module.isBind;
         }else {
             [self createButton:i];
         }
         
-        //  调整位置
-        if (_scannedBtnArray.count > i) {
-            UIButton *btn = _scannedBtnArray[i];
-            [btn setFrame:CGRectMake(10+(_buttonWidth+20)*(i%2), 100+(_buttonHeight+10)*(i/2), _buttonWidth, _buttonHeight)];
-        }
     }
 
     //扫描，移除断链设备
-    
-    
-//    //对于暂时没有扫描到的。但是绑定过的设备
-//    for (NSInteger i=0; i<_notinBoundsBtnArray.count; i++) {
-//        if (_bindArray.count > i) {
-//            NSDictionary *info = _bindArray[i];
-//            for (MinewModule *module in _disappearModules) {
-//               BOOL isTrue = [info[@"macString"] isEqualToString:module.macString];
-//                if (isTrue) {
-//                    UIButton *btn = _notinBoundsBtnArray[i];
-//                    [btn removeFromSuperview];
-//                    [_notinBoundsBtnArray removeObjectAtIndex:i];
-//                    break;
-//                }
-//            }
-//        }
-//    }
-//
-//    //然后调整位置
-//    for (NSInteger i=0; i<_notinBoundsBtnArray.count; i++) {
-//        UIButton *btn = _notinBoundsBtnArray[i];
-//        [btn setFrame:CGRectMake(10+(_buttonWidth+20)*(i%2), 100+(_buttonHeight+10)*(i/2)+(_buttonHeight+10)*(_scannedBtnArray.count/2+1), _buttonWidth, _buttonHeight)];
-//
-//    }
 }
 
 - (void) initData {
@@ -277,7 +264,7 @@
         }
     }
 
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [SVProgressHUD dismiss];
     });
 }
@@ -299,6 +286,9 @@
     
     UIAlertAction *confirmAction = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         [[MinewModuleManager sharedInstance] removeAllBindModules];
+        _bindArray = [_manager.bindModules mutableCopy];
+        [_bindArray removeAllObjects];
+        
         for (MinewModule *module in _allDevicesArray) {
             module.isBind = NO;
         }

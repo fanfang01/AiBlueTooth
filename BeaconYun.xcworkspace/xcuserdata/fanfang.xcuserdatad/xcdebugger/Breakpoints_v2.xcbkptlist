@@ -41,29 +41,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "BeaconYun/BusinessLogic/BluetoothCore/MinewModuleManager.m"
-            timestampString = "568290730.722893"
+            filePath = "BeaconYun/UI/SettingViewController.m"
+            timestampString = "568551932.726028"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "401"
-            endingLineNumber = "401"
-            landmarkName = "-handleModules"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "BeaconYun/BusinessLogic/BluetoothCore/MinewModuleManager.m"
-            timestampString = "568290730.723129"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "406"
-            endingLineNumber = "406"
-            landmarkName = "-handleModules"
+            startingLineNumber = "296"
+            endingLineNumber = "296"
+            landmarkName = "-clearAllSelectedDevices"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -74,11 +58,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "BeaconYun/UI/SettingViewController.m"
-            timestampString = "568290730.723175"
+            timestampString = "568551932.7263401"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "130"
-            endingLineNumber = "130"
+            startingLineNumber = "128"
+            endingLineNumber = "128"
             landmarkName = "-initView"
             landmarkType = "7">
          </BreakpointContent>
@@ -90,11 +74,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "BeaconYun/UI/SettingViewController.m"
-            timestampString = "568290730.724611"
+            timestampString = "568551932.726616"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "99"
-            endingLineNumber = "99"
+            startingLineNumber = "136"
+            endingLineNumber = "136"
             landmarkName = "-initView"
             landmarkType = "7">
          </BreakpointContent>
@@ -106,12 +90,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "BeaconYun/UI/SettingViewController.m"
-            timestampString = "568290730.7248811"
+            timestampString = "568551932.726934"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "69"
-            endingLineNumber = "69"
-            landmarkName = "-initCore"
+            startingLineNumber = "190"
+            endingLineNumber = "190"
+            landmarkName = "-createButton:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
