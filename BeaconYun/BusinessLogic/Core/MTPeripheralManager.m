@@ -55,7 +55,6 @@ typedef NS_ENUM(NSUInteger, CharaType) {
 {
     [_manager stopAdvertising];
     
-    
     //remove all the services added before
     [_manager removeAllServices];
     NSLog(@"广播的字符串===%@",_advUUID.UUIDString);

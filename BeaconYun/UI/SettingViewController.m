@@ -11,7 +11,7 @@
 #import "MinewModule.h"
 #import "SettingCollectionViewCell.h"
 
-@interface SettingViewController ()<UICollectionViewDelegate,UICollectionViewDataSource,MinewModuleManagerDelegate>
+@interface SettingViewController ()<MinewModuleManagerDelegate>
 
 @property (nonatomic, strong ) MinewModuleManager *manager;
 
@@ -43,6 +43,7 @@
     _buttonHeight = 50;
     _viewHeight = 100;
     
+    self.navigationController.navigationBar.barTintColor = COLOR_RGB(0, 88, 85);
     [self initCore];
     [self initData];
     
@@ -249,7 +250,7 @@
     btn.selected = !btn.selected;
     module.isBind = btn.selected;
     if (btn.selected) {
-        btn.backgroundColor = [UIColor lightGrayColor];
+        btn.backgroundColor = [UIColor blueColor];
         [_manager addBindModule:module];
         [SVProgressHUD showSuccessWithStatus:[NSString stringWithFormat:@"你已选择%@",btn.titleLabel.text]];
     }else {
@@ -272,11 +273,11 @@
 //在扫描的队列里，是否存在绑定的设备
 - (BOOL)isExistsModule:(MinewModule *)module {
     
-        for (NSDictionary *info in _bindArray) {
-            if ([info[@"macString"] isEqualToString:module.macString]) {
-                return YES;
-            }
+    for (NSDictionary *info in _bindArray) {
+        if ([info[@"macString"] isEqualToString:module.macString]) {
+            return YES;
         }
+    }
     return NO;
 }
 
@@ -294,17 +295,6 @@
         }
         
         [self updateView];
-        
-//        for (UIView *subView in self.view.subviews) {
-//            if ([subView isKindOfClass:[UIButton class]]) {
-//                [subView removeFromSuperview];
-//            }
-//        }
-//        _bindArray = _manager.bindModules;
-//        for (MinewModule *module in _allDevicesArray) {
-//            module.isBind = NO;
-//        }
-//        [self initView];
     }];
     
     UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil];
