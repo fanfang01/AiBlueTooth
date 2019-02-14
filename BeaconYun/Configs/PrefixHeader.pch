@@ -19,6 +19,8 @@
 #import "BDSWakeupDefines.h"
 #import "BDSWakeupParameters.h"
 
+#import "MinewCommonTool.h"
+
 
 #define ScreenWidth  ([[UIScreen mainScreen] bounds].size.width)
 #define ScreenHeight  ([[UIScreen mainScreen] bounds].size.height)
@@ -29,9 +31,9 @@
 #define COLOR_RGB(r,g,b) ([UIColor colorWithRed:(r)/255.0 green:(g)/255.0 blue:(b)/255.0 alpha:1])
 
 //Baidu SDK config
-#define API_KEY @"tyiwdzbYQ9GTmfaGPTqAuXtB"
-#define SECRET_KEY @"ooDetcOCZyUyTYdtWpsXgG4iw3zih1aH"
-#define APP_ID @"15058256"
+#define API_KEY @"syh1Z0ftTwfP8Csg6BfdXWRu"
+#define SECRET_KEY @"rSoYxYwBxcBMeYYtDf3xg88lBC7h2bdG"
+#define APP_ID @"15545724"
 
 #define BIND_DATA @"bind_devices"
 

@@ -170,9 +170,9 @@
         self.macBytes = 0;
         for (NSInteger i=0; i < [manufactureData length] ; i++) {
             self.macBytes += testByte[i];
-            printf("testByte = %d\n",testByte[i]);
+//            printf("testByte = %d\n",testByte[i]);
         }
-        NSLog(@"%d  0x%04x",_macBytes,_macBytes);
+//        NSLog(@"%d  0x%04x",_macBytes,_macBytes);
 
     }
 }

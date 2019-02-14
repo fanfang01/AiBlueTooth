@@ -107,7 +107,7 @@ static NSInteger count = 0;
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.title = @"开始操作";
+    self.title = NSLocalizedString(@"开始操作", nil);
     
     _is_on = NO;// 默认机器是关机状态
     
@@ -120,7 +120,7 @@ static NSInteger count = 0;
     _pm = [MTPeripheralManager sharedInstance];
     _minewManager = [MinewModuleManager sharedInstance];
     
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"设置" style:UIBarButtonItemStylePlain target:self action:@selector(startToSetup)];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"设置", nil) style:UIBarButtonItemStylePlain target:self action:@selector(startToSetup)];
 
     [self initView];
     
@@ -184,25 +184,42 @@ static NSInteger count = 0;
     }
    
     if (!_commandAray) {
-        _commandAray = [NSMutableArray arrayWithObjects:
-                        @{@"key":@"模式1"},
-                        @{@"key":@"模式2"},
-                        @{@"key":@"模式3"},
-                        @{@"key":@"模式4"},
-                        @{@"key":@"模式5"},
-                        @{@"key":@"模式6"},
-                        @{@"key":@"模式7"},
-                        @{@"key":@"模式8"},
-                        @{@"key":@"模式9"},
-                        @{@"key":@"模式10"},
-                        @{@"key":@"快点快点"},
-                        @{@"key":@"慢点慢点"},
-                        @{@"key":@"小爱你好"}
-                        ,nil];
+        if ([[MinewCommonTool getCurrentLanguage] containsString:@"zh"]) {
+            _commandAray = [NSMutableArray arrayWithObjects:
+                            @{@"key":@"模式1"},
+                            @{@"key":@"模式2"},
+                            @{@"key":@"模式3"},
+                            @{@"key":@"模式4"},
+                            @{@"key":@"模式5"},
+                            @{@"key":@"模式6"},
+                            @{@"key":@"模式7"},
+                            @{@"key":@"模式8"},
+                            @{@"key":@"模式9"},
+                            @{@"key":@"模式10"},
+                            @{@"key":@"快点快点"},
+                            @{@"key":@"慢点慢点"},
+                            @{@"key":@"小爱你好"}
+                            ,nil];
+        }else {
+            _commandAray = [NSMutableArray arrayWithObjects:
+                            @{@"key":@"模式1"},
+                            @{@"key":@"模式2"},
+                            @{@"key":@"模式3"},
+                            @{@"key":@"模式4"},
+                            @{@"key":@"模式5"},
+                            @{@"key":@"模式6"},
+                            @{@"key":@"模式7"},
+                            @{@"key":@"模式8"},
+                            @{@"key":@"模式9"},
+                            @{@"key":@"模式10"},
+                            @{@"key":@"逼溃克离"},
+                            @{@"key":@"逼斯喽离"},
+                            @{@"key":@"哈喽哈尼"}
+                            ,nil];
+
+        }
     }
-//    if (!_enCommandAray) {
-//        _enCommandAray = [NSMutableArray arrayWithObjects:@{@"key":@[@"quick",@"fast",@"increase"]},@{@"key":@[@"slow"]},@{@"key":@[@"power on"]},@{@"key":@[@"power off"]} ,@{@"key":@[@"power on"]} ,nil];
-//    }
+    
 }
 
 - (void)initView {

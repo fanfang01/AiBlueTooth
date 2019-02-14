@@ -51,7 +51,14 @@
     // 默认的唤醒词为"百度一下"，如需自定义唤醒词，请在 http://ai.baidu.com/tech/speech/wake 中评估并下载唤醒词，替换此参数
     //    NSString* words = [[NSBundle mainBundle] pathForResource:@"bds_easr_wakeup_words" ofType:@"dat"];
     
-    NSString* keywords = [[NSBundle mainBundle] pathForResource:@"WakeUp-ch" ofType:@"bin"];
+    NSString* keywords = @"";
+    if ([[MinewCommonTool getCurrentLanguage] containsString:@"zh"]) {
+        keywords = [[NSBundle mainBundle] pathForResource:@"WakeUp-ch" ofType:@"bin"];
+    }else {
+        keywords = [[NSBundle mainBundle] pathForResource:@"WakeUp-en" ofType:@"bin"];
+
+    }
+    
     [self.wakeupEventManager setParameter:dat forKey:BDS_WAKEUP_DAT_FILE_PATH];
     [self.wakeupEventManager setParameter:keywords forKey:BDS_WAKEUP_WORDS_FILE_PATH];
 }
@@ -90,7 +97,7 @@
             //            if (self.continueToVR) {
             //                self.continueToVR = NO;
             NSString *key = [NSString stringWithFormat:@"%@",((NSString *)aObj)];
-//            [SVProgressHUD showSuccessWithStatus:key];
+            [SVProgressHUD showSuccessWithStatus:key];
 //            [self.asrEventManager setParameter:@(YES) forKey:BDS_ASR_NEED_CACHE_AUDIO];
 //            [self.asrEventManager setParameter:aObj forKey:BDS_ASR_OFFLINE_ENGINE_TRIGGERED_WAKEUP_WORD];
 //            [self voiceRecogButtonHelper];

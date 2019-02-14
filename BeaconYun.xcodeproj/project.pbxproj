@@ -51,6 +51,7 @@
 		286D6BC021B7B771000DB7C8 /* StartAdvertiseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 286D6BB921B7B771000DB7C8 /* StartAdvertiseViewController.m */; };
 		286D6BC121B7B771000DB7C8 /* AdvertiseView.m in Sources */ = {isa = PBXBuildFile; fileRef = 286D6BBC21B7B771000DB7C8 /* AdvertiseView.m */; };
 		286D6BC221B7B771000DB7C8 /* ShakeSelectView.m in Sources */ = {isa = PBXBuildFile; fileRef = 286D6BBD21B7B771000DB7C8 /* ShakeSelectView.m */; };
+		28744FB02213BA6C0053D8D3 /* WakeUp-en.bin in Resources */ = {isa = PBXBuildFile; fileRef = 28744FAF2213BA6C0053D8D3 /* WakeUp-en.bin */; };
 		28D9C96821DCCAEF004A552B /* SettingCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 28D9C96621DCCAEF004A552B /* SettingCollectionViewCell.m */; };
 		28D9C96921DCCAEF004A552B /* SettingCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 28D9C96721DCCAEF004A552B /* SettingCollectionViewCell.xib */; };
 		28FE6DE821C8A354008ED44F /* WakeUpManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 28FE6DE521C8A354008ED44F /* WakeUpManager.m */; };
@@ -174,6 +175,7 @@
 		286D6BBD21B7B771000DB7C8 /* ShakeSelectView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShakeSelectView.m; sourceTree = "<group>"; };
 		286D6BBE21B7B771000DB7C8 /* AdvertiseView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AdvertiseView.h; sourceTree = "<group>"; };
 		286D6BBF21B7B771000DB7C8 /* ShakeSelectView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShakeSelectView.h; sourceTree = "<group>"; };
+		28744FAF2213BA6C0053D8D3 /* WakeUp-en.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; path = "WakeUp-en.bin"; sourceTree = "<group>"; };
 		28D9C96521DCCAEF004A552B /* SettingCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SettingCollectionViewCell.h; sourceTree = "<group>"; };
 		28D9C96621DCCAEF004A552B /* SettingCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SettingCollectionViewCell.m; sourceTree = "<group>"; };
 		28D9C96721DCCAEF004A552B /* SettingCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SettingCollectionViewCell.xib; sourceTree = "<group>"; };
@@ -288,6 +290,7 @@
 		286D6B3521B7B2A7000DB7C8 /* BaiduSDK */ = {
 			isa = PBXGroup;
 			children = (
+				28744FAF2213BA6C0053D8D3 /* WakeUp-en.bin */,
 				2838681221D61EBF00C56480 /* WakeUp-ch.bin */,
 				282D97F321B7D404004E9D39 /* WakeUp.bin */,
 				286D6B3621B7B2D3000DB7C8 /* BDSClientHeaders */,
@@ -738,7 +741,7 @@
 				TargetAttributes = {
 					E56992961E5EB60B00C76E42 = {
 						CreatedOnToolsVersion = 8.2.1;
-						DevelopmentTeam = KMD2P8B7WV;
+						DevelopmentTeam = 8FJMU234N7;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
@@ -804,6 +807,7 @@
 				28D9C96921DCCAEF004A552B /* SettingCollectionViewCell.xib in Resources */,
 				286D6B8121B7B2D6000DB7C8 /* bds_easr_wakeup_words.dat in Resources */,
 				286D6B3321B7AD1B000DB7C8 /* shake.xcassets in Resources */,
+				28744FB02213BA6C0053D8D3 /* WakeUp-en.bin in Resources */,
 				E56992F01E5EB97100C76E42 /* BYCustomConfig.plist in Resources */,
 				286D6B9221B7B2D6000DB7C8 /* English_Speech_Female.dat in Resources */,
 				286D6B7B21B7B2D6000DB7C8 /* bds_easr_basic_model.dat in Resources */,
@@ -1077,7 +1081,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = KMD2P8B7WV;
+				DEVELOPMENT_TEAM = 8FJMU234N7;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/BeaconYun/Configs/PrefixHeader.pch";
 				INFOPLIST_FILE = "$(SRCROOT)/BeaconYun/Configs/Info.plist";
@@ -1087,7 +1091,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/BeaconYun/BaiduSDK/BDSClientLib",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.anshunkang.Aitest;
+				PRODUCT_BUNDLE_IDENTIFIER = com.anshunkang.iYou;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = 1;
@@ -1101,7 +1105,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = KMD2P8B7WV;
+				DEVELOPMENT_TEAM = 8FJMU234N7;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/BeaconYun/Configs/PrefixHeader.pch";
 				INFOPLIST_FILE = "$(SRCROOT)/BeaconYun/Configs/Info.plist";
@@ -1111,7 +1115,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/BeaconYun/BaiduSDK/BDSClientLib",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.anshunkang.Aitest;
+				PRODUCT_BUNDLE_IDENTIFIER = com.anshunkang.iYou;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = 1;

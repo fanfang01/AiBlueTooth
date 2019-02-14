@@ -5,3 +5,75 @@
   Created by SACRELEE on 2/23/17.
   Copyright © 2017 MinewTech. All rights reserved.
 */
+"关于"="About";
+
+"设备列表" = "Devices";
+
+"全部设备" = "All Devices";
+
+"扫描" = "Scan";
+
+"安顺康" = "ASK";
+
+"使用前请先打开手机蓝牙" = "Please turn on Bluetooth before use";
+
+"开始扫描" = "Start scan";
+
+"模式1" = "Mode 1";
+"模式2" = "Mode 2";
+"模式3" = "Mode 3";
+"模式4" = "Mode 4";
+"模式5" = "Mode 5";
+"模式6" = "Mode 6";
+"模式7" = "Mode 7" ;
+"模式8" = "Mode 8";
+"模式9" = "Mode 9";
+"模式10" = "Mode 10";
+
+"开/关" = "On/Off";
+
+"开始操作" = "Start operating";
+
+"你还没有绑定设备，快去绑定吧!" = "You have no binded devices!";
+
+"设置" = "Setting";
+
+"提示" = "Tips";
+
+"最大模式为%ld" = "The maximum is %ld";
+
+"当前模式为%ld" = "The current is %ld";
+
+"开始扫描" = "Start scan";
+
+"扫描到%@" = "Scanned %@";
+
+"成功扫描到设备%@" = "Success scanned %@";
+
+"请点击上方按钮开始扫描" = "Click button above to scan";
+
+"清空" = "Clear";
+
+"此设备没有开机或不在范围内,不可选择" = "Device not in bounds,can't choice";
+
+"你已选择%@" = "Chioced %@";
+
+"你已取消选择%@" = "unselect %@";
+
+"取消" = "Cancel";
+
+"确定" = "Confirm";
+
+"你确定要清除所有的绑定的设备吗?" = "Sure to cancel all the devices?";
+
+"设备 %ld" = "Device %ld";
+
+"开始操作" = "Start to Contorl";
+
+"设备 %ld\n%@" = "Device %ld\n%@";
+
+"最多添加10个设备" = "NO more than 10 devices";
+
+"你已选择%@" = "Selected%@";
+
+"你已取消选择%@" = "Cancel select %@";

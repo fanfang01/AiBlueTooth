@@ -34,4 +34,6 @@
 // calculate distance by a rssi value
 + (float)distanceByRSSI:(NSInteger)rssi;
 
+//get current language
++ (NSString *)getCurrentLanguage;
 @end

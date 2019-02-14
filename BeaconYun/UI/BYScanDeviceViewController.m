@@ -71,7 +71,7 @@ static NSInteger scanCount;
     [super viewDidAppear:animated];
     if (scanCount != 0) {
         [_manager stopScan];
-        _showLabel.text = @"请点击上方按钮开始扫描";
+        _showLabel.text = NSLocalizedString(@"请点击上方按钮开始扫描", nil);
     }
     scanCount = 0;
 }
@@ -94,7 +94,7 @@ static NSInteger scanCount;
     _titleLabel = titleLabel;
 
     titleLabel.center = CGPointMake(ScreenWidth/2, 70);
-    titleLabel.text = @"使用前请先打开手机蓝牙";
+    titleLabel.text = NSLocalizedString(@"使用前请先打开手机蓝牙", nil);
     titleLabel.textAlignment = NSTextAlignmentCenter;
     titleLabel.textColor = COLOR_RGBA(160, 160, 160, 1);
     [self.view addSubview:titleLabel];
@@ -121,7 +121,7 @@ static NSInteger scanCount;
     showLabel.textColor = COLOR_RGBA(160, 160, 160, 1);
     showLabel.font = [UIFont boldSystemFontOfSize:18.0f];
     [self.view addSubview:showLabel];
-    showLabel.text = @"请点击上方按钮开始扫描";
+    showLabel.text = NSLocalizedString(@"请点击上方按钮开始扫描", nil);
 }
 
 - (void)startToScan {
@@ -151,7 +151,7 @@ static NSInteger scanCount;
     theAnimation.delegate = self;
     [_scanBGImageView.layer addAnimation:theAnimation forKey:@"transform"];
     
-    _showLabel.text = @"开始扫描";
+    _showLabel.text = NSLocalizedString(@"开始扫描", nil);
 }
 
 - (void)initCore
@@ -165,9 +165,9 @@ static NSInteger scanCount;
     _manager.findDevice = ^(MinewModule *module) {
         __strong BYScanDeviceViewController *strongSelf = weakSelf;
         dispatch_async(dispatch_get_main_queue(), ^{
-            strongSelf.showLabel.text = [NSString stringWithFormat:@"扫描到%@",module.name];
+            strongSelf.showLabel.text = [NSString stringWithFormat:NSLocalizedString(@"扫描到%@", nil),module.name];
             if (scanCount == 0) {
-                [SVProgressHUD showSuccessWithStatus:[NSString stringWithFormat:@"成功扫描到设备%@",module.name]];
+                [SVProgressHUD showSuccessWithStatus:[NSString stringWithFormat:NSLocalizedString(@"成功扫描到设备%@", nil),module.name]];
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                     [SVProgressHUD dismiss];
                 });

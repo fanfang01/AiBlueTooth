@@ -239,11 +239,12 @@
 
 - (void)centralManager:(CBCentralManager *)central didDiscoverPeripheral:(CBPeripheral *)peripheral advertisementData:(NSDictionary<NSString *,id> *)advertisementData RSSI:(NSNumber *)RSSI
 {
-    NSLog(@"还在持续扫描");
+//    NSLog(@"还在持续扫描");
     
     NSString *name = peripheral.name;
     
     NSString *adName = advertisementData[CBAdvertisementDataLocalNameKey];
+    NSLog(@"advertisementDat==%@",advertisementData);
     
     if ([adName isEqualToString:@"HToy"])
     {
@@ -272,7 +273,7 @@
         if ([_disappearModules containsObject:module]) {
             [_disappearModules removeObject:module];
         }
-        module.updateTime = [NSDate date];
+       module.updateTime = [NSDate date];
        module.inRange = YES;
        module.name = adName? adName:( name? name: @"Unnamed");
        module.rssi = [RSSI integerValue];
@@ -280,7 +281,7 @@
         NSData *data = advertisementData[CBAdvertisementDataManufacturerDataKey];
         module.manufactureData = data;
     
-        NSLog(@"收到的数据====%@",advertisementData);
+//        NSLog(@"收到的数据====%@",advertisementData);
         if (self.findDevice) {
             self.findDevice(module);
         }

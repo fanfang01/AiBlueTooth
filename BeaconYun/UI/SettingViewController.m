@@ -43,13 +43,13 @@
     _buttonHeight = 50;
     _viewHeight = 100;
     
-    self.navigationController.navigationBar.barTintColor = COLOR_RGB(0, 88, 85);
+//    self.navigationController.navigationBar.barTintColor = COLOR_RGB(0, 88, 85);
     [self initCore];
     [self initData];
     
     [self initView];
     
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"清空" style:UIBarButtonItemStylePlain target:self action:@selector(clearAllSelectedDevices)];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"清空", nil) style:UIBarButtonItemStylePlain target:self action:@selector(clearAllSelectedDevices)];
     
     [self initTimer];
 }
@@ -97,13 +97,10 @@
     [backImg setImage:[UIImage imageNamed:@"all_background"]];
     [self.view addSubview:backImg];
     
-    NSInteger sumCount = _allDevicesArray.count;
-
     for (NSInteger i=0; i < _allDevicesArray.count; i++) {
-//        UIView *view = [[UIView alloc] initWithFrame:CGRectMake(10+(_buttonWidth+20)*(i%2), 100+(_buttonHeight+10)*(i/2), _buttonWidth, _viewHeight)];
-//        [self.view addSubview:view];
+
         
-        UIButton *button = [UIButton buttonWithType:UIButtonTypeSystem];
+        UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
 //        [button setFrame:CGRectMake(0, 0, _buttonWidth, 100)];
         [button setFrame:CGRectMake(10+(_buttonWidth+20)*(i%2), 100+(_buttonHeight+10)*(i/2), _buttonWidth, _buttonHeight)];
         
@@ -114,22 +111,21 @@
         [self.view addSubview:button];
         button.titleLabel.numberOfLines = 0;
         button.tag = 100 + i;
-        
-//        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, _buttonHeight, _buttonWidth, _buttonHeight)];
-//        label.textColor = UIColor.blueColor;
-//        label.font = [UIFont systemFontOfSize:14];
-//        [view addSubview:label];
+
         
         if (i < _allDevicesArray.count) {
             MinewModule *module = _allDevicesArray[i];
 //            [button setTitle:[NSString stringWithFormat:@"设备 %ld",i] forState:UIControlStateNormal];
-            [button setTitle:[NSString stringWithFormat:@"设备 %ld\n%@",i+1 ,module.macString] forState:UIControlStateNormal];
+            [button setTitle:[NSString stringWithFormat:NSLocalizedString(@"设备 %ld\n%@", nil),i+1 ,module.macString] forState:UIControlStateNormal];
 
             if ([self isExistsModule:module]) {
                 button.selected = YES;
+                button.backgroundColor = [UIColor cyanColor];
+
                 NSLog(@"应该被绑定的设备是:%@",module.macString);
 
             }
+            
 //            label.text = [NSString stringWithFormat:@"Mac:%@",module.macString];
 
         }
@@ -139,29 +135,6 @@
         [button addTarget:self action:@selector(buttonClick:) forControlEvents:UIControlEventTouchUpInside];
         
     }
-//    NSLog(@"共有%ld个未扫描到的设备",bindNotinRangeArr.count);
-    
-//    NSArray *bindNotinRangeArr = [[MinewModuleManager sharedInstance] isExisModuleOutofSacnnedModules];
-//
-//    for (NSInteger i = 0; i < bindNotinRangeArr.count ; i++) {
-//        NSDictionary *info = bindNotinRangeArr[i];
-//
-//        UIButton *button = [UIButton buttonWithType:UIButtonTypeSystem];
-//        [button setFrame:CGRectMake(10+(_buttonWidth+20)*(i%2), 100+(_buttonHeight+10)*(i/2+_allDevicesArray.count%2), _buttonWidth, _buttonHeight)];
-//
-//        [button setTitle:info[@"customName"] forState:UIControlStateNormal];
-//        [button setTitleColor:UIColor.blueColor forState:UIControlStateNormal];
-//        button.backgroundColor = [UIColor lightGrayColor];
-//        button.layer.cornerRadius = 10;
-//        button.layer.masksToBounds = YES;
-//        [self.view addSubview:button];
-//        button.tag = 110 + i;
-//
-//        [button addTarget:self action:@selector(offlineModuleAction:) forControlEvents:UIControlEventTouchUpInside];
-//
-//        [_notinBoundsBtnArray addObject:button];
-//
-//    }
 
 }
 
@@ -185,7 +158,7 @@
     button.titleLabel.numberOfLines = 0;
     
     MinewModule *module = _allDevicesArray[index];
-    [button setTitle:[NSString stringWithFormat:@"设备 %ld\n%@",index+1 ,module.macString] forState:UIControlStateNormal];
+    [button setTitle:[NSString stringWithFormat:NSLocalizedString(@"设备 %ld\n%@", nil),index+1 ,module.macString] forState:UIControlStateNormal];
     if ([self isExistsModule:module]) {
         button.selected = YES;
     }
@@ -224,7 +197,12 @@
        
 //            btn.selected = module.isBind;
         }else {
-            [self createButton:i];
+            if (_allDevicesArray.count <= 10) {
+                [self createButton:i];
+
+            }else {
+                [SVProgressHUD showWithStatus:NSLocalizedString(@"最多添加10个设备", nil)];
+            }
         }
         
     }
@@ -250,15 +228,15 @@
     btn.selected = !btn.selected;
     module.isBind = btn.selected;
     if (btn.selected) {
-        btn.backgroundColor = [UIColor blueColor];
+        btn.backgroundColor = [UIColor cyanColor];
         [_manager addBindModule:module];
-        [SVProgressHUD showSuccessWithStatus:[NSString stringWithFormat:@"你已选择%@",btn.titleLabel.text]];
+        [SVProgressHUD showSuccessWithStatus:[NSString stringWithFormat:NSLocalizedString(@"你已选择%@", nil),btn.titleLabel.text]];
     }else {
         btn.backgroundColor = [UIColor lightTextColor];
         NSInteger count = _manager.bindModules.count;
         if (count > 0) {
             [_manager removeBindModule:module];
-            [SVProgressHUD showSuccessWithStatus:[NSString stringWithFormat:@"你已取消选择%@",btn.titleLabel.text]];
+            [SVProgressHUD showSuccessWithStatus:[NSString stringWithFormat:NSLocalizedString(@"你已取消选择%@", nil),btn.titleLabel.text]];
         }else {
 //            [SVProgressHUD showSuccessWithStatus:[NSString stringWithFormat:@"只剩最后一个,不能再取消了"]];
 //            btn.selected = YES;
@@ -283,9 +261,9 @@
 
 - (void) clearAllSelectedDevices {
     
-    UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"提示" message:@"你确定要清除所有的绑定的设备吗?" preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"提示", nil) message:NSLocalizedString(@"你确定要清除所有的绑定的设备吗?", nil) preferredStyle:UIAlertControllerStyleAlert];
     
-    UIAlertAction *confirmAction = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+    UIAlertAction *confirmAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"确定", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         [[MinewModuleManager sharedInstance] removeAllBindModules];
         _bindArray = [_manager.bindModules mutableCopy];
         [_bindArray removeAllObjects];
@@ -297,7 +275,7 @@
         [self updateView];
     }];
     
-    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil];
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"取消", nil) style:UIAlertActionStyleCancel handler:nil];
     
     [alertVC addAction:confirmAction];
     [alertVC addAction:cancelAction];

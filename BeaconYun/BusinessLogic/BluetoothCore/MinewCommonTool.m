@@ -203,4 +203,14 @@
     }
 }
 
++ (NSString *)getCurrentLanguage {
+    NSArray *languages = [NSLocale preferredLanguages];
+    if (languages.count == 0) {
+        return nil;
+    }
+    NSString *currentLanguage = [languages objectAtIndex:0];
+    
+    NSLog(@"当前语言环境===%@",currentLanguage);
+    return currentLanguage;
+}
 @end
