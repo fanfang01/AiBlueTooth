@@ -80,6 +80,8 @@ static NSInteger count = 0;
 {
     [super viewDidAppear:animated];
     
+    self.navigationController.navigationBarHidden = YES;
+    
     [self isExistsBindDevicesToAdvertise];
 }
 
@@ -90,6 +92,34 @@ static NSInteger count = 0;
     if (0 == bindArray.count) {
         [self showNoDeviceAlert];
     }
+}
+
+#pragma mark ---- 返回上一个页面
+- (IBAction)backLastVC:(UIButton *)sender {
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
+#pragma mark --- 点击按钮
+- (IBAction)buttonClick:(UIButton *)sender {
+    
+    NSInteger index = sender.tag-100;
+    _currentIndex = index;
+    
+    [self sendData:index];
+
+}
+
+#pragma mark --- 跳往设置界面
+- (IBAction)settingDevice:(UIButton *)sender {
+    [self startToSetup];
+}
+
+
+- (IBAction)onOffAction:(UIButton *)sender {
+    sender.selected = !sender.selected;
+    _is_on = sender.selected;
+    NSLog(@"开关的状态：sw.isOn==%d  _is_on==%d",sender.selected,_is_on);
+    [self sendData:12];
 }
 
 - (void)showNoDeviceAlert {
@@ -139,7 +169,7 @@ static NSInteger count = 0;
     
     [self stopTimer];
     
-    SettingViewController *setVC = [[SettingViewController alloc] init];
+    SettingViewController *setVC = [[UIStoryboard storyboardWithName:@"Main" bundle:nil] instantiateViewControllerWithIdentifier:@"SettingViewController"];
     
     [self.navigationController pushViewController:setVC animated:YES];
     
@@ -223,13 +253,20 @@ static NSInteger count = 0;
 }
 
 - (void)initView {
+    CAGradientLayer *gradient = [CAGradientLayer layer];
+    //设置开始和结束位置(设置渐变的方向)
+    gradient.startPoint = CGPointMake(0, 0);
+    gradient.endPoint = CGPointMake(1, 0);
+    gradient.frame =CGRectMake(0,0,40,40);
+    gradient.colors = [NSArray arrayWithObjects:(id)RGB(156, 100, 183).CGColor,(id)RGB(124, 71, 170).CGColor,(id)RGB(107, 55, 162).CGColor,(id)RGB(86, 35, 153).CGColor,nil];
+    [self.view.layer insertSublayer:gradient atIndex:0];
     
-    UIImageView *backImg = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, ScreenWidth, ScreenHeight)];
-    backImg.image = [[UIImage imageNamed:@"all_background"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
-    [self.view addSubview:backImg];
-    
-    self.view.backgroundColor = [UIColor whiteColor];
-    [self.view addSubview:self.advertiseView];
+//    UIImageView *backImg = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, ScreenWidth, ScreenHeight)];
+//    backImg.image = [[UIImage imageNamed:@"all_background"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+//    [self.view addSubview:backImg];
+//
+//    self.view.backgroundColor = [UIColor whiteColor];
+//    [self.view addSubview:self.advertiseView];
     
 }
 

@@ -9,5 +9,6 @@
 #import <UIKit/UIKit.h>
 
 @interface BYScanDeviceViewController : UIViewController
+@property (weak, nonatomic) IBOutlet UIView *searchView;
 
 @end

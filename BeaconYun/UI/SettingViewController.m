@@ -10,8 +10,9 @@
 #import "MinewModuleManager.h"
 #import "MinewModule.h"
 #import "SettingCollectionViewCell.h"
+#import <SVProgressHUD.h>
 
-@interface SettingViewController ()<MinewModuleManagerDelegate>
+@interface SettingViewController ()<MinewModuleManagerDelegate,UICollectionViewDelegate,UICollectionViewDataSource>
 
 @property (nonatomic, strong ) MinewModuleManager *manager;
 
@@ -36,20 +37,21 @@
     CGFloat _viewHeight ;
 }
 
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    //hide navigationBar
+    self.navigationController.navigationBarHidden = YES;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    _buttonWidth = (ScreenWidth-40)/2;
-    _buttonHeight = 50;
-    _viewHeight = 100;
-    
-//    self.navigationController.navigationBar.barTintColor = COLOR_RGB(0, 88, 85);
-    [self initCore];
     [self initData];
+
+    [self initCore];
     
     [self initView];
-    
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"清空", nil) style:UIBarButtonItemStylePlain target:self action:@selector(clearAllSelectedDevices)];
     
     [self initTimer];
 }
@@ -61,6 +63,17 @@
     
     [_manager startScan];
 }
+
+- (IBAction)backLastVC:(UIButton *)sender {
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
+#pragma mark -- 清空设备操作
+- (IBAction)deleteAllDevices:(UIButton *)sender {
+    [self clearAllSelectedDevices];
+}
+
+
 
 
 - (void)initCore {
@@ -84,7 +97,7 @@
     _allDevicesArray = [NSMutableArray arrayWithArray:_manager.allModules];
     
     //持续刷新
-    [self updateView];
+//    [self updateView];
 }
 
 - (void)invalidateTimer {
@@ -93,122 +106,20 @@
 }
 
 - (void) initView {
-    UIImageView *backImg = [[UIImageView alloc] initWithFrame:[UIScreen mainScreen].bounds];
-    [backImg setImage:[UIImage imageNamed:@"all_background"]];
-    [self.view addSubview:backImg];
+    UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
+    layout.itemSize = CGSizeMake((ScreenWidth-17*3)/2, 60);
+    layout.minimumLineSpacing = 8;
+    layout.minimumInteritemSpacing = 14;
     
-    for (NSInteger i=0; i < _allDevicesArray.count; i++) {
-
-        
-        UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-//        [button setFrame:CGRectMake(0, 0, _buttonWidth, 100)];
-        [button setFrame:CGRectMake(10+(_buttonWidth+20)*(i%2), 100+(_buttonHeight+10)*(i/2), _buttonWidth, _buttonHeight)];
-        
-        [button setTitleColor:UIColor.blueColor forState:UIControlStateNormal];
-        button.backgroundColor = [UIColor lightGrayColor];
-        button.layer.cornerRadius = 10;
-        button.layer.masksToBounds = YES;
-        [self.view addSubview:button];
-        button.titleLabel.numberOfLines = 0;
-        button.tag = 100 + i;
-
-        
-        if (i < _allDevicesArray.count) {
-            MinewModule *module = _allDevicesArray[i];
-//            [button setTitle:[NSString stringWithFormat:@"设备 %ld",i] forState:UIControlStateNormal];
-            [button setTitle:[NSString stringWithFormat:NSLocalizedString(@"设备 %ld\n%@", nil),i+1 ,module.macString] forState:UIControlStateNormal];
-
-            if ([self isExistsModule:module]) {
-                button.selected = YES;
-                button.backgroundColor = [UIColor cyanColor];
-
-                NSLog(@"应该被绑定的设备是:%@",module.macString);
-
-            }
-            
-//            label.text = [NSString stringWithFormat:@"Mac:%@",module.macString];
-
-        }
-        
-        [_scannedBtnArray addObject:button];
-        
-        [button addTarget:self action:@selector(buttonClick:) forControlEvents:UIControlEventTouchUpInside];
-        
-    }
+    self.collectionView.collectionViewLayout = layout;
+    self.collectionView.delegate = self;
+    self.collectionView.dataSource = self;
+    [self.collectionView registerNib:[UINib nibWithNibName:@"SettingCollectionViewCell" bundle:nil] forCellWithReuseIdentifier:@"SettingCollectionViewCell"];
 
 }
 
-- (void)offlineModuleAction:(UIButton *)btn {
-    [SVProgressHUD showErrorWithStatus:@"此设备没有开机或不在范围内,不可选择"];
-}
-
-- (void)createButton:(NSInteger)index {
-    CGFloat buttonWidth = (ScreenWidth-40)/2;
-    CGFloat buttonHeight = 50;
-    
-    UIButton *button = [UIButton buttonWithType:UIButtonTypeSystem];
-    [button setFrame:CGRectMake(10+(buttonWidth+20)*(index%2), 100+(buttonHeight+10)*(index/2), buttonWidth, buttonHeight)];
-    
-    [button setTitleColor:UIColor.blueColor forState:UIControlStateNormal];
-    button.backgroundColor = [UIColor lightGrayColor];
-    button.layer.cornerRadius = 10;
-    button.layer.masksToBounds = YES;
-    [self.view addSubview:button];
-    button.tag = 100 + index;
-    button.titleLabel.numberOfLines = 0;
-    
-    MinewModule *module = _allDevicesArray[index];
-    [button setTitle:[NSString stringWithFormat:NSLocalizedString(@"设备 %ld\n%@", nil),index+1 ,module.macString] forState:UIControlStateNormal];
-    if ([self isExistsModule:module]) {
-        button.selected = YES;
-    }
-    
-    [_scannedBtnArray addObject:button];
-    
-    [button addTarget:self action:@selector(buttonClick:) forControlEvents:UIControlEventTouchUpInside];
-}
 
 
-- (void)updateView {
-    //扫描，删除 不在范围内的设备
-    if (_scannedBtnArray.count > _allDevicesArray.count) {
-        for (NSInteger i=_scannedBtnArray.count-1; i>=_allDevicesArray.count; i--) {
-            if (_scannedBtnArray.count > i) {
-                [_scannedBtnArray removeObjectAtIndex:i];
-            }
-        }
-    }
-    //扫描，新增新设备
-    for (NSInteger i = 0; i<_allDevicesArray.count; i++) {
-        MinewModule *module = [_allDevicesArray objectAtIndex:i];
-        if (_scannedBtnArray.count > i) {
-            UIButton *btn = _scannedBtnArray[i];
-            NSString *titleString = btn.titleLabel.text;
-            NSString *subString = [[titleString componentsSeparatedByString:@"\n"] lastObject];
-            
-            if ([subString isEqualToString:module.macString]) {
-                btn.selected = [self isExistsModule:module];
-            }
-
-            //当所有的设备都清空了
-            if (_bindArray.count == 0) {
-                btn.selected = NO;
-            }
-       
-//            btn.selected = module.isBind;
-        }else {
-            if (_allDevicesArray.count <= 10) {
-                [self createButton:i];
-
-            }else {
-                [SVProgressHUD showWithStatus:NSLocalizedString(@"最多添加10个设备", nil)];
-            }
-        }
-        
-    }
-
-    //扫描，移除断链设备
-}
 
 - (void) initData {
     
@@ -272,7 +183,7 @@
             module.isBind = NO;
         }
         
-        [self updateView];
+//        [self updateView];
     }];
     
     UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"取消", nil) style:UIAlertActionStyleCancel handler:nil];
@@ -281,5 +192,37 @@
     [alertVC addAction:cancelAction];
     [self.navigationController presentViewController:alertVC animated:YES completion:nil];
 }
-#pragma mark
+
+#pragma mark---- UICollectionViewDelegate
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
+{
+    return _allDevicesArray.count;
+}
+
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
+    SettingCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"SettingCollectionViewCell" forIndexPath:indexPath];
+    if (_allDevicesArray.count > indexPath.row) {
+        MinewModule *module = _allDevicesArray[indexPath.row];
+        if ([self isExistsModule:module]) {
+            module.isBind = YES;
+        }
+        cell.module = module;
+        cell.deviceNameLabel = [NSString stringWithFormat:@"设备%lu",(unsigned long)(indexPath.row)+1];
+    }
+
+    return cell;
+}
+
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    MinewModule *module = _allDevicesArray[indexPath.row];
+    module.isBind = !module.isBind;
+    if (module.isBind) {
+        [_manager addBindModule:module];
+    }else {
+        [_manager removeBindModule:module];
+    }
+    [self.collectionView reloadItemsAtIndexPaths:@[indexPath]];
+    NSLog(@"你当前选择的是:%ld行",indexPath.row);
+}
 @end

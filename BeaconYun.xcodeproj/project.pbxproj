@@ -54,6 +54,8 @@
 		28744FB02213BA6C0053D8D3 /* WakeUp-en.bin in Resources */ = {isa = PBXBuildFile; fileRef = 28744FAF2213BA6C0053D8D3 /* WakeUp-en.bin */; };
 		28D9C96821DCCAEF004A552B /* SettingCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 28D9C96621DCCAEF004A552B /* SettingCollectionViewCell.m */; };
 		28D9C96921DCCAEF004A552B /* SettingCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 28D9C96721DCCAEF004A552B /* SettingCollectionViewCell.xib */; };
+		28DA0CE722C34D6200992372 /* ScanView.m in Sources */ = {isa = PBXBuildFile; fileRef = 28DA0CE622C34D6200992372 /* ScanView.m */; };
+		28DA0CE922C35BCD00992372 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 28DA0CE822C35BCD00992372 /* Main.storyboard */; };
 		28FE6DE821C8A354008ED44F /* WakeUpManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 28FE6DE521C8A354008ED44F /* WakeUpManager.m */; };
 		28FE6DE921C8A354008ED44F /* RecognizeManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 28FE6DE721C8A354008ED44F /* RecognizeManager.m */; };
 		B1CFC9764E4898520C187548 /* libPods-BeaconYun.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F5851AABDA97E315A353A0BF /* libPods-BeaconYun.a */; };
@@ -179,6 +181,9 @@
 		28D9C96521DCCAEF004A552B /* SettingCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SettingCollectionViewCell.h; sourceTree = "<group>"; };
 		28D9C96621DCCAEF004A552B /* SettingCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SettingCollectionViewCell.m; sourceTree = "<group>"; };
 		28D9C96721DCCAEF004A552B /* SettingCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SettingCollectionViewCell.xib; sourceTree = "<group>"; };
+		28DA0CE522C34D6200992372 /* ScanView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ScanView.h; sourceTree = "<group>"; };
+		28DA0CE622C34D6200992372 /* ScanView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ScanView.m; sourceTree = "<group>"; };
+		28DA0CE822C35BCD00992372 /* Main.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		28FE6DE421C8A354008ED44F /* RecognizeManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecognizeManager.h; sourceTree = "<group>"; };
 		28FE6DE521C8A354008ED44F /* WakeUpManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WakeUpManager.m; sourceTree = "<group>"; };
 		28FE6DE621C8A354008ED44F /* WakeUpManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WakeUpManager.h; sourceTree = "<group>"; };
@@ -442,6 +447,15 @@
 			path = View;
 			sourceTree = "<group>";
 		};
+		28DA0CE422C34B2800992372 /* ScanView */ = {
+			isa = PBXGroup;
+			children = (
+				28DA0CE522C34D6200992372 /* ScanView.h */,
+				28DA0CE622C34D6200992372 /* ScanView.m */,
+			);
+			path = ScanView;
+			sourceTree = "<group>";
+		};
 		28FE6DE321C8A354008ED44F /* Model */ = {
 			isa = PBXGroup;
 			children = (
@@ -521,6 +535,7 @@
 		E56992991E5EB60B00C76E42 /* BeaconYun */ = {
 			isa = PBXGroup;
 			children = (
+				28DA0CE822C35BCD00992372 /* Main.storyboard */,
 				286D6B3521B7B2A7000DB7C8 /* BaiduSDK */,
 				E56992E21E5EB97100C76E42 /* CommonTools */,
 				E56992E61E5EB97100C76E42 /* Editors */,
@@ -600,6 +615,7 @@
 		E56992EA1E5EB97100C76E42 /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				28DA0CE422C34B2800992372 /* ScanView */,
 				286D6BB621B7B771000DB7C8 /* Advertise */,
 				286D6B2B21B7ACDD000DB7C8 /* SettingViewController.h */,
 				286D6B2A21B7ACDC000DB7C8 /* SettingViewController.m */,
@@ -810,6 +826,7 @@
 				28744FB02213BA6C0053D8D3 /* WakeUp-en.bin in Resources */,
 				E56992F01E5EB97100C76E42 /* BYCustomConfig.plist in Resources */,
 				286D6B9221B7B2D6000DB7C8 /* English_Speech_Female.dat in Resources */,
+				28DA0CE922C35BCD00992372 /* Main.storyboard in Resources */,
 				286D6B7B21B7B2D6000DB7C8 /* bds_easr_basic_model.dat in Resources */,
 				286D6B8021B7B2D6000DB7C8 /* bds_easr_gramm.dat in Resources */,
 				282D97F421B7D404004E9D39 /* WakeUp.bin in Resources */,
@@ -901,6 +918,7 @@
 				286D6BC121B7B771000DB7C8 /* AdvertiseView.m in Sources */,
 				286D6B1221B7AC2F000DB7C8 /* MTPeripheralManager.m in Sources */,
 				E56992F11E5EB97100C76E42 /* BYCustomManager.m in Sources */,
+				28DA0CE722C34D6200992372 /* ScanView.m in Sources */,
 				E5BF8E721EB040A300AF94DC /* ColorPickerView.m in Sources */,
 				28D9C96821DCCAEF004A552B /* SettingCollectionViewCell.m in Sources */,
 				286D6B2721B7ACD2000DB7C8 /* BYNavigationController.m in Sources */,

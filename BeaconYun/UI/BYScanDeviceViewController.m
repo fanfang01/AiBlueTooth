@@ -40,7 +40,6 @@
 // iPhone bind device mac Address
 @implementation BYScanDeviceViewController
 {
-    UITextField *_contentTF;
     NSString *_testString;
     NSString *_deviceName;
     UIImageView *_scanBGImageView;
@@ -53,17 +52,24 @@ static NSInteger scanCount;
 {
     [super viewDidLoad];
     
-//    if ([self respondsToSelector:@selector(setEdgesForExtendedLayout:)]) {
-//        self.edgesForExtendedLayout = UIRectEdgeNone;
-//    }
     scanCount = 0;
-    [self initGUI];
+//    [self initGUI];
     [self initCore];
     
+    UITapGestureRecognizer *tapGes = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(touchDownToSearchDevice)];
+    [self.searchView addGestureRecognizer:tapGes];
+    
+    self.view.backgroundColor = RGB(140, 90, 161);
+//    self.view.backgroundColor = RGB(223, 217,148);
+    
     //add notification for keyBoard
-    [self addNoticeForKeyboard];
+//    [self addNoticeForKeyboard];
     
 
+}
+
+- (void)touchDownToSearchDevice {
+    [self startToScan];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -79,7 +85,7 @@ static NSInteger scanCount;
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    
+    self.navigationController.navigationBarHidden = YES;
 }
 
 - (void)initGUI
@@ -88,7 +94,6 @@ static NSInteger scanCount;
     UIImageView *backgroundImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, ScreenWidth, ScreenHeight)];
     backgroundImageView.image = [UIImage imageNamed:@"all_background"];
     [self.view addSubview:backgroundImageView];
-    
     
     UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, ScreenWidth, 60)];
     _titleLabel = titleLabel;
@@ -213,7 +218,7 @@ static NSInteger scanCount;
 
 - (void) startToAdertise {
     
-    StartAdvertiseViewController *adVC = [[StartAdvertiseViewController alloc] init];
+    StartAdvertiseViewController *adVC = [[UIStoryboard storyboardWithName:@"Main" bundle:nil] instantiateViewControllerWithIdentifier:@"StartAdvertiseViewController"];
     [self.navigationController pushViewController:adVC animated:YES];
     
 //    [_manager stopScan];
@@ -241,61 +246,6 @@ static NSInteger scanCount;
 {
     BYInfoViewController *bvc = [[BYInfoViewController alloc]init];
     [self.navigationController pushViewController:bvc animated:YES];
-}
-
-- (BOOL)textFieldShouldReturn:(UITextField *)textField
-{
-    [_contentTF resignFirstResponder];
-    return YES;
-}
-
-
-#pragma mark - 键盘通知
-- (void)addNoticeForKeyboard {
-    
-    //注册键盘出现的通知
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(keyboardWillShow:)
-                                                 name:UIKeyboardWillShowNotification object:nil];
-    //注册键盘消失的通知
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(keyboardWillHide:)
-                                                 name:UIKeyboardWillHideNotification object:nil];
-}
-
-///键盘显示事件
-- (void) keyboardWillShow:(NSNotification *)notification {
-    //获取键盘高度，在不同设备上，以及中英文下是不同的
-    CGFloat kbHeight = [[notification.userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue].size.height;
-    
-    //计算出键盘顶端到inputTextView panel底端的距离(加上自定义的缓冲距离INTERVAL_KEYBOARD)
-    CGFloat offset = (_contentTF.frame.origin.y+_contentTF.frame.size.height+INTERVAL_KEYBOARD) - (self.view.frame.size.height - kbHeight);
-    
-    // 取得键盘的动画时间，这样可以在视图上移的时候更连贯
-    double duration = [[notification.userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
-    
-    //将视图上移计算好的偏移
-    if(offset > 0) {
-        [UIView animateWithDuration:duration animations:^{
-            self.view.frame = CGRectMake(0.0f, -offset, self.view.frame.size.width, self.view.frame.size.height);
-        }];
-    }
-}
-
-///键盘消失事件
-- (void) keyboardWillHide:(NSNotification *)notify {
-    // 键盘动画时间
-    double duration = [[notify.userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
-    
-    //视图下沉恢复原状
-    [UIView animateWithDuration:duration animations:^{
-        self.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
-    }];
-}
-
-- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
-{
-    [_contentTF resignFirstResponder];
 }
 
 #pragma mark - animation

@@ -11,6 +11,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface SettingViewController : UIViewController
+@property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
 
 @end
 

@@ -23,17 +23,22 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    BYScanDeviceViewController *dvc = [[BYScanDeviceViewController alloc] init];
-    BYNavigationController *nvc = [[BYNavigationController alloc] initWithRootViewController:dvc];
-    nvc.navigationBar.barTintColor = [UIColor colorWithRed:0.20 green:0.20 blue:0.20 alpha:1.00];
-    nvc.navigationBar.translucent = NO;
-    nvc.navigationBar.titleTextAttributes = @{NSForegroundColorAttributeName: [UIColor whiteColor]};
-    nvc.navigationItem.rightBarButtonItem.tintColor = [UIColor whiteColor];
-    nvc.navigationItem.leftBarButtonItem.tintColor = [UIColor whiteColor];
-    nvc.navigationBar.tintColor = [UIColor whiteColor];
+//    BYScanDeviceViewController *dvc = [[BYScanDeviceViewController alloc] init];
+//    BYNavigationController *nvc = [[BYNavigationController alloc] initWithRootViewController:dvc];
+//    nvc.navigationBar.barTintColor = [UIColor colorWithRed:0.20 green:0.20 blue:0.20 alpha:1.00];
+//    nvc.navigationBar.translucent = NO;
+//    nvc.navigationBar.titleTextAttributes = @{NSForegroundColorAttributeName: [UIColor whiteColor]};
+//    nvc.navigationItem.rightBarButtonItem.tintColor = [UIColor whiteColor];
+//    nvc.navigationItem.leftBarButtonItem.tintColor = [UIColor whiteColor];
+//    nvc.navigationBar.tintColor = [UIColor whiteColor];
+    
+    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
+    
+    BYScanDeviceViewController *scanVC = [[UIStoryboard storyboardWithName:@"Main" bundle:nil] instantiateViewControllerWithIdentifier:@"BYScanDeviceViewController"];
+    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:scanVC];
     
     self.window = [[UIWindow alloc]initWithFrame:[UIScreen mainScreen].bounds];
-    self.window.rootViewController = nvc;
+    self.window.rootViewController = nav;
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];
     
