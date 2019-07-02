@@ -36,4 +36,6 @@
 
 //get current language
 + (NSString *)getCurrentLanguage;
+
++ (NSNumber *) numberHexString:(NSString *)aHexString;
 @end

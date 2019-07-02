@@ -15,6 +15,7 @@
 #import "MinewModuleManager.h"
 #import "MinewModule.h"
 #import "SettingViewController.h"
+#import "MinewModuleApi.h"
 
 //定义广播数据的结构体
 struct MyAdvDtaModel {
@@ -30,7 +31,6 @@ struct MyAdvDtaModel {
 static NSInteger i = 0;
 
 @interface StartAdvertiseViewController ()
-@property (nonatomic, strong) AdvertiseView *advertiseView;
 
 //中文唤醒
 @property (nonatomic, strong) NSMutableArray *commandAray;
@@ -45,7 +45,14 @@ static NSInteger i = 0;
 @property (nonatomic, strong) RecognizeManager *recognizeManager;
 
 @property (nonatomic, strong) MinewModuleManager *minewManager;
+
 @property (nonatomic, strong) NSMutableArray *uuidArray;//存放需要发送的UUID
+
+@property (nonatomic, strong) MinewModuleAPI *api;
+
+@property (nonatomic, strong) NSMutableArray <MinewModule *>*selectModuleArray;
+
+@property (nonatomic, strong) FLAnimatedImageView *animatedImgView;
 @end
 
 @implementation StartAdvertiseViewController
@@ -61,6 +68,7 @@ static NSInteger i = 0;
     
     NSTimer *_advCouplesTimer;
     NSInteger _couplesTimeCount;
+    GlobalManager *_globalManager;
 }
 
 static NSInteger count = 0;
@@ -71,6 +79,8 @@ static NSInteger count = 0;
     
     //退出页面，停止广播
     [_pm stopAdvertising];
+    
+    [_minewManager disconnect:_testmodule];
     
     //
     [self stopTimer];
@@ -83,43 +93,19 @@ static NSInteger count = 0;
     self.navigationController.navigationBarHidden = YES;
     
     [self isExistsBindDevicesToAdvertise];
+    
+    //获取设备信息
+    [self getDeviceInfo];
 }
 
+#pragma mark --- 判断用户有没有绑定的设备
 - (void)isExistsBindDevicesToAdvertise {
     MinewModuleManager *manager = [MinewModuleManager sharedInstance];
     NSArray *bindArray = manager.bindModules;
     
     if (0 == bindArray.count) {
-        [self showNoDeviceAlert];
+//        [self showNoDeviceAlert];
     }
-}
-
-#pragma mark ---- 返回上一个页面
-- (IBAction)backLastVC:(UIButton *)sender {
-    [self.navigationController popViewControllerAnimated:YES];
-}
-
-#pragma mark --- 点击按钮
-- (IBAction)buttonClick:(UIButton *)sender {
-    
-    NSInteger index = sender.tag-100;
-    _currentIndex = index;
-    
-    [self sendData:index];
-
-}
-
-#pragma mark --- 跳往设置界面
-- (IBAction)settingDevice:(UIButton *)sender {
-    [self startToSetup];
-}
-
-
-- (IBAction)onOffAction:(UIButton *)sender {
-    sender.selected = !sender.selected;
-    _is_on = sender.selected;
-    NSLog(@"开关的状态：sw.isOn==%d  _is_on==%d",sender.selected,_is_on);
-    [self sendData:12];
 }
 
 - (void)showNoDeviceAlert {
@@ -134,6 +120,92 @@ static NSInteger count = 0;
     [self.navigationController presentViewController:alertVC animated:YES completion:nil];
 }
 
+#pragma mark ---- 返回上一个页面
+- (IBAction)backLastVC:(UIButton *)sender {
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
+#pragma mark --- 点击按钮
+- (IBAction)buttonClick:(UIButton *)sender {
+    
+    NSInteger index = sender.tag-100;
+    _currentIndex = index;
+    
+    switch (_globalManager.connectState) {
+        case ConnectStateBLE:{
+            [self addAnimationView:index button:sender];
+            [self bleSendData:index];
+            break;
+        }
+        case ConnectStateAdvertise:{
+            [self sendData:index];
+            break;
+        }
+        default:
+            break;
+    }
+
+}
+
+- (void)addAnimationView:(NSInteger)index button:(UIButton *)button {
+    [self.animatedImgView removeFromSuperview];
+    
+//    self.animatedImgView.center = button.center;
+    self.animatedImgView.frame = CGRectMake(0, 0, 72, 72);
+    NSLog(@"button.frame===%@",NSStringFromCGRect(button.frame));
+    [button addSubview:self.animatedImgView];
+}
+
+#pragma mark --- 跳往设置界面
+- (IBAction)settingDevice:(UIButton *)sender {
+    [self startToSetup];
+}
+
+- (IBAction)onOffAction:(UIButton *)sender {
+    sender.selected = !sender.selected;
+    _is_on = sender.selected;
+//    NSLog(@"开关的状态：sw.isOn==%d  _is_on==%d",sender.selected,_is_on);
+
+//    [self bleSendData:12];
+    
+    switch (_globalManager.connectState) {
+        case ConnectStateBLE:
+        {
+            if (_is_on) {
+                [self sendPowerOnIns];
+            }else {
+                [self sendPowerOffIns];
+            }
+        }
+            break;
+        case ConnectStateAdvertise:
+        {
+            [self sendData:12];
+        }
+            break;
+        default:
+            break;
+    }
+    
+    
+}
+
+#warning 还未完成...具体指令
+- (void)sendPowerOnIns {
+    
+    [_api sendData:@"" hex:YES module:_testmodule completion:^(id result, BOOL keepAlive) {
+        
+    }];
+}
+
+- (void)sendPowerOffIns {
+    
+    [_api sendData:@"" hex:YES module:_testmodule completion:^(id result, BOOL keepAlive) {
+        
+    }];
+}
+
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     
@@ -145,14 +217,14 @@ static NSInteger count = 0;
     _currentTime = 0;
     _currentIndex = 0;//default 当前选中的模式
     
+    [self initCore];
     [self initData];
-
-    _pm = [MTPeripheralManager sharedInstance];
-    _minewManager = [MinewModuleManager sharedInstance];
     
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"设置", nil) style:UIBarButtonItemStylePlain target:self action:@selector(startToSetup)];
 
     [self initView];
+    
+//    [self.view addSubview:self.animatedImgView];
     
     [self wakeupConfiguration];
 //    [self recognizeConfiguration];
@@ -162,6 +234,14 @@ static NSInteger count = 0;
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
     
+}
+
+- (void)initCore {
+    _api = [MinewModuleAPI sharedInstance];
+    _pm = [MTPeripheralManager sharedInstance];
+    _minewManager = [MinewModuleManager sharedInstance];
+    
+    _globalManager = [GlobalManager sharedInstance];
 }
 
 //跳往设置界面
@@ -246,7 +326,6 @@ static NSInteger count = 0;
                             @{@"key":@"逼斯喽离"},
                             @{@"key":@"哈喽哈尼"}
                             ,nil];
-
         }
     }
     
@@ -257,7 +336,7 @@ static NSInteger count = 0;
     //设置开始和结束位置(设置渐变的方向)
     gradient.startPoint = CGPointMake(0, 0);
     gradient.endPoint = CGPointMake(1, 0);
-    gradient.frame =CGRectMake(0,0,40,40);
+    gradient.frame = CGRectMake(0,0,40,40);
     gradient.colors = [NSArray arrayWithObjects:(id)RGB(156, 100, 183).CGColor,(id)RGB(124, 71, 170).CGColor,(id)RGB(107, 55, 162).CGColor,(id)RGB(86, 35, 153).CGColor,nil];
     [self.view.layer insertSublayer:gradient atIndex:0];
     
@@ -270,25 +349,6 @@ static NSInteger count = 0;
     
 }
 
-
-- (AdvertiseView *)advertiseView
-{
-    if (!_advertiseView) {
-        _advertiseView = [[AdvertiseView alloc] initWithFrame:CGRectMake(0, 0, ScreenWidth, ScreenHeight)];
-        
-        __weak StartAdvertiseViewController *weakSelf = self;
-        _advertiseView.buttonBlock = ^(NSInteger index) {
-            __strong StartAdvertiseViewController *strongSelf = weakSelf;
-            
-            _currentIndex = index;
-            
-            [strongSelf sendData:index];
-        };
-        [_advertiseView.onSwitch addTarget:self action:@selector(switchOnOff:) forControlEvents:UIControlEventValueChanged];
-    }
-    return _advertiseView;
-}
-
 //test 剔除不在范围内的 Module
 - (NSMutableArray *)allInBoundsModules {
     NSMutableArray *allBindArr = [NSMutableArray arrayWithArray:_minewManager.bindModules];
@@ -296,6 +356,44 @@ static NSInteger count = 0;
     NSArray *outOfBoundsArr = [_minewManager isExisModuleOutofSacnnedModules];
     [allBindArr removeObjectsInArray:outOfBoundsArr];
     return allBindArr;
+}
+#pragma mark ---- ble模式发送数据
+- (void)bleSendData:(NSInteger)index {
+    struct InstructionSend instruction = {0,0,0,0};
+    instruction.Command_id = 3;
+    instruction.key = 1;
+    instruction.Status = 1;
+    instruction.Mode = index;
+    
+    NSString *ins = [NSString stringWithFormat:@"%02x%02x%02x%02x",instruction.Command_id,instruction.key,instruction.Status,instruction.Mode];
+    NSMutableArray *tempArray = [NSMutableArray array];
+    //找到目前所有的已经绑定的设备
+    for (NSDictionary *info in _minewManager.bindModules) {
+        NSString *macString = info[@"macString"];
+        MinewModule *module = [self isExistsModuleInScannedList:macString];
+        if (module) {
+            [tempArray addObject:module];
+        }
+    }
+    [_api sendData:ins hex:YES module:_testmodule completion:^(id result, BOOL keepAlive) {
+        
+    }];
+//    for (MinewModule *module in tempArray) {
+//        [_api sendData:ins hex:YES module:module completion:^(id result, BOOL keepAlive) {
+//
+//        }];
+//    }
+}
+
+//在绑定的队列里，是否存在在扫描的队列里
+- (MinewModule *)isExistsModuleInScannedList:(NSString *)macString {
+    for (MinewModule *module in _minewManager.allModules) {
+        if ([module.macString isEqualToString:macString]) {
+            return module;
+        }
+    }
+    
+    return nil;
 }
 
 #pragma mark -- 发送广播数据
@@ -324,22 +422,20 @@ static NSInteger count = 0;
         adv.productType = 16;
         
         adv.command_id = 1;
-        adv.key = index+1;
+        adv.key = index;
         adv.event_id = count;
         adv.values = [info[@"macByte"] intValue];
         
         if (index < 12) {
             _is_on = YES;
-            [self.advertiseView.onSwitch setOn:YES];
+            _onOffBtn.selected = YES;
         }
         
         if (12 == index) {//为开关机的状态
             if (_is_on) {//开机信息
                 adv.key = _currentIndex+1;
-                self.advertiseView.selectedIndex = _currentIndex;
             }else {      //关机信息
                 adv.key = 16;
-                self.advertiseView.selectedIndex = -1;
             }
         }
         
@@ -368,7 +464,16 @@ static NSInteger count = 0;
 #pragma mark -- 获取设备的信息
 - (void)getDeviceInfo {
     //0x21
-    [self sendData:33];
+    struct InstructionSend instruction = {0,0,0,0};
+    instruction.Command_id = 2;
+    instruction.key = 2;
+    instruction.Status = 0;
+    instruction.Mode = 0;
+    
+    NSString *ins = [NSString stringWithFormat:@"%02x%02x%02x%02x",instruction.Command_id,instruction.key,instruction.Status,instruction.Mode];
+    [_api sendData:ins hex:YES module:_testmodule completion:^(id result, BOOL keepAlive) {
+        
+    }];
 }
 
 #pragma mark --- 语音发送广播
@@ -386,7 +491,6 @@ static NSInteger count = 0;
                 if (index == 10) {//fast //发送的是当前的模式
                     _currentIndex ++;
 
-                    self.advertiseView.selectedIndex = _currentIndex;
                     if (_currentIndex>9) {
                         _currentIndex = 9;
                     }
@@ -398,14 +502,12 @@ static NSInteger count = 0;
                     if (_currentIndex < 0) {
                         _currentIndex = 0;
                     }
-                    self.advertiseView.selectedIndex = _currentIndex;
                     
                     [self sendData:_currentIndex];
 
                       break;
                 }else if (index == 12) {
                     _is_on = !_is_on;
-                    [self.advertiseView.onSwitch setOn:_is_on];
                 }
                 [self sendData:index];
 
@@ -430,24 +532,24 @@ static NSInteger count = 0;
                     //                _currentIndex = index;
                     if (index == 0) {//fast //发送的是当前的模式
                         _currentIndex ++;
-                        self.advertiseView.selectedIndex = _currentIndex;
+//                        self.advertiseView.selectedIndex = _currentIndex;
                         [self sendData:_currentIndex];
                         break;
                     }else if (index == 1) {//slow //发送的是当前的模式
                         if (_currentIndex>0) {
                             _currentIndex --;
-                            self.advertiseView.selectedIndex = _currentIndex;
+//                            self.advertiseView.selectedIndex = _currentIndex;
                             [self sendData:_currentIndex];
                             break;
                         }
                     }else if (index == 2) {//off
                         _is_on = !_is_on;
-                        [self.advertiseView.onSwitch setOn:_is_on];
+//                        [self.advertiseView.onSwitch setOn:_is_on];
                         [self sendData:10];
                         break;
                     }else if (3 == index) {//on
                         _is_on = !_is_on;
-                        [self.advertiseView.onSwitch setOn:_is_on];
+//                        [self.advertiseView.onSwitch setOn:_is_on];
                         [self sendData:11];
                     }
                     
@@ -519,9 +621,18 @@ static NSInteger count = 0;
     _advCouplesTimer = nil;
 }
 
-- (void)switchOnOff:(UISwitch *)sw {
-    _is_on = sw.on;
-    NSLog(@"开关的状态：sw.isOn==%d  _is_on==%d",sw.isOn,_is_on);
-    [self sendData:12];
+- (FLAnimatedImageView *)animatedImgView
+{
+    if (!_animatedImgView) {
+        FLAnimatedImageView *imgView = [[FLAnimatedImageView alloc] initWithFrame:CGRectMake(0, 0, 72, 72)];
+        _animatedImgView = imgView;
+//        imgView.backgroundColor = [UIColor redColor];
+        imgView.contentMode = UIViewContentModeScaleAspectFit;
+        NSString * bundlePath = [[ NSBundle mainBundle] pathForResource:@"Animation" ofType:@"bundle"];
+        NSString *imgPath= [bundlePath stringByAppendingPathComponent:[NSString stringWithFormat:@"test.gif"]];
+        NSData *imageData = [NSData dataWithContentsOfFile:imgPath];
+        imgView.animatedImage = [FLAnimatedImage animatedImageWithGIFData:imageData];
+    }
+    return _animatedImgView;
 }
 @end

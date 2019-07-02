@@ -244,12 +244,60 @@
     NSString *name = peripheral.name;
     
     NSString *adName = advertisementData[CBAdvertisementDataLocalNameKey];
+    NSString *connectable = advertisementData[CBAdvertisementDataIsConnectable];
+    NSData *manufactureData = advertisementData[CBAdvertisementDataManufacturerDataKey];
+    Byte *testByte = (Byte *)[manufactureData bytes];
     NSLog(@"advertisementDat==%@",advertisementData);
+    if ([adName isEqualToString:@"SToyyyyy"]) {
+        uint8_t validate = testByte[1];
+        if (validate >=160 && validate <=207) {
+            NSLog(@"在此范围内....");
+        }
+        uint16_t macBytes = 0;
+        NSString *macString = @"";
+        NSString *headString = @"";
+        if ([manufactureData length]) {
+            NSString *dataString = [MinewCommonTool getDataString:manufactureData];
+            macString = [dataString substringWithRange:NSMakeRange(4, dataString.length-4)];
+            headString = [dataString substringWithRange:NSMakeRange(0, 2)];
+            Byte *testByte = (Byte *)[manufactureData bytes];
+            
+            for (NSInteger i=2; i < [manufactureData length] ; i++) {
+                macBytes += testByte[i];
+            }
+            
+        }
+        NSInteger sum = [[MinewCommonTool numberHexString:[NSString stringWithFormat:@"%02x",macBytes%256]] integerValue];
+        NSLog(@"testByte[0] == %ld macBytes=%02x sum=%ldmodule.macString=%@",testByte[0],macBytes%256,sum, macString);
+
+        if (sum == testByte[0]) {
+            NSLog(@"校验成功...");
+            MinewModule *module = [self moduleExist:peripheral.identifier.UUIDString];
+            if (!module) {
+                module = [[MinewModule alloc] init];
+                [_appearModules addObject:module];
+                [_scannedModules addObject:module];
+            }
+            module.macBytes = macBytes;
+            module.macString = macString;
+            module.canConnect = [connectable boolValue];
+            module.peripheral = peripheral;
+            module.name = adName? adName:( name? name: @"Unnamed");
+            [_appearModules addObject:module];
+            if (self.findDevice) {
+                self.findDevice(module);
+            }
+
+        }
+        
+        NSLog(@"ble的返回数据===%@",advertisementData);
+    }
     
     if ([adName isEqualToString:@"HToy"])
     {
 
         MinewModule *module = [self moduleExist:peripheral.identifier.UUIDString];
+        module.canConnect = [connectable boolValue];
 
         if (!module)
         {
@@ -326,6 +374,7 @@
 - (void)centralManager:(CBCentralManager *)central didConnectPeripheral:(CBPeripheral *)peripheral
 {
     MinewModule *module = _connectingModuleDict[peripheral.identifier.UUIDString];
+    NSLog(@"连接成功%@",module.peripheral);
     
     if (module)
     {
@@ -359,7 +408,7 @@
 
 - (void)disconnectFrom:(MinewModule *)module
 {
-    if ( module.peripheral)
+    if ( module.peripheral )
     {
         module.activeDisconnect = YES;
         [_centralManager cancelPeripheralConnection:module.peripheral];

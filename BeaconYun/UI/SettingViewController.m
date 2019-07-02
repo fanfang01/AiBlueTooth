@@ -35,6 +35,7 @@
     CGFloat _buttonWidth ;
     CGFloat _buttonHeight ;
     CGFloat _viewHeight ;
+    GlobalManager *_globalManager;
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -79,8 +80,10 @@
 - (void)initCore {
     _manager = [MinewModuleManager sharedInstance];
     _manager.delegaate = self;
-    _bindArray = [_manager.bindModules mutableCopy];
+    _bindArray = _manager.bindModules;
     _allDevicesArray = [NSMutableArray arrayWithArray:_manager.allModules];
+    
+    _globalManager = [GlobalManager sharedInstance];
     
     NSLog(@"全部扫描到的设备为:%ld",_allDevicesArray.count);
 }
@@ -88,16 +91,24 @@
 //后台持续1s扫描
 - (void)initTimer {
     if (!_reloadTimer) {
-        _reloadTimer = [NSTimer scheduledTimerWithTimeInterval:3 target:self selector:@selector(refreshScannedDevices) userInfo:nil repeats:YES];
+        _reloadTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(refreshScannedDevices) userInfo:nil repeats:YES];
     }
 }
 
 - (void)refreshScannedDevices {
-    _bindArray = [_manager.bindModules mutableCopy];
     _allDevicesArray = [NSMutableArray arrayWithArray:_manager.allModules];
     
-    //持续刷新
-//    [self updateView];
+    for (NSDictionary *info in _bindArray) {
+        NSString *macString = info[@"macString"];
+        MinewModule *module = [self isExistsModuleInScannedList:macString];
+        if (module) {//如果没有连接的话，去连接
+            if (!module.connected && !module.connecting) {//未连接，开始去连接
+                [_manager connecnt:module];
+            }
+        }
+    }
+    
+    [self reloadData];
 }
 
 - (void)invalidateTimer {
@@ -170,20 +181,32 @@
     return NO;
 }
 
+//在绑定的队列里，是否存在在扫描的队列里
+- (MinewModule *)isExistsModuleInScannedList:(NSString *)macString {
+    for (MinewModule *module in _scannedBtnArray) {
+        if ([module.macString isEqualToString:macString]) {
+            return module;
+        }
+    }
+    
+    return nil;
+}
+
+#pragma mark ----   清除所有的设备
 - (void) clearAllSelectedDevices {
     
     UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"提示", nil) message:NSLocalizedString(@"你确定要清除所有的绑定的设备吗?", nil) preferredStyle:UIAlertControllerStyleAlert];
     
     UIAlertAction *confirmAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"确定", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         [[MinewModuleManager sharedInstance] removeAllBindModules];
-        _bindArray = [_manager.bindModules mutableCopy];
+        _bindArray = _manager.bindModules;
         [_bindArray removeAllObjects];
         
         for (MinewModule *module in _allDevicesArray) {
             module.isBind = NO;
         }
         
-//        [self updateView];
+        [self reloadData];
     }];
     
     UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"取消", nil) style:UIAlertActionStyleCancel handler:nil];
@@ -191,6 +214,11 @@
     [alertVC addAction:confirmAction];
     [alertVC addAction:cancelAction];
     [self.navigationController presentViewController:alertVC animated:YES completion:nil];
+}
+
+- (void)reloadData {
+    _bindArray = _manager.bindModules;
+    [self.collectionView reloadData];
 }
 
 #pragma mark---- UICollectionViewDelegate
@@ -207,7 +235,7 @@
             module.isBind = YES;
         }
         cell.module = module;
-        cell.deviceNameLabel = [NSString stringWithFormat:@"设备%lu",(unsigned long)(indexPath.row)+1];
+        cell.deviceNameLabel = [NSString stringWithFormat:@"设备%lu",(indexPath.row)+1];
     }
 
     return cell;
@@ -222,7 +250,28 @@
     }else {
         [_manager removeBindModule:module];
     }
-    [self.collectionView reloadItemsAtIndexPaths:@[indexPath]];
+    switch (_globalManager.connectState) {
+        case ConnectStateBLE:
+        {
+            if (module.isBind) {
+                [_manager connecnt:module];
+            }else {
+                [_manager disconnect:module];
+            }
+        }
+            break;
+        case ConnectStateAdvertise:
+        {
+
+        }
+            break;
+        default:
+            break;
+    }
+
+    
+    //reload
+    [self reloadData];
     NSLog(@"你当前选择的是:%ld行",indexPath.row);
 }
 @end

@@ -200,10 +200,10 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yPe-ow-NOL">
-                                <rect key="frame" x="20" y="31" width="12" height="22"/>
+                                <rect key="frame" x="20" y="31" width="24" height="44"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="12" id="DTC-ZY-yiW"/>
-                                    <constraint firstAttribute="height" constant="22" id="K4k-76-duR"/>
+                                    <constraint firstAttribute="width" constant="24" id="DTC-ZY-yiW"/>
+                                    <constraint firstAttribute="height" constant="44" id="K4k-76-duR"/>
                                 </constraints>
                                 <state key="normal" image="back"/>
                                 <connections>
@@ -311,6 +311,9 @@
                             <constraint firstItem="SEd-7z-fnI" firstAttribute="width" secondItem="CTH-Vi-3e5" secondAttribute="width" constant="-2" id="xvl-Nh-QQi"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="onOffBtn" destination="9nO-hg-mY5" id="1Ht-ck-NTd"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ndA-ag-KzT" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

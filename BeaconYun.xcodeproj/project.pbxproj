@@ -52,6 +52,8 @@
 		286D6BC121B7B771000DB7C8 /* AdvertiseView.m in Sources */ = {isa = PBXBuildFile; fileRef = 286D6BBC21B7B771000DB7C8 /* AdvertiseView.m */; };
 		286D6BC221B7B771000DB7C8 /* ShakeSelectView.m in Sources */ = {isa = PBXBuildFile; fileRef = 286D6BBD21B7B771000DB7C8 /* ShakeSelectView.m */; };
 		28744FB02213BA6C0053D8D3 /* WakeUp-en.bin in Resources */ = {isa = PBXBuildFile; fileRef = 28744FAF2213BA6C0053D8D3 /* WakeUp-en.bin */; };
+		28BB821622CAEE2600C78920 /* GlobalManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 28BB821522CAEE2600C78920 /* GlobalManager.m */; };
+		28BB821822CB13E500C78920 /* Animation.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 28BB821722CB13E500C78920 /* Animation.bundle */; };
 		28D9C96821DCCAEF004A552B /* SettingCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 28D9C96621DCCAEF004A552B /* SettingCollectionViewCell.m */; };
 		28D9C96921DCCAEF004A552B /* SettingCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 28D9C96721DCCAEF004A552B /* SettingCollectionViewCell.xib */; };
 		28DA0CE722C34D6200992372 /* ScanView.m in Sources */ = {isa = PBXBuildFile; fileRef = 28DA0CE622C34D6200992372 /* ScanView.m */; };
@@ -178,6 +180,9 @@
 		286D6BBE21B7B771000DB7C8 /* AdvertiseView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AdvertiseView.h; sourceTree = "<group>"; };
 		286D6BBF21B7B771000DB7C8 /* ShakeSelectView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShakeSelectView.h; sourceTree = "<group>"; };
 		28744FAF2213BA6C0053D8D3 /* WakeUp-en.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; path = "WakeUp-en.bin"; sourceTree = "<group>"; };
+		28BB821422CAEE2600C78920 /* GlobalManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GlobalManager.h; sourceTree = "<group>"; };
+		28BB821522CAEE2600C78920 /* GlobalManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GlobalManager.m; sourceTree = "<group>"; };
+		28BB821722CB13E500C78920 /* Animation.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Animation.bundle; sourceTree = "<group>"; };
 		28D9C96521DCCAEF004A552B /* SettingCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SettingCollectionViewCell.h; sourceTree = "<group>"; };
 		28D9C96621DCCAEF004A552B /* SettingCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SettingCollectionViewCell.m; sourceTree = "<group>"; };
 		28D9C96721DCCAEF004A552B /* SettingCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SettingCollectionViewCell.xib; sourceTree = "<group>"; };
@@ -587,6 +592,7 @@
 				E56992D61E5EB91500C76E42 /* LaunchScreen.storyboard */,
 				E56992D81E5EB91500C76E42 /* Info.plist */,
 				E56992D91E5EB91500C76E42 /* main.m */,
+				28BB821722CB13E500C78920 /* Animation.bundle */,
 			);
 			path = Configs;
 			sourceTree = "<group>";
@@ -597,6 +603,8 @@
 				E56992E31E5EB97100C76E42 /* BYCommonMacros.h */,
 				E56992E41E5EB97100C76E42 /* BYCommonTools.h */,
 				E56992E51E5EB97100C76E42 /* BYCommonTools.m */,
+				28BB821422CAEE2600C78920 /* GlobalManager.h */,
+				28BB821522CAEE2600C78920 /* GlobalManager.m */,
 			);
 			path = CommonTools;
 			sourceTree = "<group>";
@@ -820,6 +828,7 @@
 				286D6B8221B7B2D6000DB7C8 /* bds_easr_dnn_wakeup_model.dat in Resources */,
 				286D6B7921B7B2D6000DB7C8 /* .gitIgnore in Resources */,
 				2838681321D61EBF00C56480 /* WakeUp-ch.bin in Resources */,
+				28BB821822CB13E500C78920 /* Animation.bundle in Resources */,
 				28D9C96921DCCAEF004A552B /* SettingCollectionViewCell.xib in Resources */,
 				286D6B8121B7B2D6000DB7C8 /* bds_easr_wakeup_words.dat in Resources */,
 				286D6B3321B7AD1B000DB7C8 /* shake.xcassets in Resources */,
@@ -936,6 +945,7 @@
 				286D6B1121B7AC2F000DB7C8 /* MTCommonTool.m in Sources */,
 				E54070101E97320100D9ECB4 /* WXImgLoaderDefaultImpl.m in Sources */,
 				E56993011E5ECA9400C76E42 /* BYCellModel.m in Sources */,
+				28BB821622CAEE2600C78920 /* GlobalManager.m in Sources */,
 				E56993041E5ED41100C76E42 /* BYSectionModel.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1103,7 +1113,7 @@
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/BeaconYun/Configs/PrefixHeader.pch";
 				INFOPLIST_FILE = "$(SRCROOT)/BeaconYun/Configs/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1127,7 +1137,7 @@
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/BeaconYun/Configs/PrefixHeader.pch";
 				INFOPLIST_FILE = "$(SRCROOT)/BeaconYun/Configs/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",

@@ -153,6 +153,39 @@ WX_EXPORT_METHOD(@selector(getLanguage:))
     [api.lastModule writeData:dataValue hex:hex];
 }
 
+- (void)sendData:(NSString *)data hex:(BOOL)hex module:(MinewModule *)module completion:(WXModuleKeepAliveCallback)handler
+{
+    NSLog(@"++INS:%@, hex:%d", data, hex);
+    
+    MinewModuleAPI *api = [self getInstance];
+    
+    NSData *dataValue = nil;
+    
+    if (hex)
+    {
+        dataValue = [self dataFromHexString:data];
+        
+        if (!dataValue)
+        {
+            handler(@"0", YES);
+            return ;
+        }
+    }
+    else
+        dataValue = [data dataUsingEncoding:NSUTF8StringEncoding];
+    
+    NSLog(@"++DATA:%@", dataValue);
+    
+    
+    module.writeHandler = ^(BOOL result) {
+        handler( result? @"1": @"0", YES);
+        
+        NSLog(@"++RE:%d", result);
+    };
+    
+    [module writeData:dataValue hex:hex];
+}
+
 - (void)sendCycleData:(NSString *)data hex:(BOOL)hex interval:(NSString *)inter completion:(WXModuleKeepAliveCallback)handler
 {
     MinewModuleAPI *api = [self getInstance];

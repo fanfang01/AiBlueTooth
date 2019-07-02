@@ -37,6 +37,7 @@
 - (void)dataReceive:(WXModuleKeepAliveCallback)handler;
 
 - (void)sendData:(NSString *)data hex:(BOOL)hex completion:(WXModuleKeepAliveCallback)handler;
+- (void)sendData:(NSString *)data hex:(BOOL)hex module:(MinewModule *)module completion:(WXModuleKeepAliveCallback)handler;
 
 - (void)sendCycleData:(NSString *)data hex:(BOOL)hex interval:(NSString *)inter completion:(WXModuleKeepAliveCallback)handler;
 

@@ -44,7 +44,8 @@
     NSString *_deviceName;
     UIImageView *_scanBGImageView;
     UILabel *_titleLabel;
-
+    MinewModule *_testModule;
+    GlobalManager *_globalManager;
 }
 
 static NSInteger scanCount;
@@ -166,20 +167,30 @@ static NSInteger scanCount;
 //    [_manager startScan];
     [self startToScan];
     
+    _globalManager = [GlobalManager sharedInstance];
+    
     __weak BYScanDeviceViewController *weakSelf = self;
     _manager.findDevice = ^(MinewModule *module) {
         __strong BYScanDeviceViewController *strongSelf = weakSelf;
         dispatch_async(dispatch_get_main_queue(), ^{
             strongSelf.showLabel.text = [NSString stringWithFormat:NSLocalizedString(@"扫描到%@", nil),module.name];
             if (scanCount == 0) {
-                [SVProgressHUD showSuccessWithStatus:[NSString stringWithFormat:NSLocalizedString(@"成功扫描到设备%@", nil),module.name]];
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                    [SVProgressHUD dismiss];
-                });
-                
-                [weakSelf startToAdertise];
-                scanCount ++;
-//                [strongSelf.manager stopScan];
+                if (module.canConnect) {
+                    [_manager connecnt:module];
+                    _globalManager.connectState = ConnectStateBLE;
+                    _testModule = module;
+                    scanCount ++;
+                }else {//广播蓝牙
+                    [SVProgressHUD showSuccessWithStatus:[NSString stringWithFormat:NSLocalizedString(@"成功扫描到设备%@", nil),module.name]];
+                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                        [SVProgressHUD dismiss];
+                    });
+                    _globalManager.connectState = ConnectStateAdvertise;
+                    [weakSelf startToAdertise];
+
+                    scanCount ++;
+                    //                [strongSelf.manager stopScan];
+                }
                 
             }
         });
@@ -219,7 +230,10 @@ static NSInteger scanCount;
 - (void) startToAdertise {
     
     StartAdvertiseViewController *adVC = [[UIStoryboard storyboardWithName:@"Main" bundle:nil] instantiateViewControllerWithIdentifier:@"StartAdvertiseViewController"];
+    adVC.testmodule = _testModule;
+    
     [self.navigationController pushViewController:adVC animated:YES];
+    
     
 //    [_manager stopScan];
 }
@@ -255,5 +269,14 @@ static NSInteger scanCount;
 
 - (void)animationDidStop:(CAAnimation *)anim finished:(BOOL)flag {
     NSLog(@"%@ | %d",anim,flag);
+}
+
+- (void)manager:(MinewModuleManager *)manager didChangeModule:(MinewModule *)module linkStatus:(LinkStatus)status {
+    if (status == LinkStatusConnected) {
+        NSLog(@"连接成功%@",module.peripheral);
+        
+        [self startToAdertise];
+        scanCount ++;
+    }
 }
 @end

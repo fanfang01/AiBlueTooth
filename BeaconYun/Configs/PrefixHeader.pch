@@ -20,6 +20,10 @@
 #import "BDSWakeupParameters.h"
 
 #import "MinewCommonTool.h"
+#import "GlobalManager.h"
+
+#import <FLAnimatedImageView.h>
+#import <FLAnimatedImage.h>
 
 
 #define ScreenWidth  ([[UIScreen mainScreen] bounds].size.width)

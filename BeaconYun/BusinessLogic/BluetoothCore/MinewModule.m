@@ -10,9 +10,9 @@
 #import <CoreBluetooth/CoreBluetooth.h>
 #import "MinewCommonTool.h"
 
-#define sWriteUUIDs @[@"6E400002-B5A3-F393-E0A9-E50E24DCCA9E", @"FFF2"]
+#define sWriteUUIDs @[@"6E400002-B5A3-F393-E0A9-E50E24DCCA9E", @"FF01"]
 #define sNotifyUUIDs @[@"6E400003-B5A3-F393-E0A9-E50E24DCCA9E", @"FFF1"]
-#define sServiceUUIDs @[@"6E400001-B5A3-F393-E0A9-E50E24DCCA9E", @"FFF0"]
+#define sServiceUUIDs @[@"6E400001-B5A3-F393-E0A9-E50E24DCCA9E", @"FF00"]
 
 @interface MinewModule()<CBPeripheralDelegate>
 
@@ -102,7 +102,7 @@
 
 - (void)peripheral:(CBPeripheral *)peripheral didUpdateNotificationStateForCharacteristic:(CBCharacteristic *)characteristic error:(NSError *)error
 {
-    NSLog(@"didUpdateNotificationStateForCharacteristic Error:%@", error);
+    NSLog(@"didUpdateNotificationStateForCharacteristic Error:%@ characteristic.value=%@ =%@", error,characteristic.value,peripheral);
     
 }
 
@@ -135,9 +135,10 @@
 
 - (void)peripheral:(CBPeripheral *)peripheral didWriteValueForCharacteristic:(CBCharacteristic *)characteristic error:(NSError *)error
 {
-    NSLog(@"didWriteValueForCharacteristic Error:%@", error);
+    NSLog(@"didWriteValueForCharacteristic Error:%@ characteristic.value=%@ peripheral==%@", error,characteristic.value,peripheral);
     if ( [_writeCharacteristic.UUID.UUIDString isEqualToString:characteristic.UUID.UUIDString] && _writeHandler)
     {
+        [peripheral readValueForCharacteristic:characteristic];
         _writeHandler(error? NO: YES);
     }
 }

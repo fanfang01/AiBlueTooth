@@ -1,21 +1,27 @@
 PODS:
+  - FLAnimatedImage (1.0.12)
   - Masonry (1.1.0)
-  - MJExtension (3.0.15.1)
-  - SDWebImage (3.7.5):
-    - SDWebImage/Core (= 3.7.5)
-  - SDWebImage/Core (3.7.5)
+  - MJExtension (3.0.17)
+  - SDWebImage (4.4.7):
+    - SDWebImage/Core (= 4.4.7)
+  - SDWebImage/Core (4.4.7)
+  - SDWebImage/GIF (4.4.7):
+    - FLAnimatedImage (~> 1.0)
+    - SDWebImage/Core
   - SVProgressHUD (2.2.5)
-  - WeexSDK (0.20.1)
+  - WeexSDK (0.24.0)
 
 DEPENDENCIES:
   - Masonry
   - MJExtension
-  - SDWebImage (= 3.7.5)
+  - SDWebImage
+  - SDWebImage/GIF
   - SVProgressHUD
   - WeexSDK
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
+    - FLAnimatedImage
     - Masonry
     - MJExtension
     - SDWebImage
@@ -23,12 +29,13 @@ SPEC REPOS:
     - WeexSDK
 
 SPEC CHECKSUMS:
+  FLAnimatedImage: 4a0b56255d9b05f18b6dd7ee06871be5d3b89e31
   Masonry: 678fab65091a9290e40e2832a55e7ab731aad201
-  MJExtension: 19bc33ce2eee2d319760f5622562cf581a6ff756
-  SDWebImage: 69c6303e3348fba97e03f65d65d4fbc26740f461
+  MJExtension: 74ec83124a68891619fb7ba9c5c811bbf1691076
+  SDWebImage: c10d14a8883ebd89664f02a422006f66a85c0c5d
   SVProgressHUD: 1428aafac632c1f86f62aa4243ec12008d7a51d6
-  WeexSDK: ced3f2ef2f0cb48d1d76fd2f03c645572c632d21
+  WeexSDK: 5bd35be9c035c67c84d1ba15712360bb0d0ba6b5
 
-PODFILE CHECKSUM: 5156c26a8171c11f68d0f7ce59b863a8c5367d39
+PODFILE CHECKSUM: c5235ba5238b2fa37bb0e294ea66272c005790f7
 
 COCOAPODS: 1.5.3
