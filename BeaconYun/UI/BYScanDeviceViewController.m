@@ -70,17 +70,23 @@ static NSInteger scanCount;
 }
 
 - (void)touchDownToSearchDevice {
+    scanCount = 0;
     [self startToScan];
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
-    [super viewDidAppear:animated];
     if (scanCount != 0) {
         [_manager stopScan];
+        NSLog(@"全部停止扫描....");
         _showLabel.text = NSLocalizedString(@"请点击上方按钮开始扫描", nil);
     }
     scanCount = 0;
+    //在设置页面代理被设置到那里了，这里接受不到连接成功的回调
+    _manager.delegaate = self;
+    NSLog(@"viewDidAppear设备再次出现scanCount==%ld",scanCount);
+    [super viewDidAppear:animated];
+
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -143,7 +149,7 @@ static NSInteger scanCount;
 
 #pragma mark --- 动画开始
 - (void)scanAction {
-    [_scanBGImageView.layer removeAnimationForKey:@"transform"];
+    [_scanRoundImgView.layer removeAnimationForKey:@"transform"];
     CAKeyframeAnimation *theAnimation = [CAKeyframeAnimation animation];
     theAnimation.values = [NSArray arrayWithObjects:
                            [NSValue valueWithCATransform3D:CATransform3DMakeRotation(0, 0,0,1)],
@@ -155,7 +161,7 @@ static NSInteger scanCount;
     theAnimation.repeatCount = MAXFLOAT;
     theAnimation.removedOnCompletion = YES;
     theAnimation.delegate = self;
-    [_scanBGImageView.layer addAnimation:theAnimation forKey:@"transform"];
+    [_scanRoundImgView.layer addAnimation:theAnimation forKey:@"transform"];
     
     _showLabel.text = NSLocalizedString(@"开始扫描", nil);
 }
@@ -174,6 +180,7 @@ static NSInteger scanCount;
         __strong BYScanDeviceViewController *strongSelf = weakSelf;
         dispatch_async(dispatch_get_main_queue(), ^{
             strongSelf.showLabel.text = [NSString stringWithFormat:NSLocalizedString(@"扫描到%@", nil),module.name];
+            NSLog(@"扫描到设备,,此时的scanCount==%ld",scanCount);
             if (scanCount == 0) {
                 if (module.canConnect) {
                     [_manager connecnt:module];
@@ -185,6 +192,7 @@ static NSInteger scanCount;
                     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                         [SVProgressHUD dismiss];
                     });
+                    NSLog(@"广播蓝牙方式进入");
                     _globalManager.connectState = ConnectStateAdvertise;
                     [weakSelf startToAdertise];
 
@@ -272,11 +280,17 @@ static NSInteger scanCount;
 }
 
 - (void)manager:(MinewModuleManager *)manager didChangeModule:(MinewModule *)module linkStatus:(LinkStatus)status {
+    NSLog(@"收到连接的回调.....");
     if (status == LinkStatusConnected) {
         NSLog(@"连接成功%@",module.peripheral);
-        
-        [self startToAdertise];
-        scanCount ++;
+        NSLog(@"连接成功此时的scanCount==%ld",scanCount);
+        if (scanCount == 1) {
+            [MinewCommonTool onMainThread:^{
+                [self startToAdertise];
+            }];
+            scanCount ++;
+        }
+
     }
 }
 @end

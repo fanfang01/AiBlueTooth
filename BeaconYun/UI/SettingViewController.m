@@ -54,15 +54,15 @@
     
     [self initView];
     
-    [self initTimer];
+//    [self initTimer];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
     
-    [self invalidateTimer];
+//    [self invalidateTimer];
     
-    [_manager startScan];
+//    [_manager startScan];
 }
 
 - (IBAction)backLastVC:(UIButton *)sender {
@@ -73,8 +73,6 @@
 - (IBAction)deleteAllDevices:(UIButton *)sender {
     [self clearAllSelectedDevices];
 }
-
-
 
 
 - (void)initCore {
@@ -88,39 +86,39 @@
     NSLog(@"全部扫描到的设备为:%ld",_allDevicesArray.count);
 }
 
-//后台持续1s扫描
-- (void)initTimer {
-    if (!_reloadTimer) {
-        _reloadTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(refreshScannedDevices) userInfo:nil repeats:YES];
-    }
-}
+////后台持续1s扫描
+//- (void)initTimer {
+//    if (!_reloadTimer) {
+//        _reloadTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(refreshScannedDevices) userInfo:nil repeats:YES];
+//    }
+//}
+//
+//- (void)refreshScannedDevices {
+////    _allDevicesArray = [NSMutableArray arrayWithArray:_manager.allModules];
+////
+////    for (NSDictionary *info in _bindArray) {
+////        NSString *macString = info[@"macString"];
+////        MinewModule *module = [self isExistsModuleInScannedList:macString];
+////        if (module) {//如果没有连接的话，去连接
+////            if (!module.connected && !module.connecting) {//未连接，开始去连接
+////                [_manager connecnt:module];
+////            }
+////        }
+////    }
+//
+//    [self reloadData];
+//}
 
-- (void)refreshScannedDevices {
-    _allDevicesArray = [NSMutableArray arrayWithArray:_manager.allModules];
-    
-    for (NSDictionary *info in _bindArray) {
-        NSString *macString = info[@"macString"];
-        MinewModule *module = [self isExistsModuleInScannedList:macString];
-        if (module) {//如果没有连接的话，去连接
-            if (!module.connected && !module.connecting) {//未连接，开始去连接
-                [_manager connecnt:module];
-            }
-        }
-    }
-    
-    [self reloadData];
-}
-
-- (void)invalidateTimer {
-    [_reloadTimer invalidate];
-    _reloadTimer = nil;
-}
+//- (void)invalidateTimer {
+//    [_reloadTimer invalidate];
+//    _reloadTimer = nil;
+//}
 
 - (void) initView {
     UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
     layout.itemSize = CGSizeMake((ScreenWidth-17*3)/2, 60);
-    layout.minimumLineSpacing = 8;
-    layout.minimumInteritemSpacing = 14;
+    layout.minimumLineSpacing = 10;
+    layout.minimumInteritemSpacing = 15;
     
     self.collectionView.collectionViewLayout = layout;
     self.collectionView.delegate = self;
@@ -128,9 +126,6 @@
     [self.collectionView registerNib:[UINib nibWithNibName:@"SettingCollectionViewCell" bundle:nil] forCellWithReuseIdentifier:@"SettingCollectionViewCell"];
 
 }
-
-
-
 
 - (void) initData {
     
@@ -200,7 +195,6 @@
     UIAlertAction *confirmAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"确定", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         [[MinewModuleManager sharedInstance] removeAllBindModules];
         _bindArray = _manager.bindModules;
-        [_bindArray removeAllObjects];
         
         for (MinewModule *module in _allDevicesArray) {
             module.isBind = NO;
@@ -234,8 +228,9 @@
         if ([self isExistsModule:module]) {
             module.isBind = YES;
         }
+//        cell.deviceNameLabel.text = [NSString stringWithFormat:@"设备%lu",(indexPath.row)+1];
+
         cell.module = module;
-        cell.deviceNameLabel = [NSString stringWithFormat:@"设备%lu",(indexPath.row)+1];
     }
 
     return cell;
@@ -246,6 +241,9 @@
     MinewModule *module = _allDevicesArray[indexPath.row];
     module.isBind = !module.isBind;
     if (module.isBind) {
+        if (_manager.bindModules.count>=6) {
+            [SVProgressHUD showSuccessWithStatus:@"已超过最大的添加设备数..."];
+        }
         [_manager addBindModule:module];
     }else {
         [_manager removeBindModule:module];

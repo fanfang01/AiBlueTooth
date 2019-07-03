@@ -48,16 +48,16 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "No"
+            shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "BeaconYun/UI/Advertise/Controller/StartAdvertiseViewController.m"
-            timestampString = "583746600.933917"
+            filePath = "BeaconYun/UI/BYScanDeviceViewController.m"
+            timestampString = "583838558.123273"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "634"
-            endingLineNumber = "634"
-            landmarkName = "-animatedImgView"
+            startingLineNumber = "199"
+            endingLineNumber = "199"
+            landmarkName = "-initCore"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -67,13 +67,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "BeaconYun/UI/SettingViewController.m"
-            timestampString = "583746600.934662"
+            filePath = "BeaconYun/UI/BYScanDeviceViewController.m"
+            timestampString = "583838558.123382"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "257"
-            endingLineNumber = "257"
-            landmarkName = "-collectionView:didSelectItemAtIndexPath:"
+            startingLineNumber = "191"
+            endingLineNumber = "191"
+            landmarkName = "-initCore"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -83,45 +83,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "BeaconYun/UI/SettingViewController.m"
-            timestampString = "583746600.934765"
+            filePath = "BeaconYun/UI/BYScanDeviceViewController.m"
+            timestampString = "583838558.1234241"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "259"
-            endingLineNumber = "259"
-            landmarkName = "-collectionView:didSelectItemAtIndexPath:"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "BeaconYun/UI/Advertise/Controller/StartAdvertiseViewController.m"
-            timestampString = "583746600.934837"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "386"
-            endingLineNumber = "386"
-            landmarkName = "-bleSendData:"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "BeaconYun/BusinessLogic/BluetoothCore/MinewModule.m"
-            timestampString = "583745816.381174"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "41"
-            endingLineNumber = "41"
-            landmarkName = "-writeData:hex:"
+            startingLineNumber = "184"
+            endingLineNumber = "184"
+            landmarkName = "-initCore"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

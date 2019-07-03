@@ -21,6 +21,11 @@ NS_ASSUME_NONNULL_BEGIN
 //记录当前所在的位置
 @property (nonatomic, assign) ConnectState connectState;
 
+@property (nonatomic,strong)NSMutableArray *allDevicesArray;
+
+@property (nonatomic,strong)NSMutableArray *bindArray;
+
+
 + (instancetype)sharedInstance;
 
 @end

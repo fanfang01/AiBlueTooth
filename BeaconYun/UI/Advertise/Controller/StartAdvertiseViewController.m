@@ -53,11 +53,12 @@ static NSInteger i = 0;
 @property (nonatomic, strong) NSMutableArray <MinewModule *>*selectModuleArray;
 
 @property (nonatomic, strong) FLAnimatedImageView *animatedImgView;
+
+@property (nonatomic,assign) BOOL is_on;//记录开关的状态
 @end
 
 @implementation StartAdvertiseViewController
 {
-    BOOL _is_on;//记录开关的状态
 
     NSTimer *_advTimer;//
 
@@ -96,6 +97,7 @@ static NSInteger count = 0;
     
     //获取设备信息
     [self getDeviceInfo];
+    
 }
 
 #pragma mark --- 判断用户有没有绑定的设备
@@ -133,7 +135,6 @@ static NSInteger count = 0;
     
     switch (_globalManager.connectState) {
         case ConnectStateBLE:{
-            [self addAnimationView:index button:sender];
             [self bleSendData:index];
             break;
         }
@@ -162,11 +163,7 @@ static NSInteger count = 0;
 }
 
 - (IBAction)onOffAction:(UIButton *)sender {
-    sender.selected = !sender.selected;
-    _is_on = sender.selected;
-//    NSLog(@"开关的状态：sw.isOn==%d  _is_on==%d",sender.selected,_is_on);
-
-//    [self bleSendData:12];
+    self.is_on = !sender.selected;
     
     switch (_globalManager.connectState) {
         case ConnectStateBLE:
@@ -186,23 +183,49 @@ static NSInteger count = 0;
         default:
             break;
     }
-    
-    
 }
 
-#warning 还未完成...具体指令
+- (void)setIs_on:(BOOL)is_on
+{
+    _is_on = is_on;
+    _onOffBtn.selected = _is_on;
+}
+
+#pragma mark --- 发送关机和开机的指令
 - (void)sendPowerOnIns {
+    struct InstructionSend instruction = {0,0,0,0};
+    instruction.Command_id = 3;
+    instruction.key = 1;
+    instruction.Status = 1;
+    instruction.Mode = _currentIndex;
     
-    [_api sendData:@"" hex:YES module:_testmodule completion:^(id result, BOOL keepAlive) {
-        
-    }];
+    NSString *ins = [NSString stringWithFormat:@"%02x%02x%02x%02x",instruction.Command_id,instruction.key,instruction.Status,instruction.Mode];
+    NSMutableArray *tempArray = [self allBindArrays];
+    for (MinewModule *module in tempArray) {
+        [_api sendData:ins hex:YES module:module completion:^(id result, BOOL keepAlive) {
+            
+        }];
+    }
 }
 
 - (void)sendPowerOffIns {
+    [self.animatedImgView removeFromSuperview];
     
-    [_api sendData:@"" hex:YES module:_testmodule completion:^(id result, BOOL keepAlive) {
-        
-    }];
+    struct InstructionSend instruction = {0,0,0,0};
+    instruction.Command_id = 3;
+    instruction.key = 1;
+    instruction.Status = 0;
+    instruction.Mode = 1;
+    
+    NSString *ins = [NSString stringWithFormat:@"%02x%02x%02x%02x",instruction.Command_id,instruction.key,instruction.Status,instruction.Mode];
+
+    NSMutableArray *tempArray = [self allBindArrays];
+    for (MinewModule *module in tempArray) {
+        [_api sendData:ins hex:YES module:module completion:^(id result, BOOL keepAlive) {
+            
+        }];
+    }
+    
 }
 
 
@@ -215,7 +238,7 @@ static NSInteger count = 0;
     
     _countDownTime = 5;//设定5秒后停止广播
     _currentTime = 0;
-    _currentIndex = 0;//default 当前选中的模式
+    _currentIndex = 1;//default 当前选中的模式
     
     [self initCore];
     [self initData];
@@ -332,20 +355,17 @@ static NSInteger count = 0;
 }
 
 - (void)initView {
+    //设置渐变色
     CAGradientLayer *gradient = [CAGradientLayer layer];
     //设置开始和结束位置(设置渐变的方向)
     gradient.startPoint = CGPointMake(0, 0);
-    gradient.endPoint = CGPointMake(1, 0);
-    gradient.frame = CGRectMake(0,0,40,40);
+    gradient.endPoint = CGPointMake(0, 1);
+    gradient.frame = CGRectMake(0,0,ScreenWidth,ScreenHeight);
     gradient.colors = [NSArray arrayWithObjects:(id)RGB(156, 100, 183).CGColor,(id)RGB(124, 71, 170).CGColor,(id)RGB(107, 55, 162).CGColor,(id)RGB(86, 35, 153).CGColor,nil];
     [self.view.layer insertSublayer:gradient atIndex:0];
     
-//    UIImageView *backImg = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, ScreenWidth, ScreenHeight)];
-//    backImg.image = [[UIImage imageNamed:@"all_background"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
-//    [self.view addSubview:backImg];
-//
-//    self.view.backgroundColor = [UIColor whiteColor];
-//    [self.view addSubview:self.advertiseView];
+    [_onOffBtn setImage:[UIImage imageNamed:@"switch_off"] forState:UIControlStateNormal];
+    [_onOffBtn setImage:[UIImage imageNamed:@"switch_on"] forState:UIControlStateSelected];
     
 }
 
@@ -357,8 +377,15 @@ static NSInteger count = 0;
     [allBindArr removeObjectsInArray:outOfBoundsArr];
     return allBindArr;
 }
+
 #pragma mark ---- ble模式发送数据
 - (void)bleSendData:(NSInteger)index {
+    
+    NSLog(@"当前作用的是第%ld",index);
+    self.is_on = YES;
+    UIButton *sender = [self.view viewWithTag:100+index];
+    [self addAnimationView:index button:sender];
+
     struct InstructionSend instruction = {0,0,0,0};
     instruction.Command_id = 3;
     instruction.key = 1;
@@ -366,6 +393,19 @@ static NSInteger count = 0;
     instruction.Mode = index;
     
     NSString *ins = [NSString stringWithFormat:@"%02x%02x%02x%02x",instruction.Command_id,instruction.key,instruction.Status,instruction.Mode];
+
+//    [_api sendData:ins hex:YES module:_testmodule completion:^(id result, BOOL keepAlive) {
+//
+//    }];
+    NSMutableArray *tempArray = [self allBindArrays];
+    for (MinewModule *module in tempArray) {
+        [_api sendData:ins hex:YES module:module completion:^(id result, BOOL keepAlive) {
+
+        }];
+    }
+}
+
+- (NSMutableArray *)allBindArrays {
     NSMutableArray *tempArray = [NSMutableArray array];
     //找到目前所有的已经绑定的设备
     for (NSDictionary *info in _minewManager.bindModules) {
@@ -375,14 +415,7 @@ static NSInteger count = 0;
             [tempArray addObject:module];
         }
     }
-    [_api sendData:ins hex:YES module:_testmodule completion:^(id result, BOOL keepAlive) {
-        
-    }];
-//    for (MinewModule *module in tempArray) {
-//        [_api sendData:ins hex:YES module:module completion:^(id result, BOOL keepAlive) {
-//
-//        }];
-//    }
+    return tempArray;
 }
 
 //在绑定的队列里，是否存在在扫描的队列里
@@ -427,8 +460,7 @@ static NSInteger count = 0;
         adv.values = [info[@"macByte"] intValue];
         
         if (index < 12) {
-            _is_on = YES;
-            _onOffBtn.selected = YES;
+            self.is_on = YES;
         }
         
         if (12 == index) {//为开关机的状态
@@ -479,47 +511,47 @@ static NSInteger count = 0;
 #pragma mark --- 语音发送广播
 //后续 还可以更精准一点过滤   语音发送广播
 - (void)voiceToAdvertise:(NSString *)key {
-    NSMutableArray *keyArr = [self getALLKeys];
-    NSString *recordKey = @"";
-    for (NSString *okey in keyArr) {
-        if ([okey containsString:key] || [key containsString:okey]) {
-            recordKey = okey;
-            NSInteger index = [keyArr indexOfObject:recordKey];
-            if (index >= 0) {
-                //开始广播
-//                _currentIndex = index;
-                if (index == 10) {//fast //发送的是当前的模式
-                    _currentIndex ++;
-
-                    if (_currentIndex>9) {
-                        _currentIndex = 9;
-                    }
-
-                    [self sendData:_currentIndex];
-                    break;
-                }else if (index == 11) {//slow //发送的是当前的模式
-                    _currentIndex --;
-                    if (_currentIndex < 0) {
-                        _currentIndex = 0;
-                    }
-                    
-                    [self sendData:_currentIndex];
-
-                      break;
-                }else if (index == 12) {
-                    _is_on = !_is_on;
-                }
-                [self sendData:index];
-
-                break;
+    
+    if ([key isEqualToString:@"小爱你好"]) {
+        if (_globalManager.connectState == ConnectStateBLE) {
+            self.is_on = !_is_on;
+            if (_is_on) {
+                [self sendPowerOnIns];
+            }else {
+                [self sendPowerOffIns];
             }
-            
+        }else if (_globalManager.connectState == ConnectStateAdvertise){
+            self.is_on = !_is_on;
+            [self sendData:12];
+        }
+    }else if ([key isEqualToString:@"快点快点"]) {
+        if (_currentIndex >= 10) {
+            [SVProgressHUD showSuccessWithStatus:@"已经是最大了"];
+        }else {
+            _currentIndex ++;
+        }
+        if (_globalManager.connectState == ConnectStateBLE) {
+            [self bleSendData:_currentIndex];
+        }else if (_globalManager.connectState == ConnectStateAdvertise) {
+            [self sendData:_currentIndex];
+        }
+    }else if ([key isEqualToString:@"慢点慢点"]) {
+        if (_currentIndex<=1) {
+            [SVProgressHUD showSuccessWithStatus:@"已经最小了"];
+        }else {
+            _currentIndex --;
+        }
+        if (_globalManager.connectState == ConnectStateBLE) {
+            [self bleSendData:_currentIndex];
+        }else if (_globalManager.connectState == ConnectStateAdvertise) {
+            [self sendData:_currentIndex];
         }
     }
 }
 
-//voice recognize 发送指令
+#pragma mark --- 发送指令
 - (void)voiceToRecognize:(NSString *)key {
+    
     NSString *recordKey = @"";
     for (NSInteger i =0; i<_enCommandAray.count; i++) {
         NSArray *array = _enCommandAray[i][@"key"];
@@ -532,25 +564,38 @@ static NSInteger count = 0;
                     //                _currentIndex = index;
                     if (index == 0) {//fast //发送的是当前的模式
                         _currentIndex ++;
-//                        self.advertiseView.selectedIndex = _currentIndex;
-                        [self sendData:_currentIndex];
+                        if (_globalManager.connectState == ConnectStateBLE) {
+                            [self bleSendData:_currentIndex];
+                        }else if (_globalManager.connectState == ConnectStateAdvertise) {
+                            [self sendData:_currentIndex];
+                        }
                         break;
                     }else if (index == 1) {//slow //发送的是当前的模式
                         if (_currentIndex>0) {
                             _currentIndex --;
-//                            self.advertiseView.selectedIndex = _currentIndex;
-                            [self sendData:_currentIndex];
+                            if (_globalManager.connectState == ConnectStateBLE) {
+                                [self bleSendData:_currentIndex];
+                            }else if (_globalManager.connectState == ConnectStateAdvertise) {
+                                [self sendData:_currentIndex];
+                            }
                             break;
                         }
                     }else if (index == 2) {//off
-                        _is_on = !_is_on;
+                        self.is_on = !_is_on;
 //                        [self.advertiseView.onSwitch setOn:_is_on];
-                        [self sendData:10];
+                        if (_globalManager.connectState == ConnectStateBLE) {
+                            [self sendPowerOffIns];
+                        }else if (_globalManager.connectState == ConnectStateAdvertise) {
+                            [self sendData:12];
+                        }
                         break;
                     }else if (3 == index) {//on
-                        _is_on = !_is_on;
-//                        [self.advertiseView.onSwitch setOn:_is_on];
-                        [self sendData:11];
+                        self.is_on = !_is_on;
+                        if (_globalManager.connectState == ConnectStateBLE) {
+                            [self sendPowerOnIns];
+                        }else if (_globalManager.connectState == ConnectStateAdvertise) {
+                            [self sendData:11];
+                        }
                     }
                     
                     break;

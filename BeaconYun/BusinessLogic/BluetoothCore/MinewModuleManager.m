@@ -177,7 +177,7 @@
     [stand synchronize];
 }
 
-#pragma mark ********************************Public
+#pragma mark ******************************** Public
 - (void)startScan
 {
     _scanning = YES;
@@ -214,6 +214,7 @@
 - (void)connecnt:(MinewModule *)module
 {
     [self connectTo:(MinewModule *)module];
+    NSLog(@"开始连接%@",module.peripheral);
 }
 
 // disconnect from a module
@@ -248,10 +249,13 @@
     NSData *manufactureData = advertisementData[CBAdvertisementDataManufacturerDataKey];
     Byte *testByte = (Byte *)[manufactureData bytes];
     NSLog(@"advertisementDat==%@",advertisementData);
-    if ([adName isEqualToString:@"SToyyyyy"]) {
+    if ( manufactureData.length >= 8 ) {
+        [GlobalManager sharedInstance].connectState = ConnectStateBLE;
         uint8_t validate = testByte[1];
         if (validate >=160 && validate <=207) {
             NSLog(@"在此范围内....");
+        }else {
+            return ;
         }
         uint16_t macBytes = 0;
         NSString *macString = @"";
@@ -295,7 +299,9 @@
     
     if ([adName isEqualToString:@"HToy"])
     {
-
+        if ([GlobalManager sharedInstance].connectState == ConnectStateBLE) {
+            return ;
+        }
         MinewModule *module = [self moduleExist:peripheral.identifier.UUIDString];
         module.canConnect = [connectable boolValue];
 
@@ -494,7 +500,7 @@
     if (_scanTime < 5) {
         _scanTime ++;
     }else {
-        [self startScan];
+//        [self startScan];
         _scanTime = 0;
     }
     

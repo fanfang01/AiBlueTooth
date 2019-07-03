@@ -14,6 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface StartAdvertiseViewController : UIViewController
 @property (weak, nonatomic) IBOutlet UIButton *onOffBtn;
+@property (weak, nonatomic) IBOutlet UIButton *backButton;
 
 @property (nonatomic, strong) MinewModule *testmodule;
 

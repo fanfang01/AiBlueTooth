@@ -22,6 +22,12 @@
         
         self.contentView.backgroundColor = [UIColor whiteColor];
         self.contentView.layer.cornerRadius = 5.;
+        self.contentView.layer.masksToBounds = YES;
+        self.contentView.layer.borderColor = [UIColor whiteColor].CGColor;
+        self.contentView.layer.borderWidth = 1;
+        
+        self.deviceNameLabel.textColor = RGB(51, 51, 51);
+        self.deviceMacNameLabel.textColor = RGB(153, 153, 153);
         
     }
     return self;
@@ -40,15 +46,20 @@
 {
     _module = module;
     self.deviceMacNameLabel.text = module.macString;
-
+    self.deviceNameLabel.text = module.name;
+    
     if (module.isBind) {
         self.contentView.backgroundColor = RGB(254, 145, 212);
         self.deviceImageView.image = [UIImage imageNamed:@"device_select"];
         self.deviceBackImageView.hidden = NO;
+        self.deviceNameLabel.textColor = [UIColor whiteColor];
+        self.deviceMacNameLabel.textColor = [UIColor whiteColor];
     }else {
         self.contentView.backgroundColor = [UIColor whiteColor];
         self.deviceImageView.image = [UIImage imageNamed:@"device_unselect"];
         self.deviceBackImageView.hidden = YES;
+        self.deviceNameLabel.textColor = RGB(51, 51, 51);
+        self.deviceMacNameLabel.textColor = RGB(153, 153, 153);
     }
 }
 
