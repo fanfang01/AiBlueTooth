@@ -182,7 +182,6 @@
 
 + (float)distanceByRSSI:(NSInteger)rssi
 {
-    
     if (rssi == 0)
     {
         return -1.0;
@@ -217,18 +216,36 @@
 // 16进制转10进制
 + (NSNumber *) numberHexString:(NSString *)aHexString
 {
-        // 空,直接返回.
-        if (nil == aHexString)
-            {
-                    return nil;
-                }
-        NSScanner * scanner = [NSScanner scannerWithString:aHexString];
-        unsigned long long longlongValue;
-        [scanner scanHexLongLong:&longlongValue];
-    
-        //将整数转换为NSNumber,存储到数组中
-        NSNumber * hexNumber = [NSNumber numberWithLongLong:longlongValue];
-        return hexNumber;
-        
+    // 空,直接返回.
+    if (nil == aHexString)
+    {
+            return nil;
+    }
+    NSScanner * scanner = [NSScanner scannerWithString:aHexString];
+    unsigned long long longlongValue;
+    [scanner scanHexLongLong:&longlongValue];
+
+    //将整数转换为NSNumber,存储到数组中
+    NSNumber * hexNumber = [NSNumber numberWithLongLong:longlongValue];
+    return hexNumber;
 }
+
+- (NSString *)hexStringFromString:(NSString *)string
+{
+    NSData *myD = [string dataUsingEncoding:NSUTF8StringEncoding];
+    Byte *bytes = (Byte *)[myD bytes];
+    //下面是Byte 转换为16进制。
+    NSString *hexStr=@"";
+    for(int i=0;i<[myD length];i++)
+    {
+        NSString *newHexStr = [NSString stringWithFormat:@"%x",bytes[i]&0xff];//16进制数
+        if([newHexStr length]==1)
+            hexStr = [NSString stringWithFormat:@"%@0%@",hexStr,newHexStr];
+        else
+            hexStr = [NSString stringWithFormat:@"%@%@",hexStr,newHexStr];
+    }
+    return hexStr;
+}
+
+
 @end

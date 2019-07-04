@@ -46,6 +46,8 @@
     UILabel *_titleLabel;
     MinewModule *_testModule;
     GlobalManager *_globalManager;
+    NSTimer *_enterTimer;
+    NSInteger _enterTimeCount;
 }
 
 static NSInteger scanCount;
@@ -69,6 +71,23 @@ static NSInteger scanCount;
 
 }
 
+- (void)initEnterTimer {
+    if (!_enterTimer) {
+        _enterTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(countDownTimeCount) userInfo:nil repeats:YES];
+    }
+}
+
+- (void)countDownTimeCount {
+    _enterTimeCount ++;
+}
+
+- (void)invalidateTimer {
+    _enterTimeCount = 0;
+    
+    [_enterTimer invalidate];
+    _enterTimer = nil;
+}
+
 - (void)touchDownToSearchDevice {
     scanCount = 0;
     [self startToScan];
@@ -76,6 +95,8 @@ static NSInteger scanCount;
 
 - (void)viewDidAppear:(BOOL)animated
 {
+    [super viewDidAppear:animated];
+
     if (scanCount != 0) {
         [_manager stopScan];
         NSLog(@"全部停止扫描....");
@@ -85,8 +106,37 @@ static NSInteger scanCount;
     //在设置页面代理被设置到那里了，这里接受不到连接成功的回调
     _manager.delegaate = self;
     NSLog(@"viewDidAppear设备再次出现scanCount==%ld",scanCount);
-    [super viewDidAppear:animated];
+    
+    [_globalManager invalidateTimer];
+    
+    NSMutableArray *tempArray = [self allBindArrays];
+    for (MinewModule *module in tempArray) {
+        [_manager disconnect:module];
+    }
+}
 
+- (NSMutableArray *)allBindArrays {
+    NSMutableArray *tempArray = [NSMutableArray array];
+    //找到目前所有的已经绑定的设备
+    for (NSDictionary *info in _manager.bindModules) {
+        NSString *macString = info[@"macString"];
+        MinewModule *module = [self isExistsModuleInScannedList:macString];
+        if (module) {
+            [tempArray addObject:module];
+        }
+    }
+    return tempArray;
+}
+
+//在绑定的队列里，是否存在在扫描的队列里
+- (MinewModule *)isExistsModuleInScannedList:(NSString *)macString {
+    for (MinewModule *module in _manager.allModules) {
+        if ([module.macString isEqualToString:macString]) {
+            return module;
+        }
+    }
+    
+    return nil;
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -141,6 +191,9 @@ static NSInteger scanCount;
     [_manager startScan];
     [self scanAction];
     
+    [self invalidateTimer];
+    [self initEnterTimer];
+    
 #ifdef debug
 
 #else
@@ -180,87 +233,58 @@ static NSInteger scanCount;
         __strong BYScanDeviceViewController *strongSelf = weakSelf;
         dispatch_async(dispatch_get_main_queue(), ^{
             strongSelf.showLabel.text = [NSString stringWithFormat:NSLocalizedString(@"扫描到%@", nil),module.name];
-            NSLog(@"扫描到设备,,此时的scanCount==%ld",scanCount);
+            if (!module.canConnect) {//表明是广播蓝牙的设备...
+                //优先扫描ble的设备
+            }
+            NSLog(@"扫描到设备,此时的scanCount==%ld",(long)scanCount);
             if (scanCount == 0) {
                 if (module.canConnect) {
-                    [_manager connecnt:module];
-                    _globalManager.connectState = ConnectStateBLE;
-                    _testModule = module;
+//                    [strongSelf.manager connecnt:module];
+                    strongSelf->_globalManager.connectState = ConnectStateBLE;
+                    
+                    if (_enterTimeCount<3) {
+                        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)((3-_enterTimeCount) * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                            [strongSelf startToAdertise];
+                            _testModule = module;
+                        });
+                    }
                     scanCount ++;
+
+                    
                 }else {//广播蓝牙
                     [SVProgressHUD showSuccessWithStatus:[NSString stringWithFormat:NSLocalizedString(@"成功扫描到设备%@", nil),module.name]];
                     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                         [SVProgressHUD dismiss];
                     });
                     NSLog(@"广播蓝牙方式进入");
-                    _globalManager.connectState = ConnectStateAdvertise;
-                    [weakSelf startToAdertise];
-
+                    if (_enterTimeCount < 3) {
+                        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)((3-_enterTimeCount) * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                            strongSelf->_globalManager.connectState = ConnectStateAdvertise;
+                            [strongSelf startToAdertise];
+                            
+                        });
+                    }
                     scanCount ++;
-                    //                [strongSelf.manager stopScan];
+
                 }
                 
             }
         });
         
     };
-
-    if (_timer)
-        [_timer invalidate];
-        
-    _timer = [NSTimer scheduledTimerWithTimeInterval:1.4 target:self selector:@selector(reloadTableView) userInfo:nil repeats:YES];
-    
-    [_timer fire];
 }
 
-- (void)reloadTableView
-{
-    _moduleArray = [_manager.allModules copy];
-    
-#warning 添加HToy的测试  记录所有的设备
-    if (!_tempArr) {
-        _tempArr = [NSMutableArray array];
-    }
-    [_tempArr removeAllObjects];
 
-    for (MinewModule *module in _moduleArray) {
-        if ([module.name isEqualToString:@"HToy"]) {
-            [_tempArr addObject:module];
-        }
-    }
-    
-    if (_tempArr.count > 0) {
-//        MinewModule *module = [_tempArr firstObject];
-        
-    }
-}
 
 - (void) startToAdertise {
+    
+    [self invalidateTimer];
     
     StartAdvertiseViewController *adVC = [[UIStoryboard storyboardWithName:@"Main" bundle:nil] instantiateViewControllerWithIdentifier:@"StartAdvertiseViewController"];
     adVC.testmodule = _testModule;
     
     [self.navigationController pushViewController:adVC animated:YES];
     
-    
-//    [_manager stopScan];
-}
-
-- (NSString *)hexStringFromString:(NSString *)string
-{
-    NSData *myD = [string dataUsingEncoding:NSUTF8StringEncoding];
-    Byte *bytes = (Byte *)[myD bytes];
-    //下面是Byte 转换为16进制。
-    NSString *hexStr=@"";
-    for(int i=0;i<[myD length];i++)
-    {
-        NSString *newHexStr = [NSString stringWithFormat:@"%x",bytes[i]&0xff];//16进制数
-        if([newHexStr length]==1)
-            hexStr = [NSString stringWithFormat:@"%@0%@",hexStr,newHexStr];
-        else
-            hexStr = [NSString stringWithFormat:@"%@%@",hexStr,newHexStr];
-    }
-    return hexStr;
 }
 
 
@@ -281,16 +305,16 @@ static NSInteger scanCount;
 
 - (void)manager:(MinewModuleManager *)manager didChangeModule:(MinewModule *)module linkStatus:(LinkStatus)status {
     NSLog(@"收到连接的回调.....");
-    if (status == LinkStatusConnected) {
-        NSLog(@"连接成功%@",module.peripheral);
-        NSLog(@"连接成功此时的scanCount==%ld",scanCount);
-        if (scanCount == 1) {
-            [MinewCommonTool onMainThread:^{
-                [self startToAdertise];
-            }];
-            scanCount ++;
-        }
-
-    }
+//    if (status == LinkStatusConnected) {
+//        NSLog(@"连接成功%@",module.peripheral);
+//        NSLog(@"连接成功此时的scanCount==%ld",scanCount);
+//        if (scanCount == 1) {
+//            [MinewCommonTool onMainThread:^{
+//                [self startToAdertise];
+//            }];
+//            scanCount ++;
+//        }
+//
+//    }
 }
 @end

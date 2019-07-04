@@ -299,9 +299,9 @@
     
     if ([adName isEqualToString:@"HToy"])
     {
-        if ([GlobalManager sharedInstance].connectState == ConnectStateBLE) {
-            return ;
-        }
+//        if ([GlobalManager sharedInstance].connectState == ConnectStateBLE) {
+//            return ;
+//        }
         MinewModule *module = [self moduleExist:peripheral.identifier.UUIDString];
         module.canConnect = [connectable boolValue];
 

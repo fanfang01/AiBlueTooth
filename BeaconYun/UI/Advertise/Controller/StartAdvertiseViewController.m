@@ -81,9 +81,10 @@ static NSInteger count = 0;
     //退出页面，停止广播
     [_pm stopAdvertising];
     
-    [_minewManager disconnect:_testmodule];
+//    [_minewManager disconnect:_testmodule];
     
-    //
+
+    
     [self stopTimer];
 }
 
@@ -97,6 +98,8 @@ static NSInteger count = 0;
     
     //获取设备信息
     [self getDeviceInfo];
+    
+    [_globalManager initTimer];
     
 }
 
@@ -225,7 +228,6 @@ static NSInteger count = 0;
             
         }];
     }
-    
 }
 
 
@@ -393,10 +395,12 @@ static NSInteger count = 0;
     instruction.Mode = index;
     
     NSString *ins = [NSString stringWithFormat:@"%02x%02x%02x%02x",instruction.Command_id,instruction.key,instruction.Status,instruction.Mode];
-
+//      单个设备发送指令....
 //    [_api sendData:ins hex:YES module:_testmodule completion:^(id result, BOOL keepAlive) {
 //
 //    }];
+    
+    //多个设备发送指令....
     NSMutableArray *tempArray = [self allBindArrays];
     for (MinewModule *module in tempArray) {
         [_api sendData:ins hex:YES module:module completion:^(id result, BOOL keepAlive) {
@@ -512,7 +516,7 @@ static NSInteger count = 0;
 //后续 还可以更精准一点过滤   语音发送广播
 - (void)voiceToAdvertise:(NSString *)key {
     
-    if ([key isEqualToString:@"小爱你好"]) {
+    if ([key isEqualToString:@"小爱你好"] || [key isEqualToString:@"哈喽哈尼"]) {
         if (_globalManager.connectState == ConnectStateBLE) {
             self.is_on = !_is_on;
             if (_is_on) {
@@ -524,7 +528,7 @@ static NSInteger count = 0;
             self.is_on = !_is_on;
             [self sendData:12];
         }
-    }else if ([key isEqualToString:@"快点快点"]) {
+    }else if ([key isEqualToString:@"快点快点"] || [key isEqualToString:@"逼溃克离"]) {
         if (_currentIndex >= 10) {
             [SVProgressHUD showSuccessWithStatus:@"已经是最大了"];
         }else {
@@ -535,7 +539,7 @@ static NSInteger count = 0;
         }else if (_globalManager.connectState == ConnectStateAdvertise) {
             [self sendData:_currentIndex];
         }
-    }else if ([key isEqualToString:@"慢点慢点"]) {
+    }else if ([key isEqualToString:@"慢点慢点"] || [key isEqualToString:@"逼斯喽离"]) {
         if (_currentIndex<=1) {
             [SVProgressHUD showSuccessWithStatus:@"已经最小了"];
         }else {
@@ -666,6 +670,7 @@ static NSInteger count = 0;
     _advCouplesTimer = nil;
 }
 
+#pragma mark --- 加载GIF动画
 - (FLAnimatedImageView *)animatedImgView
 {
     if (!_animatedImgView) {

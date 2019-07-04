@@ -13,13 +13,6 @@ typedef NS_ENUM(NSUInteger, ConnectionState) {
     StateDisconnected,
 };
 
-//typedef NS_ENUM(NSUInteger,ConnectState) {
-//    ConnectStateUnkown = 0,
-//    ConnectStateAdvertise,
-//    ConnectStateBLE
-//};
-
-
 struct InstructionSend {
     uint8_t Command_id;
     uint8_t key;//设备模式设置

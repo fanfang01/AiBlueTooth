@@ -137,34 +137,6 @@
     }
 }
 
-- (void)buttonClick:(UIButton *)btn {
-    NSInteger index = btn.tag - 100;
-
-    MinewModule *module = _allDevicesArray[index];
-
-    btn.selected = !btn.selected;
-    module.isBind = btn.selected;
-    if (btn.selected) {
-        btn.backgroundColor = [UIColor cyanColor];
-        [_manager addBindModule:module];
-        [SVProgressHUD showSuccessWithStatus:[NSString stringWithFormat:NSLocalizedString(@"你已选择%@", nil),btn.titleLabel.text]];
-    }else {
-        btn.backgroundColor = [UIColor lightTextColor];
-        NSInteger count = _manager.bindModules.count;
-        if (count > 0) {
-            [_manager removeBindModule:module];
-            [SVProgressHUD showSuccessWithStatus:[NSString stringWithFormat:NSLocalizedString(@"你已取消选择%@", nil),btn.titleLabel.text]];
-        }else {
-//            [SVProgressHUD showSuccessWithStatus:[NSString stringWithFormat:@"只剩最后一个,不能再取消了"]];
-//            btn.selected = YES;
-        }
-    }
-
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [SVProgressHUD dismiss];
-    });
-}
-
 //在扫描的队列里，是否存在绑定的设备
 - (BOOL)isExistsModule:(MinewModule *)module {
     
@@ -193,13 +165,14 @@
     UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"提示", nil) message:NSLocalizedString(@"你确定要清除所有的绑定的设备吗?", nil) preferredStyle:UIAlertControllerStyleAlert];
     
     UIAlertAction *confirmAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"确定", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-        [[MinewModuleManager sharedInstance] removeAllBindModules];
         _bindArray = _manager.bindModules;
+        NSMutableArray *tempArray = [self bindArray];
         
         for (MinewModule *module in _allDevicesArray) {
             module.isBind = NO;
         }
-        
+        [[MinewModuleManager sharedInstance] removeAllBindModules];
+
         [self reloadData];
     }];
     
@@ -245,8 +218,12 @@
             [SVProgressHUD showSuccessWithStatus:@"已超过最大的添加设备数..."];
         }
         [_manager addBindModule:module];
+        [SVProgressHUD showSuccessWithStatus:[NSString stringWithFormat:NSLocalizedString(@"你已选择%@", nil),module.name]];
+
     }else {
         [_manager removeBindModule:module];
+        [SVProgressHUD showSuccessWithStatus:[NSString stringWithFormat:NSLocalizedString(@"你已取消选择%@", nil),module.name]];
+
     }
     switch (_globalManager.connectState) {
         case ConnectStateBLE:
@@ -267,7 +244,9 @@
             break;
     }
 
-    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [SVProgressHUD dismiss];
+    });
     //reload
     [self reloadData];
     NSLog(@"你当前选择的是:%ld行",indexPath.row);

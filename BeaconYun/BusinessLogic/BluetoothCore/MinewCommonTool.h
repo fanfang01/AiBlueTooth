@@ -37,5 +37,9 @@
 //get current language
 + (NSString *)getCurrentLanguage;
 
+//16 进制转 10进制
 + (NSNumber *) numberHexString:(NSString *)aHexString;
+
+//NSString 转16进制
+- (NSString *)hexStringFromString:(NSString *)string;
 @end

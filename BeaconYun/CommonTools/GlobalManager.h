@@ -28,6 +28,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (instancetype)sharedInstance;
 
+//全局定时扫描 和 断开扫描
+- (void)invalidateTimer;
+
+- (void)initTimer;
+
 @end
 
 NS_ASSUME_NONNULL_END

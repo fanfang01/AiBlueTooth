@@ -9,6 +9,7 @@
 #import "GlobalManager.h"
 #import "MinewModuleManager.h"
 #import "MinewModule.h"
+#import <CoreBluetooth/CoreBluetooth.h>
 
 @interface GlobalManager ()
 @property (nonatomic, strong)MinewModuleManager *manager;
@@ -57,13 +58,22 @@
         NSString *macString = info[@"macString"];
         MinewModule *module = [self isExistsModuleInScannedList:macString];
         if (module) {//如果没有连接的话，去连接
-            if (!module.connected && !module.connecting) {//未连接，开始去连接
+//            if (!module.connected && !module.connecting) {//未连接，开始去连接
+//                [_manager connecnt:module];
+//                NSLog(@"需要重新去扫描的设备:%@",module.peripheral);
+//            }
+            CBPeripheral *peripheral = module.peripheral;
+            if (peripheral.state != CBPeripheralStateConnected && peripheral.state != CBPeripheralStateConnecting) {
                 [_manager connecnt:module];
-                NSLog(@"需要重新去扫描的设备:%@",module.peripheral);
             }
         }
     }
     
+}
+
+- (void)invalidateTimer {
+    [_reloadTimer invalidate];
+    _reloadTimer = nil;
 }
 
 //在绑定的队列里，是否存在在扫描的队列里
