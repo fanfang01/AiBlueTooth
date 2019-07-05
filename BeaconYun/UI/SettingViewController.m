@@ -123,14 +123,14 @@
     layout.minimumLineSpacing = 10;
     layout.minimumInteritemSpacing = 15;
     
-    self.collectionView.collectionViewLayout = layout;
-    self.collectionView.delegate = self;
-    self.collectionView.dataSource = self;
-    [self.collectionView registerNib:[UINib nibWithNibName:@"SettingCollectionViewCell" bundle:nil] forCellWithReuseIdentifier:@"SettingCollectionViewCell"];
+//    self.collectionView.collectionViewLayout = layout;
+//    self.collectionView.delegate = self;
+//    self.collectionView.dataSource = self;
+//    [self.collectionView registerNib:[UINib nibWithNibName:@"SettingCollectionViewCell" bundle:nil] forCellWithReuseIdentifier:@"SettingCollectionViewCell"];
 
-//    self.collectionView.hidden = YES;
+    self.collectionView.hidden = YES;
     
-//    [self.view addSubview:self.deviceCollectionView];
+    [self.view addSubview:self.deviceCollectionView];
     
 
 }
@@ -139,9 +139,11 @@
 {
     if (!_deviceCollectionView) {
         UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
-        layout.itemSize = CGSizeMake((ScreenWidth-17*3)/2, 60);
+        layout.itemSize = CGSizeMake((ScreenWidth-17*3)/2, 65);
         layout.minimumLineSpacing = 10;
         layout.minimumInteritemSpacing = 15;
+        layout.scrollDirection = UICollectionViewScrollDirectionVertical;
+        layout.sectionInset = UIEdgeInsetsMake(15, 15, 0, 15);
         
         _deviceCollectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0, 64, ScreenWidth, ScreenHeight) collectionViewLayout:layout];
         _deviceCollectionView.backgroundColor = [UIColor clearColor];
@@ -211,7 +213,7 @@
 
 - (void)reloadData {
     _bindArray = _manager.bindModules;
-    [self.collectionView reloadData];
+    [self.deviceCollectionView reloadData];
 }
 
 #pragma mark---- UICollectionViewDelegate
@@ -242,11 +244,12 @@
     if (module.isBind) {
         if (_manager.bindModules.count >= 6) {
             [SVProgressHUD showSuccessWithStatus:@"已超过最大的添加设备数..."];
+            module.isBind = NO;
             return ;
+        }else {
+            [_manager addBindModule:module];
+            [SVProgressHUD showSuccessWithStatus:[NSString stringWithFormat:NSLocalizedString(@"你已选择%@", nil),module.name]];
         }
-        [_manager addBindModule:module];
-        [SVProgressHUD showSuccessWithStatus:[NSString stringWithFormat:NSLocalizedString(@"你已选择%@", nil),module.name]];
-
     }else {
         [_manager removeBindModule:module];
         [SVProgressHUD showSuccessWithStatus:[NSString stringWithFormat:NSLocalizedString(@"你已取消选择%@", nil),module.name]];
@@ -278,4 +281,5 @@
     [self reloadData];
     NSLog(@"你当前选择的是:%ld行",indexPath.row);
 }
+
 @end
