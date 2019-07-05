@@ -94,22 +94,31 @@ static NSInteger count = 0;
     
     self.navigationController.navigationBarHidden = YES;
     
-    [self isExistsBindDevicesToAdvertise];
+    
     
     //获取设备信息
     [self getDeviceInfo];
     
     [_globalManager initTimer];
     
+    if (_globalManager.connectState == ConnectStateBLE) {
+        if ([self allBindArrays].count==0) {
+            [self showNoDeviceAlert];
+        }
+    }else if (_globalManager.connectState == ConnectStateAdvertise) {
+        [self isExistsBindDevicesToAdvertise];
+    }
+
+    
 }
 
-#pragma mark --- 判断用户有没有绑定的设备
+#pragma mark --- 判断用户有没有绑定的设备 --- 蓝牙
 - (void)isExistsBindDevicesToAdvertise {
     MinewModuleManager *manager = [MinewModuleManager sharedInstance];
     NSArray *bindArray = manager.bindModules;
     
     if (0 == bindArray.count) {
-//        [self showNoDeviceAlert];
+        [self showNoDeviceAlert];
     }
 }
 
@@ -196,6 +205,10 @@ static NSInteger count = 0;
 
 #pragma mark --- 发送关机和开机的指令
 - (void)sendPowerOnIns {
+    //加载GIF动画
+    UIButton *button = [self.view viewWithTag:100+_currentIndex];
+    [self addAnimationView:_currentIndex button:button];
+    
     struct InstructionSend instruction = {0,0,0,0};
     instruction.Command_id = 3;
     instruction.key = 1;
@@ -204,6 +217,10 @@ static NSInteger count = 0;
     
     NSString *ins = [NSString stringWithFormat:@"%02x%02x%02x%02x",instruction.Command_id,instruction.key,instruction.Status,instruction.Mode];
     NSMutableArray *tempArray = [self allBindArrays];
+    if (tempArray.count == 0) {
+        [SVProgressHUD showSuccessWithStatus:@"请先绑定设备..."];
+        [self startToSetup];
+    }
     for (MinewModule *module in tempArray) {
         [_api sendData:ins hex:YES module:module completion:^(id result, BOOL keepAlive) {
             
@@ -223,6 +240,10 @@ static NSInteger count = 0;
     NSString *ins = [NSString stringWithFormat:@"%02x%02x%02x%02x",instruction.Command_id,instruction.key,instruction.Status,instruction.Mode];
 
     NSMutableArray *tempArray = [self allBindArrays];
+    if (tempArray.count == 0) {
+        [SVProgressHUD showSuccessWithStatus:@"请先绑定设备..."];
+        [self startToSetup];
+    }
     for (MinewModule *module in tempArray) {
         [_api sendData:ins hex:YES module:module completion:^(id result, BOOL keepAlive) {
             
@@ -317,6 +338,8 @@ static NSInteger count = 0;
     if (!_uuidArray) {
         _uuidArray = [NSMutableArray array];
     }
+    
+    
    
     if (!_commandAray) {
         if ([[MinewCommonTool getCurrentLanguage] containsString:@"zh"]) {
@@ -402,9 +425,14 @@ static NSInteger count = 0;
     
     //多个设备发送指令....
     NSMutableArray *tempArray = [self allBindArrays];
+    if (tempArray.count == 0) {
+        [SVProgressHUD showSuccessWithStatus:@"请先绑定设备..."];
+        [self startToSetup];
+    }
+    
     for (MinewModule *module in tempArray) {
         [_api sendData:ins hex:YES module:module completion:^(id result, BOOL keepAlive) {
-
+            
         }];
     }
 }
@@ -435,6 +463,12 @@ static NSInteger count = 0;
 
 #pragma mark -- 发送广播数据
 - (void)sendData:(NSInteger)index {
+    
+    if (index<=10) {
+        UIButton *button = [self.view viewWithTag:100+index];
+        [self addAnimationView:index button:button];
+    }
+    
     [self isExistsBindDevicesToAdvertise];
 
     [self stopTimer];
@@ -470,8 +504,11 @@ static NSInteger count = 0;
         if (12 == index) {//为开关机的状态
             if (_is_on) {//开机信息
                 adv.key = _currentIndex+1;
+                UIButton *button = [self.view viewWithTag:100+index];
+                [self addAnimationView:index button:button];
             }else {      //关机信息
                 adv.key = 16;
+                [self.animatedImgView removeFromSuperview];
             }
         }
         
@@ -517,15 +554,14 @@ static NSInteger count = 0;
 - (void)voiceToAdvertise:(NSString *)key {
     
     if ([key isEqualToString:@"小爱你好"] || [key isEqualToString:@"哈喽哈尼"]) {
+        self.is_on = !_is_on;
         if (_globalManager.connectState == ConnectStateBLE) {
-            self.is_on = !_is_on;
             if (_is_on) {
                 [self sendPowerOnIns];
             }else {
                 [self sendPowerOffIns];
             }
         }else if (_globalManager.connectState == ConnectStateAdvertise){
-            self.is_on = !_is_on;
             [self sendData:12];
         }
     }else if ([key isEqualToString:@"快点快点"] || [key isEqualToString:@"逼溃克离"]) {

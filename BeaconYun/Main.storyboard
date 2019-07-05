@@ -108,6 +108,7 @@
                     <connections>
                         <outlet property="scanRoundImgView" destination="czU-C7-qOV" id="fc7-5v-hHR"/>
                         <outlet property="searchView" destination="zhc-Mf-U1D" id="BHc-O2-yNZ"/>
+                        <outlet property="showLabel" destination="d3I-2F-JoD" id="pnb-Fg-bfe"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="QRQ-xN-IWq" userLabel="First Responder" sceneMemberID="firstResponder"/>

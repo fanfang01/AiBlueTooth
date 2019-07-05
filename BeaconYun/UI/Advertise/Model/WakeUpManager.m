@@ -55,6 +55,7 @@
     if ([[MinewCommonTool getCurrentLanguage] containsString:@"zh"]) {
         keywords = [[NSBundle mainBundle] pathForResource:@"WakeUp-ch" ofType:@"bin"];
     }else {
+        NSLog(@"加载英文的指令。。。");
         keywords = [[NSBundle mainBundle] pathForResource:@"WakeUp-en" ofType:@"bin"];
 
     }

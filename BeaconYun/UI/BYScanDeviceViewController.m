@@ -33,8 +33,6 @@
 
 @property(nonatomic,strong) NSMutableArray *tempArr ;//存放当前扫描到的设备
 
-@property (nonatomic, strong) UILabel *showLabel;
-
 @end
 
 // iPhone bind device mac Address
@@ -72,6 +70,7 @@ static NSInteger scanCount;
 }
 
 - (void)initEnterTimer {
+    _enterTimeCount = 0;
     if (!_enterTimer) {
         _enterTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(countDownTimeCount) userInfo:nil repeats:YES];
     }
@@ -89,7 +88,7 @@ static NSInteger scanCount;
 }
 
 - (void)touchDownToSearchDevice {
-    scanCount = 0;
+//    scanCount = 0;
     [self startToScan];
 }
 
@@ -100,11 +99,11 @@ static NSInteger scanCount;
     if (scanCount != 0) {
         [_manager stopScan];
         NSLog(@"全部停止扫描....");
-        _showLabel.text = NSLocalizedString(@"请点击上方按钮开始扫描", nil);
+        _showLabel.text = NSLocalizedString(@"请点击下方按钮开始扫描", nil);
     }
     scanCount = 0;
     //在设置页面代理被设置到那里了，这里接受不到连接成功的回调
-    _manager.delegaate = self;
+//    _manager.delegaate = self;
     NSLog(@"viewDidAppear设备再次出现scanCount==%ld",scanCount);
     
     [_globalManager invalidateTimer];
@@ -183,9 +182,10 @@ static NSInteger scanCount;
     showLabel.textColor = COLOR_RGBA(160, 160, 160, 1);
     showLabel.font = [UIFont boldSystemFontOfSize:18.0f];
     [self.view addSubview:showLabel];
-    showLabel.text = NSLocalizedString(@"请点击上方按钮开始扫描", nil);
+    showLabel.text = NSLocalizedString(@"请点击下方按钮开始扫描", nil);
 }
 
+#pragma mark ---- 开始扫描
 - (void)startToScan {
     [_manager stopScan];
     [_manager startScan];
@@ -242,30 +242,35 @@ static NSInteger scanCount;
 //                    [strongSelf.manager connecnt:module];
                     strongSelf->_globalManager.connectState = ConnectStateBLE;
                     
-                    if (_enterTimeCount<3) {
-                        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)((3-_enterTimeCount) * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    if (_enterTimeCount<2) {
+                        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)((2-_enterTimeCount) * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                             [strongSelf startToAdertise];
                             _testModule = module;
                         });
+                    }else {
+                        [strongSelf startToAdertise];
+                        _testModule = module;
                     }
                     scanCount ++;
 
                     
                 }else {//广播蓝牙
-                    [SVProgressHUD showSuccessWithStatus:[NSString stringWithFormat:NSLocalizedString(@"成功扫描到设备%@", nil),module.name]];
+                    [SVProgressHUD showSuccessWithStatus:[NSString stringWithFormat:NSLocalizedString(@"成功扫描到设备 %@", nil),module.name]];
                     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                         [SVProgressHUD dismiss];
                     });
                     NSLog(@"广播蓝牙方式进入");
-                    if (_enterTimeCount < 3) {
-                        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)((3-_enterTimeCount) * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    if (_enterTimeCount < 2) {
+                        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)((2-_enterTimeCount) * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                             strongSelf->_globalManager.connectState = ConnectStateAdvertise;
                             [strongSelf startToAdertise];
                             
                         });
+                    }else {
+                        strongSelf->_globalManager.connectState = ConnectStateAdvertise;
+                        [strongSelf startToAdertise];
                     }
                     scanCount ++;
-
                 }
                 
             }

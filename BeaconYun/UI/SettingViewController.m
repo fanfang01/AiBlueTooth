@@ -27,6 +27,8 @@
 // 记录消失的设备
 @property (nonatomic, strong) NSMutableArray *disappearModules;
 
+@property (nonatomic, strong) UICollectionView *deviceCollectionView;
+
 @end
 
 @implementation SettingViewController
@@ -47,6 +49,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
     // Do any additional setup after loading the view.
     [self initData];
 
@@ -54,7 +57,7 @@
     
     [self initView];
     
-//    [self initTimer];
+    [self initTimer];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -86,35 +89,35 @@
     NSLog(@"全部扫描到的设备为:%ld",_allDevicesArray.count);
 }
 
-////后台持续1s扫描
-//- (void)initTimer {
-//    if (!_reloadTimer) {
-//        _reloadTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(refreshScannedDevices) userInfo:nil repeats:YES];
-//    }
-//}
-//
-//- (void)refreshScannedDevices {
-////    _allDevicesArray = [NSMutableArray arrayWithArray:_manager.allModules];
-////
-////    for (NSDictionary *info in _bindArray) {
-////        NSString *macString = info[@"macString"];
-////        MinewModule *module = [self isExistsModuleInScannedList:macString];
-////        if (module) {//如果没有连接的话，去连接
-////            if (!module.connected && !module.connecting) {//未连接，开始去连接
-////                [_manager connecnt:module];
-////            }
-////        }
-////    }
-//
-//    [self reloadData];
-//}
+#pragma mark ---- 后台持续1s扫描
+- (void)initTimer {
+    if (!_reloadTimer) {
+        _reloadTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(refreshScannedDevices) userInfo:nil repeats:YES];
+    }
+}
 
-//- (void)invalidateTimer {
-//    [_reloadTimer invalidate];
-//    _reloadTimer = nil;
-//}
+- (void)refreshScannedDevices {
+    _allDevicesArray = [NSMutableArray arrayWithArray:_manager.allModules];
+
+    [self reloadData];
+}
+
+- (void)invalidateTimer {
+    [_reloadTimer invalidate];
+    _reloadTimer = nil;
+}
 
 - (void) initView {
+    
+    //设置渐变色
+    CAGradientLayer *gradient = [CAGradientLayer layer];
+    //设置开始和结束位置(设置渐变的方向)
+    gradient.startPoint = CGPointMake(0, 0);
+    gradient.endPoint = CGPointMake(0, 1);
+    gradient.frame = CGRectMake(0,0,ScreenWidth,ScreenHeight);
+    gradient.colors = [NSArray arrayWithObjects:(id)RGB(156, 100, 183).CGColor,(id)RGB(124, 71, 170).CGColor,(id)RGB(107, 55, 162).CGColor,(id)RGB(86, 35, 153).CGColor,nil];
+    [self.view.layer insertSublayer:gradient atIndex:0];
+
     UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
     layout.itemSize = CGSizeMake((ScreenWidth-17*3)/2, 60);
     layout.minimumLineSpacing = 10;
@@ -125,6 +128,29 @@
     self.collectionView.dataSource = self;
     [self.collectionView registerNib:[UINib nibWithNibName:@"SettingCollectionViewCell" bundle:nil] forCellWithReuseIdentifier:@"SettingCollectionViewCell"];
 
+//    self.collectionView.hidden = YES;
+    
+//    [self.view addSubview:self.deviceCollectionView];
+    
+
+}
+
+- (UICollectionView *)deviceCollectionView
+{
+    if (!_deviceCollectionView) {
+        UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
+        layout.itemSize = CGSizeMake((ScreenWidth-17*3)/2, 60);
+        layout.minimumLineSpacing = 10;
+        layout.minimumInteritemSpacing = 15;
+        
+        _deviceCollectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0, 64, ScreenWidth, ScreenHeight) collectionViewLayout:layout];
+        _deviceCollectionView.backgroundColor = [UIColor clearColor];
+        _deviceCollectionView.dataSource = self;
+        _deviceCollectionView.delegate = self;
+        [_deviceCollectionView registerNib:[UINib nibWithNibName:@"SettingCollectionViewCell" bundle:nil] forCellWithReuseIdentifier:@"SettingCollectionViewCell"];
+        
+    }
+    return _deviceCollectionView ;
 }
 
 - (void) initData {
@@ -214,8 +240,9 @@
     MinewModule *module = _allDevicesArray[indexPath.row];
     module.isBind = !module.isBind;
     if (module.isBind) {
-        if (_manager.bindModules.count>=6) {
+        if (_manager.bindModules.count >= 6) {
             [SVProgressHUD showSuccessWithStatus:@"已超过最大的添加设备数..."];
+            return ;
         }
         [_manager addBindModule:module];
         [SVProgressHUD showSuccessWithStatus:[NSString stringWithFormat:NSLocalizedString(@"你已选择%@", nil),module.name]];

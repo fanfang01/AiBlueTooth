@@ -198,7 +198,7 @@
 
 - (void)stopScan
 {
-//    [_scannedModules removeAllObjects];
+    [_scannedModules removeAllObjects];
     [_appearModules removeAllObjects];
     
     _scanning = NO;
@@ -250,7 +250,6 @@
     Byte *testByte = (Byte *)[manufactureData bytes];
     NSLog(@"advertisementDat==%@",advertisementData);
     if ( manufactureData.length >= 8 ) {
-        [GlobalManager sharedInstance].connectState = ConnectStateBLE;
         uint8_t validate = testByte[1];
         if (validate >=160 && validate <=207) {
             NSLog(@"在此范围内....");
@@ -269,12 +268,16 @@
             for (NSInteger i=2; i < [manufactureData length] ; i++) {
                 macBytes += testByte[i];
             }
-            
         }
         NSInteger sum = [[MinewCommonTool numberHexString:[NSString stringWithFormat:@"%02x",macBytes%256]] integerValue];
         NSLog(@"testByte[0] == %ld macBytes=%02x sum=%ldmodule.macString=%@",testByte[0],macBytes%256,sum, macString);
 
         if (sum == testByte[0]) {
+            if ( [GlobalManager sharedInstance].connectState == ConnectStateAdvertise) {
+                return;
+            }
+            [GlobalManager sharedInstance].connectState = ConnectStateBLE;
+
             NSLog(@"校验成功...");
             MinewModule *module = [self moduleExist:peripheral.identifier.UUIDString];
             if (!module) {
@@ -299,12 +302,12 @@
     
     if ([adName isEqualToString:@"HToy"])
     {
-//        if ([GlobalManager sharedInstance].connectState == ConnectStateBLE) {
-//            return ;
-//        }
+        if ([GlobalManager sharedInstance].connectState == ConnectStateBLE) {
+            return ;
+        }
         MinewModule *module = [self moduleExist:peripheral.identifier.UUIDString];
         module.canConnect = [connectable boolValue];
-
+        [GlobalManager sharedInstance].connectState = ConnectStateAdvertise;
         if (!module)
         {
             module = [[MinewModule alloc] init];

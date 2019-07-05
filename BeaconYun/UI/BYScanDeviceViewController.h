@@ -11,5 +11,6 @@
 @interface BYScanDeviceViewController : UIViewController
 @property (weak, nonatomic) IBOutlet UIView *searchView;
 @property (weak, nonatomic) IBOutlet UIImageView *scanRoundImgView;
+@property (weak, nonatomic) IBOutlet UILabel *showLabel;
 
 @end
