@@ -66,6 +66,8 @@ static NSInteger scanCount;
     //add notification for keyBoard
 //    [self addNoticeForKeyboard];
     
+    self.searchLabel.text = NSLocalizedString(@"搜寻设备", nil);
+    
 
 }
 
@@ -106,6 +108,7 @@ static NSInteger scanCount;
 //    _manager.delegaate = self;
     NSLog(@"viewDidAppear设备再次出现scanCount==%ld",scanCount);
     
+    _globalManager.connectState = ConnectStateUnkown;
     [_globalManager invalidateTimer];
     
     NSMutableArray *tempArray = [self allBindArrays];
@@ -232,7 +235,7 @@ static NSInteger scanCount;
     _manager.findDevice = ^(MinewModule *module) {
         __strong BYScanDeviceViewController *strongSelf = weakSelf;
         dispatch_async(dispatch_get_main_queue(), ^{
-            strongSelf.showLabel.text = [NSString stringWithFormat:NSLocalizedString(@"扫描到%@", nil),module.name];
+            strongSelf.showLabel.text = [NSString stringWithFormat:NSLocalizedString(@"扫描到设备", nil)];
             if (!module.canConnect) {//表明是广播蓝牙的设备...
                 //优先扫描ble的设备
             }
@@ -321,5 +324,7 @@ static NSInteger scanCount;
 //        }
 //
 //    }
+}
+- (IBAction)firstButton:(UIButton *)sender {
 }
 @end

@@ -18,6 +18,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong) MinewModule *testmodule;
 
+@property (weak, nonatomic) IBOutlet UIButton *firstButton;
+
 @end
 
 NS_ASSUME_NONNULL_END

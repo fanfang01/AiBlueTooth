@@ -29,6 +29,9 @@
 
 @property (nonatomic, strong) UICollectionView *deviceCollectionView;
 
+//刷新控件
+@property (nonatomic, strong) UIRefreshControl *refreshControl;
+
 @end
 
 @implementation SettingViewController
@@ -57,15 +60,52 @@
     
     [self initView];
     
-    [self initTimer];
+    //初始化刷新控件
+    UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
+    _refreshControl = refreshControl;
+    // 3.1 配置刷新控件
+    refreshControl.tintColor = [UIColor whiteColor];
+    NSDictionary *attributes = @{NSForegroundColorAttributeName : [UIColor whiteColor]};
+    refreshControl.attributedTitle = [[NSAttributedString alloc] initWithString:NSLocalizedString(@"下拉刷新", nil) attributes:attributes];
+    [refreshControl addTarget:self action:@selector(handleRefreshScan:) forControlEvents:UIControlEventValueChanged];
+    self.deviceCollectionView.refreshControl = refreshControl;
+    
+    //开始自动刷新....
+//    [self initTimer];
+}
+
+- (void) handleRefreshScan:(UIRefreshControl *)refreshControl {
+    NSLog(@"开始刷新...");
+    
+//    [_manager stopScan];
+    
+    for (MinewModule *module in [self allBindArrays]) {
+        [_manager disconnect:module];
+    }
+    [_manager startScan];
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self refreshScannedDevices];
+        [refreshControl endRefreshing];
+    });
+    
+    
+
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
     
-//    [self invalidateTimer];
+    [self invalidateTimer];
+    
+    [SVProgressHUD dismiss];
     
 //    [_manager startScan];
+}
+
+- (void)dealloc
+{
+    [self invalidateTimer];
 }
 
 - (IBAction)backLastVC:(UIButton *)sender {
@@ -87,7 +127,11 @@
     _globalManager = [GlobalManager sharedInstance];
     
     NSLog(@"全部扫描到的设备为:%ld",_allDevicesArray.count);
+    
+
 }
+
+
 
 #pragma mark ---- 后台持续1s扫描
 - (void)initTimer {
@@ -131,7 +175,6 @@
     self.collectionView.hidden = YES;
     
     [self.view addSubview:self.deviceCollectionView];
-    
 
 }
 
@@ -145,7 +188,7 @@
         layout.scrollDirection = UICollectionViewScrollDirectionVertical;
         layout.sectionInset = UIEdgeInsetsMake(15, 15, 0, 15);
         
-        _deviceCollectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0, 64, ScreenWidth, ScreenHeight) collectionViewLayout:layout];
+        _deviceCollectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0, statusBarHeight+44, ScreenWidth, ScreenHeight) collectionViewLayout:layout];
         _deviceCollectionView.backgroundColor = [UIColor clearColor];
         _deviceCollectionView.dataSource = self;
         _deviceCollectionView.delegate = self;
@@ -175,10 +218,22 @@
     }
     return NO;
 }
+- (NSMutableArray *)allBindArrays {
+    NSMutableArray *tempArray = [NSMutableArray array];
+    //找到目前所有的已经绑定的设备
+    for (NSDictionary *info in _manager.bindModules) {
+        NSString *macString = info[@"macString"];
+        MinewModule *module = [self isExistsModuleInScannedList:macString];
+        if (module) {
+            [tempArray addObject:module];
+        }
+    }
+    return tempArray;
+}
 
 //在绑定的队列里，是否存在在扫描的队列里
 - (MinewModule *)isExistsModuleInScannedList:(NSString *)macString {
-    for (MinewModule *module in _scannedBtnArray) {
+    for (MinewModule *module in _manager.allModules) {
         if ([module.macString isEqualToString:macString]) {
             return module;
         }
@@ -194,10 +249,13 @@
     
     UIAlertAction *confirmAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"确定", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         _bindArray = _manager.bindModules;
-        NSMutableArray *tempArray = [self bindArray];
+        NSMutableArray *tempArray = [self allBindArrays];
         
         for (MinewModule *module in _allDevicesArray) {
             module.isBind = NO;
+        }
+        for (MinewModule *module in tempArray) {
+            [_manager disconnect:module];
         }
         [[MinewModuleManager sharedInstance] removeAllBindModules];
 
@@ -226,6 +284,7 @@
     SettingCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"SettingCollectionViewCell" forIndexPath:indexPath];
     if (_allDevicesArray.count > indexPath.row) {
         MinewModule *module = _allDevicesArray[indexPath.row];
+//    MinewModule *module = [_allDevicesArray firstObject];
         if ([self isExistsModule:module]) {
             module.isBind = YES;
         }
@@ -248,11 +307,11 @@
             return ;
         }else {
             [_manager addBindModule:module];
-            [SVProgressHUD showSuccessWithStatus:[NSString stringWithFormat:NSLocalizedString(@"你已选择%@", nil),module.name]];
+            [SVProgressHUD showSuccessWithStatus:[NSString stringWithFormat:NSLocalizedString(@"你已选择 %@", nil),module.name]];
         }
     }else {
         [_manager removeBindModule:module];
-        [SVProgressHUD showSuccessWithStatus:[NSString stringWithFormat:NSLocalizedString(@"你已取消选择%@", nil),module.name]];
+        [SVProgressHUD showSuccessWithStatus:[NSString stringWithFormat:NSLocalizedString(@"你已取消选择 %@", nil),module.name]];
 
     }
     switch (_globalManager.connectState) {

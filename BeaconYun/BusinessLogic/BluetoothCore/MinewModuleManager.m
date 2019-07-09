@@ -184,7 +184,7 @@
     
     //开这个定时器，运行在setting 程序会卡顿，setting有1s的实时页面刷新操作。来回存储设备信息，或者前后台进入 会卡顿
     //这个，全程扫描、全程监测有没有在范围内、全程5s重新扫描，清楚之前已经扫描到的设备。
-//    [self initializeTimer];
+    [self initializeTimer];
     [_scannedModules removeAllObjects];
     
     //指定扫描特定的服务
@@ -192,7 +192,7 @@
 //    NSArray *uuidArr = @[uuid1];
     
     [MinewCommonTool onThread:_bluetoothQueue execute:^{
-        [_centralManager scanForPeripheralsWithServices:nil options:@{ CBCentralManagerScanOptionAllowDuplicatesKey: @NO}];
+        [_centralManager scanForPeripheralsWithServices:nil options:@{ CBCentralManagerScanOptionAllowDuplicatesKey: @YES}];
     }];
 }
 
@@ -290,6 +290,7 @@
             module.canConnect = [connectable boolValue];
             module.peripheral = peripheral;
             module.name = adName? adName:( name? name: @"Unnamed");
+            module.updateTime = [NSDate date];
             [_appearModules addObject:module];
             if (self.findDevice) {
                 self.findDevice(module);
@@ -351,13 +352,8 @@
     
     if (module)
     {
-        if (module.activeDisconnect)
-            module.activeDisconnect = NO;
-        else
-        {
-            [module didDisconnect];
-            [self callBack:module connect:LinkStatusDisconnect];
-        }
+        [module didDisconnect];
+        [self callBack:module connect:LinkStatusDisconnect];
         
         [_connectingModuleDict removeObjectForKey:peripheral.identifier.UUIDString];
     }
@@ -456,49 +452,49 @@
 - (void)handleModules
 {
     // handle disappear beacons
-//    static BOOL disappearHandling = NO;
-//    if ( !disappearHandling)
-//    {
-//        static NSInteger count = 0;
-//
-//        if ( count > 3)
-//        {
-//            disappearHandling = YES;
-//
-//            NSArray *moduleArray = _scannedModules;
-//            [_disappearModules removeAllObjects];
-//
-//            for ( NSInteger i = 0; i < moduleArray.count; i ++)
-//            {
-//                MinewModule *module = moduleArray[i];
-//
-//                NSTimeInterval interval = [module.updateTime timeIntervalSinceNow];
-//
-//                if ( interval < -3)
-//                {
-//                    module.inRange = NO;
-//                    [_disappearModules addObject:module];
-//                }
-//            }
-//
-//            for (MinewModule *disModule in _disappearModules) {
-////                [_scannedModules removeObject:disModule];
-//            }
-//
-//            if (  [self.delegaate respondsToSelector:@selector(manager:disappearModules:)])
-//            {
-//                [MinewCommonTool onMainThread:^{
-//                    [self.delegaate manager:self disappearModules:_disappearModules];
-//                }];
-//            }
-//
-//
-//            disappearHandling = NO;
-//            count = -1;
-//        }
-//        count ++;
-//    }
-//
+    static BOOL disappearHandling = NO;
+    if ( !disappearHandling)
+    {
+        static NSInteger count = 0;
+
+        if ( count > 3)
+        {
+            disappearHandling = YES;
+
+            NSArray *moduleArray = _scannedModules;
+            [_disappearModules removeAllObjects];
+
+            for ( NSInteger i = 0; i < moduleArray.count; i ++)
+            {
+                MinewModule *module = moduleArray[i];
+
+                NSTimeInterval interval = [module.updateTime timeIntervalSinceNow];
+
+                if ( interval < -3 && module.peripheral.state != CBPeripheralStateConnected)
+                {
+                    module.inRange = NO;
+                    [_disappearModules addObject:module];
+                }
+            }
+
+            for (MinewModule *disModule in _disappearModules) {
+                [_scannedModules removeObject:disModule];
+            }
+
+            if (  [self.delegaate respondsToSelector:@selector(manager:disappearModules:)])
+            {
+                [MinewCommonTool onMainThread:^{
+                    [self.delegaate manager:self disappearModules:_disappearModules];
+                }];
+            }
+
+
+            disappearHandling = NO;
+            count = -1;
+        }
+        count ++;
+    }
+
     //设置10s
     if (_scanTime < 5) {
         _scanTime ++;

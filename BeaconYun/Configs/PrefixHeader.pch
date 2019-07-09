@@ -22,6 +22,8 @@
 #import "MinewCommonTool.h"
 #import "GlobalManager.h"
 
+#import <Masonry.h>
+
 #import <FLAnimatedImageView.h>
 #import <FLAnimatedImage.h>
 
@@ -40,6 +42,8 @@
 #define APP_ID @"15545724"
 
 #define BIND_DATA @"bind_devices"
+
+#define statusBarHeight [[UIApplication sharedApplication] statusBarFrame].size.height
 
 #define MAX_DEVICE 10 //能添加的最大设备数
 

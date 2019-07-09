@@ -64,12 +64,12 @@
                                         </constraints>
                                     </imageView>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="搜寻设备" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oP2-u0-2yd">
-                                        <rect key="frame" x="27.5" y="78" width="80" height="30"/>
+                                        <rect key="frame" x="17.5" y="78" width="100" height="30"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="30" id="0AL-6k-heU"/>
-                                            <constraint firstAttribute="width" constant="80" id="rOu-1E-XuE"/>
+                                            <constraint firstAttribute="width" constant="100" id="rOu-1E-XuE"/>
                                         </constraints>
-                                        <fontDescription key="fontDescription" type="system" pointSize="19"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
                                     </label>
@@ -107,13 +107,14 @@
                     </view>
                     <connections>
                         <outlet property="scanRoundImgView" destination="czU-C7-qOV" id="fc7-5v-hHR"/>
+                        <outlet property="searchLabel" destination="oP2-u0-2yd" id="nqT-oW-iRK"/>
                         <outlet property="searchView" destination="zhc-Mf-U1D" id="BHc-O2-yNZ"/>
                         <outlet property="showLabel" destination="d3I-2F-JoD" id="pnb-Fg-bfe"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="QRQ-xN-IWq" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1353" y="-177"/>
+            <point key="canvasLocation" x="-1732" y="-229"/>
         </scene>
         <!--Start Advertise View Controller-->
         <scene sceneID="b5c-J7-YyC">
@@ -224,6 +225,7 @@
                                 <state key="normal" image="1"/>
                                 <connections>
                                     <action selector="buttonClick:" destination="mMB-Rt-CvM" eventType="touchUpInside" id="86G-VJ-d0x"/>
+                                    <action selector="firstButton:" destination="OvW-cD-rDz" eventType="touchUpInside" id="by0-Ze-fpJ"/>
                                 </connections>
                             </button>
                             <button opaque="NO" tag="110" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="X3G-HW-meV">
@@ -299,12 +301,14 @@
                     </view>
                     <connections>
                         <outlet property="backButton" destination="yPe-ow-NOL" id="aQX-uG-cHL"/>
+                        <outlet property="firstButton" destination="AlI-wf-l3l" id="F20-J0-QSu"/>
                         <outlet property="onOffBtn" destination="9nO-hg-mY5" id="1Ht-ck-NTd"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ndA-ag-KzT" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="OvW-cD-rDz" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="-602.39999999999998" y="-187.55622188905548"/>
+            <point key="canvasLocation" x="-946" y="-231"/>
         </scene>
         <!--Setting View Controller-->
         <scene sceneID="aXz-Wx-N5k">
@@ -396,7 +400,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="9zs-dF-5YF" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="172" y="-188.45577211394306"/>
+            <point key="canvasLocation" x="-151" y="-231"/>
         </scene>
     </scenes>
     <resources>

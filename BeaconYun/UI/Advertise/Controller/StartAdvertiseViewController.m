@@ -83,7 +83,13 @@ static NSInteger count = 0;
     
 //    [_minewManager disconnect:_testmodule];
     
-
+    //页面消失的时候，尝试去断连
+    NSMutableArray *modules = [self allBindArrays];
+    for (MinewModule *module in modules) {
+        if (module.peripheral.state == CBPeripheralStateConnected) {
+            [_minewManager disconnect:module];
+        }
+    }
     
     [self stopTimer];
 }
@@ -123,9 +129,9 @@ static NSInteger count = 0;
 }
 
 - (void)showNoDeviceAlert {
-    UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"温馨提示" message:@"你还没有绑定设备，快去绑定吧!" preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"温馨提示", nil) message:NSLocalizedString(@"你还没有绑定设备，快去绑定吧!", nil) preferredStyle:UIAlertControllerStyleAlert];
     
-    UIAlertAction *confirmAction = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+    UIAlertAction *confirmAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"确定", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         [self startToSetup];
     }];
     
@@ -217,10 +223,9 @@ static NSInteger count = 0;
     
     NSString *ins = [NSString stringWithFormat:@"%02x%02x%02x%02x",instruction.Command_id,instruction.key,instruction.Status,instruction.Mode];
     NSMutableArray *tempArray = [self allBindArrays];
-    if (tempArray.count == 0) {
-        [SVProgressHUD showSuccessWithStatus:@"请先绑定设备..."];
-        [self startToSetup];
-    }
+//    if (tempArray.count == 0) {
+//        [self showNoDeviceAlert];
+//    }
     for (MinewModule *module in tempArray) {
         [_api sendData:ins hex:YES module:module completion:^(id result, BOOL keepAlive) {
             
@@ -240,10 +245,9 @@ static NSInteger count = 0;
     NSString *ins = [NSString stringWithFormat:@"%02x%02x%02x%02x",instruction.Command_id,instruction.key,instruction.Status,instruction.Mode];
 
     NSMutableArray *tempArray = [self allBindArrays];
-    if (tempArray.count == 0) {
-        [SVProgressHUD showSuccessWithStatus:@"请先绑定设备..."];
-        [self startToSetup];
-    }
+//    if (tempArray.count == 0) {
+//        [self showNoDeviceAlert];
+//    }
     for (MinewModule *module in tempArray) {
         [_api sendData:ins hex:YES module:module completion:^(id result, BOOL keepAlive) {
             
@@ -280,6 +284,21 @@ static NSInteger count = 0;
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
     
+}
+
+- (void)viewDidLayoutSubviews
+{
+    if (ScreenHeight >= 812) {//判断是不是iPhoneX max
+        [_firstButton mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.left.equalTo(self.view.mas_left).offset(26);
+            make.top.equalTo(self.view.mas_top).offset (200);
+            make.size.mas_equalTo(CGSizeMake(72, 72));
+        }];
+    }
+    
+    [self.view layoutIfNeeded];
+    
+    [super viewDidLayoutSubviews];
 }
 
 - (void)initCore {
@@ -392,6 +411,8 @@ static NSInteger count = 0;
     [_onOffBtn setImage:[UIImage imageNamed:@"switch_off"] forState:UIControlStateNormal];
     [_onOffBtn setImage:[UIImage imageNamed:@"switch_on"] forState:UIControlStateSelected];
     
+    
+    
 }
 
 //test 剔除不在范围内的 Module
@@ -425,10 +446,9 @@ static NSInteger count = 0;
     
     //多个设备发送指令....
     NSMutableArray *tempArray = [self allBindArrays];
-    if (tempArray.count == 0) {
-        [SVProgressHUD showSuccessWithStatus:@"请先绑定设备..."];
-        [self startToSetup];
-    }
+//    if (tempArray.count == 0) {
+//        [self showNoDeviceAlert];
+//    }
     
     for (MinewModule *module in tempArray) {
         [_api sendData:ins hex:YES module:module completion:^(id result, BOOL keepAlive) {
@@ -464,7 +484,7 @@ static NSInteger count = 0;
 #pragma mark -- 发送广播数据
 - (void)sendData:(NSInteger)index {
     
-    if (index<=10) {
+    if (index <= 10) {
         UIButton *button = [self.view viewWithTag:100+index];
         [self addAnimationView:index button:button];
     }
@@ -503,8 +523,8 @@ static NSInteger count = 0;
         
         if (12 == index) {//为开关机的状态
             if (_is_on) {//开机信息
-                adv.key = _currentIndex+1;
-                UIButton *button = [self.view viewWithTag:100+index];
+                adv.key = _currentIndex;
+                UIButton *button = [self.view viewWithTag:100+_currentIndex];
                 [self addAnimationView:index button:button];
             }else {      //关机信息
                 adv.key = 16;
@@ -564,6 +584,11 @@ static NSInteger count = 0;
         }else if (_globalManager.connectState == ConnectStateAdvertise){
             [self sendData:12];
         }
+        if ([key isEqualToString:@"哈喽哈尼"] ) {
+            [SVProgressHUD showSuccessWithStatus:@"Hello honey!"];
+        }else {
+            [SVProgressHUD showSuccessWithStatus:key];
+        }
     }else if ([key isEqualToString:@"快点快点"] || [key isEqualToString:@"逼溃克离"]) {
         if (_currentIndex >= 10) {
             [SVProgressHUD showSuccessWithStatus:@"已经是最大了"];
@@ -575,6 +600,11 @@ static NSInteger count = 0;
         }else if (_globalManager.connectState == ConnectStateAdvertise) {
             [self sendData:_currentIndex];
         }
+        if ([key isEqualToString:@"逼溃克离"] ) {
+            [SVProgressHUD showSuccessWithStatus:@"Be quickly!"];
+        }else {
+            [SVProgressHUD showSuccessWithStatus:key];
+        }
     }else if ([key isEqualToString:@"慢点慢点"] || [key isEqualToString:@"逼斯喽离"]) {
         if (_currentIndex<=1) {
             [SVProgressHUD showSuccessWithStatus:@"已经最小了"];
@@ -585,6 +615,11 @@ static NSInteger count = 0;
             [self bleSendData:_currentIndex];
         }else if (_globalManager.connectState == ConnectStateAdvertise) {
             [self sendData:_currentIndex];
+        }
+        if ([key isEqualToString:@"逼斯喽离"] ) {
+            [SVProgressHUD showSuccessWithStatus:@"Be slowly!"];
+        }else {
+            [SVProgressHUD showSuccessWithStatus:key];
         }
     }
 }

@@ -40,13 +40,17 @@
 
 "提示" = "Tips";
 
+"温馨提示" = "Tips";
+
+"你还没有绑定设备，快去绑定吧!" = "No bounded devices yet. Go ahead and bind it!";
+
 "最大模式为%ld" = "The maximum is %ld";
 
 "当前模式为%ld" = "The current is %ld";
 
 "开始扫描" = "Start scan";
 
-"扫描到%@" = "Scanned %@";
+"扫描到设备" = "Scanned Device";
 
 "成功扫描到设备%@" = "Success scanned %@";
 
@@ -56,9 +60,9 @@
 
 "此设备没有开机或不在范围内,不可选择" = "Device not in bounds,can't choice";
 
-"你已选择%@" = "Chioced %@";
+"你已选择 %@" = "Selected %@";
 
-"你已取消选择%@" = "unselect %@";
+"你已取消选择 %@" = "Unselect %@";
 
 "取消" = "Cancel";
 
@@ -77,3 +81,9 @@
 "你已选择%@" = "Selected%@";
 
 "你已取消选择%@" = "Cancel select %@";
+
+"搜寻设备" = "Scan Device";
+
+"已超过最大的添加设备数..." = "The maximum number has been exceeded...";
+
+"下啦刷新" = "Pull to refresh";
