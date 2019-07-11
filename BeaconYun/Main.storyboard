@@ -22,7 +22,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="scan_round" translatesAutoresizingMaskIntoConstraints="NO" id="fef-Oo-kAq">
-                                <rect key="frame" x="0.0" y="100" width="375" height="567"/>
+                                <rect key="frame" x="0.0" y="100" width="375" height="602"/>
                             </imageView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="scan" translatesAutoresizingMaskIntoConstraints="NO" id="czU-C7-qOV">
                                 <rect key="frame" x="52" y="336" width="271" height="271"/>
@@ -102,7 +102,7 @@
                             <constraint firstAttribute="trailing" secondItem="fef-Oo-kAq" secondAttribute="trailing" id="msY-iG-maM"/>
                             <constraint firstAttribute="trailing" secondItem="zhc-Mf-U1D" secondAttribute="trailing" constant="120" id="nkQ-MK-Tdg"/>
                             <constraint firstItem="fef-Oo-kAq" firstAttribute="leading" secondItem="02O-BM-nFZ" secondAttribute="leading" id="qW3-Vh-Fas"/>
-                            <constraint firstItem="vsZ-dh-rHw" firstAttribute="top" secondItem="fef-Oo-kAq" secondAttribute="bottom" id="tm3-mk-Otl"/>
+                            <constraint firstItem="vsZ-dh-rHw" firstAttribute="top" secondItem="fef-Oo-kAq" secondAttribute="bottom" constant="-35" id="tm3-mk-Otl"/>
                         </constraints>
                     </view>
                     <connections>
@@ -131,56 +131,56 @@
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bg" translatesAutoresizingMaskIntoConstraints="NO" id="JsX-aA-mEu" customClass="bg">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                             </imageView>
-                            <button opaque="NO" tag="102" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BMU-3E-3rZ">
+                            <button opaque="NO" clipsSubviews="YES" tag="102" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BMU-3E-3rZ">
                                 <rect key="frame" x="151.5" y="95" width="72" height="72"/>
                                 <state key="normal" image="2"/>
                                 <connections>
                                     <action selector="buttonClick:" destination="mMB-Rt-CvM" eventType="touchUpInside" id="iEV-4f-GNJ"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" tag="103" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CNJ-le-rab">
+                            <button opaque="NO" clipsSubviews="YES" tag="103" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CNJ-le-rab">
                                 <rect key="frame" x="277" y="95" width="72" height="72"/>
                                 <state key="normal" image="3"/>
                                 <connections>
                                     <action selector="buttonClick:" destination="mMB-Rt-CvM" eventType="touchUpInside" id="3Sc-uj-clr"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" tag="104" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uXZ-Y0-d27">
+                            <button opaque="NO" clipsSubviews="YES" tag="104" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uXZ-Y0-d27">
                                 <rect key="frame" x="26" y="201" width="72" height="72"/>
                                 <state key="normal" image="4"/>
                                 <connections>
                                     <action selector="buttonClick:" destination="mMB-Rt-CvM" eventType="touchUpInside" id="E88-f3-8Qe"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" tag="105" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Aw9-RO-9Pg">
+                            <button opaque="NO" clipsSubviews="YES" tag="105" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Aw9-RO-9Pg">
                                 <rect key="frame" x="151.5" y="201" width="70" height="72"/>
                                 <state key="normal" image="5"/>
                                 <connections>
                                     <action selector="buttonClick:" destination="mMB-Rt-CvM" eventType="touchUpInside" id="QAs-wE-p4x"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" tag="106" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NbU-hb-1iA">
+                            <button opaque="NO" clipsSubviews="YES" tag="106" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NbU-hb-1iA">
                                 <rect key="frame" x="276" y="201" width="70" height="72"/>
                                 <state key="normal" image="6"/>
                                 <connections>
                                     <action selector="buttonClick:" destination="mMB-Rt-CvM" eventType="touchUpInside" id="D2S-GL-dBd"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" tag="107" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LT0-Kj-ufO">
+                            <button opaque="NO" clipsSubviews="YES" tag="107" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LT0-Kj-ufO">
                                 <rect key="frame" x="26" y="307" width="72" height="72"/>
                                 <state key="normal" image="7"/>
                                 <connections>
                                     <action selector="buttonClick:" destination="mMB-Rt-CvM" eventType="touchUpInside" id="5EU-Z9-Ewl"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" tag="108" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Z47-ja-PPB">
+                            <button opaque="NO" clipsSubviews="YES" tag="108" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Z47-ja-PPB">
                                 <rect key="frame" x="150.5" y="307" width="72" height="72"/>
                                 <state key="normal" image="8"/>
                                 <connections>
                                     <action selector="buttonClick:" destination="mMB-Rt-CvM" eventType="touchUpInside" id="Eid-AN-unp"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" tag="109" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LfN-ra-q02">
+                            <button opaque="NO" clipsSubviews="YES" tag="109" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LfN-ra-q02">
                                 <rect key="frame" x="283" y="307" width="70" height="72"/>
                                 <state key="normal" image="9"/>
                                 <connections>
@@ -217,7 +217,7 @@
                                     <action selector="settingDevice:" destination="mMB-Rt-CvM" eventType="touchUpInside" id="MM0-HK-jkz"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" tag="101" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AlI-wf-l3l">
+                            <button opaque="NO" clipsSubviews="YES" tag="101" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AlI-wf-l3l">
                                 <rect key="frame" x="26" y="95" width="72" height="72"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="AlI-wf-l3l" secondAttribute="height" multiplier="1:1" id="wIK-rt-hdj"/>
@@ -228,14 +228,14 @@
                                     <action selector="firstButton:" destination="OvW-cD-rDz" eventType="touchUpInside" id="by0-Ze-fpJ"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" tag="110" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="X3G-HW-meV">
+                            <button opaque="NO" clipsSubviews="YES" tag="110" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="X3G-HW-meV">
                                 <rect key="frame" x="150.5" y="413" width="72" height="72"/>
                                 <state key="normal" image="10"/>
                                 <connections>
                                     <action selector="buttonClick:" destination="mMB-Rt-CvM" eventType="touchUpInside" id="rah-8H-Bmm"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" tag="120" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9nO-hg-mY5">
+                            <button opaque="NO" clipsSubviews="YES" tag="120" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9nO-hg-mY5">
                                 <rect key="frame" x="150.5" y="519" width="72" height="72"/>
                                 <state key="normal" image="switch_off"/>
                                 <connections>
@@ -301,8 +301,12 @@
                     </view>
                     <connections>
                         <outlet property="backButton" destination="yPe-ow-NOL" id="aQX-uG-cHL"/>
+                        <outlet property="bakImgView" destination="JsX-aA-mEu" id="68w-YQ-uxF"/>
                         <outlet property="firstButton" destination="AlI-wf-l3l" id="F20-J0-QSu"/>
+                        <outlet property="lastButton" destination="X3G-HW-meV" id="uGa-9S-q6b"/>
                         <outlet property="onOffBtn" destination="9nO-hg-mY5" id="1Ht-ck-NTd"/>
+                        <outlet property="sendFirstButton" destination="uXZ-Y0-d27" id="79K-Sd-qJc"/>
+                        <outlet property="thirdFirstButton" destination="LT0-Kj-ufO" id="VIv-Tw-8ms"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ndA-ag-KzT" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -395,6 +399,7 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="backImgView" destination="E3V-Gk-gQo" id="A5k-NS-pL1"/>
                         <outlet property="collectionView" destination="zDR-MB-P43" id="ViM-bg-Yz5"/>
                     </connections>
                 </viewController>

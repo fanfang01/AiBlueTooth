@@ -19,6 +19,12 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) MinewModule *testmodule;
 
 @property (weak, nonatomic) IBOutlet UIButton *firstButton;
+@property (weak, nonatomic) IBOutlet UIImageView *bakImgView;
+
+@property (weak, nonatomic) IBOutlet UIButton *sendFirstButton;
+@property (weak, nonatomic) IBOutlet UIButton *thirdFirstButton;
+@property (weak, nonatomic) IBOutlet UIButton *lastButton;
+
 
 @end
 

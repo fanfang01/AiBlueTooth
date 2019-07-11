@@ -70,6 +70,7 @@ static NSInteger i = 0;
     NSTimer *_advCouplesTimer;
     NSInteger _couplesTimeCount;
     GlobalManager *_globalManager;
+    CGFloat _buttonWidth;
 }
 
 static NSInteger count = 0;
@@ -100,6 +101,11 @@ static NSInteger count = 0;
     
     self.navigationController.navigationBarHidden = YES;
     
+    if (@available(iOS 11.0, *)) {
+        UIScrollView.appearance.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+    }else {
+        self.automaticallyAdjustsScrollViewInsets = NO;
+    }
     
     
     //获取设备信息
@@ -169,9 +175,7 @@ static NSInteger count = 0;
 - (void)addAnimationView:(NSInteger)index button:(UIButton *)button {
     [self.animatedImgView removeFromSuperview];
     
-//    self.animatedImgView.center = button.center;
-    self.animatedImgView.frame = CGRectMake(0, 0, 72, 72);
-    NSLog(@"button.frame===%@",NSStringFromCGRect(button.frame));
+    self.animatedImgView.frame = CGRectMake(0, 0, _buttonWidth, _buttonWidth);
     [button addSubview:self.animatedImgView];
 }
 
@@ -263,6 +267,8 @@ static NSInteger count = 0;
     
     _is_on = NO;// 默认机器是关机状态
     
+    _buttonWidth = 72;
+    
     _countDownTime = 5;//设定5秒后停止广播
     _currentTime = 0;
     _currentIndex = 1;//default 当前选中的模式
@@ -289,11 +295,33 @@ static NSInteger count = 0;
 - (void)viewDidLayoutSubviews
 {
     if (ScreenHeight >= 812) {//判断是不是iPhoneX max
-        [_firstButton mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.left.equalTo(self.view.mas_left).offset(26);
-            make.top.equalTo(self.view.mas_top).offset (200);
-            make.size.mas_equalTo(CGSizeMake(72, 72));
-        }];
+        
+        CGFloat horSpoacing = 28;
+        CGFloat verSpacing = 53;
+        CGFloat spacing = 53;
+        _buttonWidth = (ScreenWidth-horSpoacing*2-spacing*2)/3;
+        for (NSInteger i=1; i<=10; i++) {
+            UIButton *button = [self.view viewWithTag:100+i];
+            button.frame = CGRectMake(horSpoacing+(_buttonWidth+spacing)*((i-1)%3), statusBarHeight+80+(_buttonWidth+verSpacing)*((i-1)/3), _buttonWidth, _buttonWidth);
+            if (10 == i) {
+                button.frame = CGRectMake(horSpoacing+(_buttonWidth+spacing), statusBarHeight+80+(_buttonWidth+verSpacing)*((i-1)/3), _buttonWidth, _buttonWidth);
+                _onOffBtn.frame = CGRectMake(horSpoacing+(_buttonWidth+spacing), statusBarHeight+80+(_buttonWidth+verSpacing)*((i-1+3)/3), _buttonWidth, _buttonWidth);
+            }
+        }
+
+    }else if (ScreenHeight <= 586) {
+        CGFloat horSpoacing = 28;
+        CGFloat verSpacing = 23;
+        CGFloat spacing = 53;
+        _buttonWidth = (ScreenWidth-horSpoacing*2-spacing*2)/3;
+        for (NSInteger i=1; i<=10; i++) {
+            UIButton *button = [self.view viewWithTag:100+i];
+            button.frame = CGRectMake(horSpoacing+(_buttonWidth+spacing)*((i-1)%3), statusBarHeight+80+(_buttonWidth+verSpacing)*((i-1)/3), _buttonWidth, _buttonWidth);
+            if (10 == i) {
+                button.frame = CGRectMake(horSpoacing+(_buttonWidth+spacing), statusBarHeight+80+(_buttonWidth+verSpacing)*((i-1)/3), _buttonWidth, _buttonWidth);
+                _onOffBtn.frame = CGRectMake(horSpoacing+(_buttonWidth+spacing), statusBarHeight+80+(_buttonWidth+verSpacing)*((i-1+3)/3), _buttonWidth, _buttonWidth);
+            }
+        }
     }
     
     [self.view layoutIfNeeded];
@@ -399,6 +427,16 @@ static NSInteger count = 0;
 }
 
 - (void)initView {
+ 
+    
+    [_onOffBtn setImage:[UIImage imageNamed:@"switch_off"] forState:UIControlStateNormal];
+    [_onOffBtn setImage:[UIImage imageNamed:@"switch_on"] forState:UIControlStateSelected];
+    
+    
+    
+    
+//    self.view.backgroundColor = [UIColor colorWithPatternImage:[[UIImage imageNamed:@"bg"] imageWithRenderingMode:UIImageRenderingModeAutomatic]];
+    
     //设置渐变色
     CAGradientLayer *gradient = [CAGradientLayer layer];
     //设置开始和结束位置(设置渐变的方向)
@@ -406,12 +444,16 @@ static NSInteger count = 0;
     gradient.endPoint = CGPointMake(0, 1);
     gradient.frame = CGRectMake(0,0,ScreenWidth,ScreenHeight);
     gradient.colors = [NSArray arrayWithObjects:(id)RGB(156, 100, 183).CGColor,(id)RGB(124, 71, 170).CGColor,(id)RGB(107, 55, 162).CGColor,(id)RGB(86, 35, 153).CGColor,nil];
-    [self.view.layer insertSublayer:gradient atIndex:0];
+//    [self.view.layer insertSublayer:gradient atIndex:0];
     
-    [_onOffBtn setImage:[UIImage imageNamed:@"switch_off"] forState:UIControlStateNormal];
-    [_onOffBtn setImage:[UIImage imageNamed:@"switch_on"] forState:UIControlStateSelected];
+//    UIImageView *imgView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, ScreenWidth, ScreenHeight)];
+//    imgView.image = [UIImage imageNamed:@"bg"];
+//
+//    [self.view addSubview:imgView];
+//    [self.view insertSubview:imgView belowSubview:_bakImgView];
     
-    
+    _bakImgView.image = [UIImage imageNamed:@""];
+    self.view.backgroundColor = [UIColor colorWithPatternImage:[[UIImage imageNamed:@"bg_bg"] imageWithRenderingMode:UIImageRenderingModeAutomatic]];
     
 }
 
@@ -446,9 +488,6 @@ static NSInteger count = 0;
     
     //多个设备发送指令....
     NSMutableArray *tempArray = [self allBindArrays];
-//    if (tempArray.count == 0) {
-//        [self showNoDeviceAlert];
-//    }
     
     for (MinewModule *module in tempArray) {
         [_api sendData:ins hex:YES module:module completion:^(id result, BOOL keepAlive) {
@@ -745,7 +784,7 @@ static NSInteger count = 0;
 - (FLAnimatedImageView *)animatedImgView
 {
     if (!_animatedImgView) {
-        FLAnimatedImageView *imgView = [[FLAnimatedImageView alloc] initWithFrame:CGRectMake(0, 0, 72, 72)];
+        FLAnimatedImageView *imgView = [[FLAnimatedImageView alloc] initWithFrame:CGRectMake(0, 0, _buttonWidth, _buttonWidth)];
         _animatedImgView = imgView;
 //        imgView.backgroundColor = [UIColor redColor];
         imgView.contentMode = UIViewContentModeScaleAspectFit;

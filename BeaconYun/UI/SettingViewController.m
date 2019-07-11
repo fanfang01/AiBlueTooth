@@ -48,6 +48,12 @@
     [super viewDidAppear:animated];
     //hide navigationBar
     self.navigationController.navigationBarHidden = YES;
+    
+    if (@available(iOS 11.0, *)) {
+        UIScrollView.appearance.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+    }else {
+        self.automaticallyAdjustsScrollViewInsets = NO;
+    }
 }
 
 - (void)viewDidLoad {
@@ -72,6 +78,8 @@
     
     //开始自动刷新....
 //    [self initTimer];
+    
+
 }
 
 - (void) handleRefreshScan:(UIRefreshControl *)refreshControl {
@@ -92,6 +100,7 @@
     
 
 }
+
 
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
@@ -160,7 +169,7 @@
     gradient.endPoint = CGPointMake(0, 1);
     gradient.frame = CGRectMake(0,0,ScreenWidth,ScreenHeight);
     gradient.colors = [NSArray arrayWithObjects:(id)RGB(156, 100, 183).CGColor,(id)RGB(124, 71, 170).CGColor,(id)RGB(107, 55, 162).CGColor,(id)RGB(86, 35, 153).CGColor,nil];
-    [self.view.layer insertSublayer:gradient atIndex:0];
+//    [self.view.layer insertSublayer:gradient atIndex:0];
 
     UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
     layout.itemSize = CGSizeMake((ScreenWidth-17*3)/2, 60);
@@ -175,6 +184,9 @@
     self.collectionView.hidden = YES;
     
     [self.view addSubview:self.deviceCollectionView];
+    
+    _backImgView.image = [UIImage imageNamed:@""];
+    self.view.backgroundColor = [UIColor colorWithPatternImage:[[UIImage imageNamed:@"bg_bg"] imageWithRenderingMode:UIImageRenderingModeAutomatic]];
 
 }
 

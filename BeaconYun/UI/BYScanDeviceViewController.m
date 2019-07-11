@@ -245,15 +245,18 @@ static NSInteger scanCount;
 //                    [strongSelf.manager connecnt:module];
                     strongSelf->_globalManager.connectState = ConnectStateBLE;
                     
-                    if (_enterTimeCount<2) {
-                        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)((2-_enterTimeCount) * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                            [strongSelf startToAdertise];
-                            _testModule = module;
-                        });
-                    }else {
+                    [MinewCommonTool onMainThread:^{
                         [strongSelf startToAdertise];
                         _testModule = module;
-                    }
+                    }];
+//                    if (_enterTimeCount<2) {
+//                        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)((2-_enterTimeCount) * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//
+//                        });
+//                    }else {
+//                        [strongSelf startToAdertise];
+//                        _testModule = module;
+//                    }
                     scanCount ++;
 
                     
@@ -263,16 +266,18 @@ static NSInteger scanCount;
                         [SVProgressHUD dismiss];
                     });
                     NSLog(@"广播蓝牙方式进入");
-                    if (_enterTimeCount < 2) {
+                    [MinewCommonTool onMainThread:^{
                         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)((2-_enterTimeCount) * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                             strongSelf->_globalManager.connectState = ConnectStateAdvertise;
                             [strongSelf startToAdertise];
                             
                         });
-                    }else {
-                        strongSelf->_globalManager.connectState = ConnectStateAdvertise;
-                        [strongSelf startToAdertise];
-                    }
+                    }];
+//                    if (_enterTimeCount < 2) {
+//                                            }else {
+//                        strongSelf->_globalManager.connectState = ConnectStateAdvertise;
+//                        [strongSelf startToAdertise];
+//                    }
                     scanCount ++;
                 }
                 
