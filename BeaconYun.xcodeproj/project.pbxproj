@@ -1012,97 +1012,6 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
-		2898FF5122D0475200808EE0 /* ad hoc distribution */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
-				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
-				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INFINITE_RECURSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_SUSPICIOUS_MOVE = YES;
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				ENABLE_NS_ASSERTIONS = NO;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				GCC_WARN_UNUSED_FUNCTION = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				MTL_ENABLE_DEBUG_INFO = NO;
-				SDKROOT = iphoneos;
-				VALIDATE_PRODUCT = YES;
-			};
-			name = "ad hoc distribution";
-		};
-		2898FF5222D0475200808EE0 /* ad hoc distribution */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = B370C1B698562C91509A8E8F /* Pods-BeaconYun.release.xcconfig */;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Shenzhen AnShunKang medical Technology Co.,Ltd (8FJMU234N7)";
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 8FJMU234N7;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_PREFIX_HEADER = "$(SRCROOT)/BeaconYun/Configs/PrefixHeader.pch";
-				INFOPLIST_FILE = "$(SRCROOT)/BeaconYun/Configs/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/BeaconYun/BaiduSDK/BDSClientLib",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.anshunkang.iYou;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
-				TARGETED_DEVICE_FAMILY = 1;
-			};
-			name = "ad hoc distribution";
-		};
-		2898FF5322D0475200808EE0 /* ad hoc distribution */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				DEVELOPMENT_TEAM = 646P9H983T;
-				INFOPLIST_FILE = BeaconYunTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.yunliwuli.BeaconYunTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BeaconYun.app/BeaconYun";
-			};
-			name = "ad hoc distribution";
-		};
-		2898FF5422D0475200808EE0 /* ad hoc distribution */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				DEVELOPMENT_TEAM = 646P9H983T;
-				INFOPLIST_FILE = BeaconYunUITests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.yunliwuli.BeaconYunUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_TARGET_NAME = BeaconYun;
-			};
-			name = "ad hoc distribution";
-		};
 		E56992C21E5EB60B00C76E42 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1299,7 +1208,6 @@
 			buildConfigurations = (
 				E56992C21E5EB60B00C76E42 /* Debug */,
 				E56992C31E5EB60B00C76E42 /* Release */,
-				2898FF5122D0475200808EE0 /* ad hoc distribution */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -1309,7 +1217,6 @@
 			buildConfigurations = (
 				E56992C51E5EB60B00C76E42 /* Debug */,
 				E56992C61E5EB60B00C76E42 /* Release */,
-				2898FF5222D0475200808EE0 /* ad hoc distribution */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -1319,7 +1226,6 @@
 			buildConfigurations = (
 				E56992C81E5EB60B00C76E42 /* Debug */,
 				E56992C91E5EB60B00C76E42 /* Release */,
-				2898FF5322D0475200808EE0 /* ad hoc distribution */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -1329,7 +1235,6 @@
 			buildConfigurations = (
 				E56992CB1E5EB60B00C76E42 /* Debug */,
 				E56992CC1E5EB60B00C76E42 /* Release */,
-				2898FF5422D0475200808EE0 /* ad hoc distribution */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

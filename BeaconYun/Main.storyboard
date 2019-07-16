@@ -57,14 +57,14 @@
                                 <rect key="frame" x="120" y="405" width="135" height="135"/>
                                 <subviews>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="scan_device" translatesAutoresizingMaskIntoConstraints="NO" id="JeL-UJ-enr">
-                                        <rect key="frame" x="62.5" y="28" width="10" height="40"/>
+                                        <rect key="frame" x="62.5" y="25" width="10" height="40"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="10" id="U2O-b0-vIz"/>
                                             <constraint firstAttribute="height" constant="40" id="toL-Bb-4yV"/>
                                         </constraints>
                                     </imageView>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="搜寻设备" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oP2-u0-2yd">
-                                        <rect key="frame" x="17.5" y="78" width="100" height="30"/>
+                                        <rect key="frame" x="17.5" y="75" width="100" height="30"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="30" id="0AL-6k-heU"/>
                                             <constraint firstAttribute="width" constant="100" id="rOu-1E-XuE"/>
@@ -76,8 +76,8 @@
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstItem="JeL-UJ-enr" firstAttribute="top" secondItem="zhc-Mf-U1D" secondAttribute="top" constant="28" id="4xL-tg-Y9T"/>
                                     <constraint firstItem="oP2-u0-2yd" firstAttribute="centerX" secondItem="zhc-Mf-U1D" secondAttribute="centerX" id="Iua-9Z-Xmo"/>
+                                    <constraint firstItem="JeL-UJ-enr" firstAttribute="top" secondItem="zhc-Mf-U1D" secondAttribute="top" constant="25" id="SP9-Ml-7h9"/>
                                     <constraint firstItem="oP2-u0-2yd" firstAttribute="top" secondItem="JeL-UJ-enr" secondAttribute="bottom" constant="10" id="jdj-Cz-djN"/>
                                     <constraint firstItem="JeL-UJ-enr" firstAttribute="centerX" secondItem="zhc-Mf-U1D" secondAttribute="centerX" id="juP-2U-9iD"/>
                                     <constraint firstAttribute="width" secondItem="zhc-Mf-U1D" secondAttribute="height" multiplier="1:1" id="s9w-om-FGW"/>

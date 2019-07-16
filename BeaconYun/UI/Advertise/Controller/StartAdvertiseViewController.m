@@ -7,7 +7,7 @@
 //
 
 #import "StartAdvertiseViewController.h"
-#import <CoreBluetooth/CoreBluetooth.h>
+
 #import "AdvertiseView.h"
 #import "MTPeripheralManager.h"
 #import "WakeUpManager.h"
@@ -121,7 +121,6 @@ static NSInteger count = 0;
         [self isExistsBindDevicesToAdvertise];
     }
 
-    
 }
 
 #pragma mark --- 判断用户有没有绑定的设备 --- 蓝牙
@@ -175,6 +174,11 @@ static NSInteger count = 0;
 - (void)addAnimationView:(NSInteger)index button:(UIButton *)button {
     [self.animatedImgView removeFromSuperview];
     
+    NSString * bundlePath = [[ NSBundle mainBundle] pathForResource:@"Animation" ofType:@"bundle"];
+
+    NSString *imgPath= [bundlePath stringByAppendingPathComponent:[NSString stringWithFormat:@"%ld.gif",(long)index]];
+    NSData *imageData = [NSData dataWithContentsOfFile:imgPath];
+    _animatedImgView.animatedImage = [FLAnimatedImage animatedImageWithGIFData:imageData];
     self.animatedImgView.frame = CGRectMake(0, 0, _buttonWidth, _buttonWidth);
     [button addSubview:self.animatedImgView];
 }
@@ -564,7 +568,7 @@ static NSInteger count = 0;
             if (_is_on) {//开机信息
                 adv.key = _currentIndex;
                 UIButton *button = [self.view viewWithTag:100+_currentIndex];
-                [self addAnimationView:index button:button];
+                [self addAnimationView:_currentIndex button:button];
             }else {      //关机信息
                 adv.key = 16;
                 [self.animatedImgView removeFromSuperview];

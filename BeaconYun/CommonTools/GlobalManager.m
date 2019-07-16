@@ -86,4 +86,10 @@
     
     return nil;
 }
+
+- (void)dealloc
+{
+    [self invalidateTimer];
+    NSLog(@"销毁全局的连接计时器....");
+}
 @end

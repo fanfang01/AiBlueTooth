@@ -19,14 +19,14 @@
                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                 <subviews>
                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="device_unselect" translatesAutoresizingMaskIntoConstraints="NO" id="ubm-fJ-saA">
-                        <rect key="frame" x="20" y="20" width="10" height="16"/>
+                        <rect key="frame" x="14" y="20" width="10" height="16"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="10" id="BwW-A2-A7q"/>
                             <constraint firstAttribute="height" constant="16" id="aYx-jb-nDd"/>
                         </constraints>
                     </imageView>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="设备01" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MhY-9F-830">
-                        <rect key="frame" x="45" y="10" width="80" height="20"/>
+                        <rect key="frame" x="34" y="10" width="80" height="20"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="80" id="J06-HW-eX4"/>
                             <constraint firstAttribute="height" constant="20" id="scQ-eZ-rup"/>
@@ -36,7 +36,7 @@
                         <nil key="highlightedColor"/>
                     </label>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="HToy123456789" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3na-aQ-dBP">
-                        <rect key="frame" x="45" y="37" width="108" height="20"/>
+                        <rect key="frame" x="34" y="37" width="108" height="20"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="20" id="VaP-f9-VZO"/>
                             <constraint firstAttribute="width" constant="108" id="yug-9U-aD4"/>
@@ -59,10 +59,10 @@
                 <constraint firstItem="3na-aQ-dBP" firstAttribute="top" secondItem="MhY-9F-830" secondAttribute="bottom" constant="7" id="F90-pp-X6J"/>
                 <constraint firstItem="Yov-5P-7MM" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="cf7-gg-8gd"/>
                 <constraint firstAttribute="bottom" secondItem="Yov-5P-7MM" secondAttribute="bottom" id="fX5-1R-aAB"/>
-                <constraint firstItem="MhY-9F-830" firstAttribute="leading" secondItem="ubm-fJ-saA" secondAttribute="trailing" constant="15" id="gwF-UT-C28"/>
+                <constraint firstItem="MhY-9F-830" firstAttribute="leading" secondItem="ubm-fJ-saA" secondAttribute="trailing" constant="10" id="gwF-UT-C28"/>
                 <constraint firstAttribute="trailing" secondItem="Yov-5P-7MM" secondAttribute="trailing" id="kTg-1e-FyJ"/>
-                <constraint firstItem="3na-aQ-dBP" firstAttribute="leading" secondItem="ubm-fJ-saA" secondAttribute="trailing" constant="15" id="oxW-4O-cXj"/>
-                <constraint firstItem="ubm-fJ-saA" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="20" id="qD8-uP-ejq"/>
+                <constraint firstItem="3na-aQ-dBP" firstAttribute="leading" secondItem="ubm-fJ-saA" secondAttribute="trailing" constant="10" id="oxW-4O-cXj"/>
+                <constraint firstItem="ubm-fJ-saA" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="14" id="qD8-uP-ejq"/>
             </constraints>
             <size key="customSize" width="222" height="75"/>
             <connections>
@@ -71,7 +71,7 @@
                 <outlet property="deviceMacNameLabel" destination="3na-aQ-dBP" id="BW6-Tq-pF9"/>
                 <outlet property="deviceNameLabel" destination="MhY-9F-830" id="ADC-S8-a6a"/>
             </connections>
-            <point key="canvasLocation" x="-24" y="21.139430284857571"/>
+            <point key="canvasLocation" x="-27" y="-36"/>
         </collectionViewCell>
     </objects>
     <resources>

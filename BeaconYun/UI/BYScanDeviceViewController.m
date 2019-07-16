@@ -245,20 +245,20 @@ static NSInteger scanCount;
 //                    [strongSelf.manager connecnt:module];
                     strongSelf->_globalManager.connectState = ConnectStateBLE;
                     
-                    [MinewCommonTool onMainThread:^{
-                        [strongSelf startToAdertise];
-                        _testModule = module;
-                    }];
-//                    if (_enterTimeCount<2) {
-//                        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)((2-_enterTimeCount) * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-//
-//                        });
-//                    }else {
+//                    [MinewCommonTool onMainThread:^{
 //                        [strongSelf startToAdertise];
 //                        _testModule = module;
-//                    }
+//                    }];
+                    if (_enterTimeCount<3) {
+                        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)((3-_enterTimeCount) * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                            [strongSelf startToAdertise];
+                            _testModule = module;
+                        });
+                    }else {
+                        [strongSelf startToAdertise];
+                        _testModule = module;
+                    }
                     scanCount ++;
-
                     
                 }else {//广播蓝牙
                     [SVProgressHUD showSuccessWithStatus:[NSString stringWithFormat:NSLocalizedString(@"成功扫描到设备 %@", nil),module.name]];
@@ -266,21 +266,25 @@ static NSInteger scanCount;
                         [SVProgressHUD dismiss];
                     });
                     NSLog(@"广播蓝牙方式进入");
-                    [MinewCommonTool onMainThread:^{
-                        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)((2-_enterTimeCount) * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//                    [MinewCommonTool onMainThread:^{
+//                        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)((2-_enterTimeCount) * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//                            strongSelf->_globalManager.connectState = ConnectStateAdvertise;
+//                            [strongSelf startToAdertise];
+//
+//                        });
+//                    }];
+                    if (_enterTimeCount < 3) {
+                        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)((3-_enterTimeCount) * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                             strongSelf->_globalManager.connectState = ConnectStateAdvertise;
                             [strongSelf startToAdertise];
                             
                         });
-                    }];
-//                    if (_enterTimeCount < 2) {
-//                                            }else {
-//                        strongSelf->_globalManager.connectState = ConnectStateAdvertise;
-//                        [strongSelf startToAdertise];
-//                    }
+                    }else {
+                        strongSelf->_globalManager.connectState = ConnectStateAdvertise;
+                        [strongSelf startToAdertise];
+                    }
                     scanCount ++;
                 }
-                
             }
         });
         

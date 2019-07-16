@@ -24,6 +24,8 @@
 
 #import <Masonry.h>
 
+#import <CoreBluetooth/CoreBluetooth.h>
+
 #import <FLAnimatedImageView.h>
 #import <FLAnimatedImage.h>
 

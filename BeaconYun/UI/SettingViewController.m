@@ -19,10 +19,6 @@
 @property (nonatomic, strong ) NSMutableArray *allDevicesArray;
 @property (nonatomic, strong ) NSMutableArray *bindArray;
 
-//存储各自的设备
-@property (nonatomic, strong ) NSMutableArray *scannedBtnArray;
-
-@property (nonatomic, strong ) NSMutableArray *notinBoundsBtnArray;
 
 // 记录消失的设备
 @property (nonatomic, strong) NSMutableArray *disappearModules;
@@ -31,6 +27,9 @@
 
 //刷新控件
 @property (nonatomic, strong) UIRefreshControl *refreshControl;
+
+//存储用户刷新前的设备
+@property (nonatomic, strong) NSMutableArray *currenBindsArray;
 
 @end
 
@@ -77,7 +76,7 @@
     self.deviceCollectionView.refreshControl = refreshControl;
     
     //开始自动刷新....
-//    [self initTimer];
+    [self initTimer];
     
 
 }
@@ -96,9 +95,6 @@
         [self refreshScannedDevices];
         [refreshControl endRefreshing];
     });
-    
-    
-
 }
 
 
@@ -145,12 +141,23 @@
 #pragma mark ---- 后台持续1s扫描
 - (void)initTimer {
     if (!_reloadTimer) {
-        _reloadTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(refreshScannedDevices) userInfo:nil repeats:YES];
+        _reloadTimer = [NSTimer scheduledTimerWithTimeInterval:1.5 target:self selector:@selector(refreshScannedDevices) userInfo:nil repeats:YES];
     }
 }
 
 - (void)refreshScannedDevices {
+    
+    //记录当前
+    [_currenBindsArray removeAllObjects];
+    
+    for (MinewModule *module in [self allBindArrays]) {
+        if (module.peripheral.state == CBPeripheralStateConnected) {
+            [_currenBindsArray addObject:module];
+        }
+    }
+    
     _allDevicesArray = [NSMutableArray arrayWithArray:_manager.allModules];
+    
 
     [self reloadData];
 }
@@ -212,11 +219,8 @@
 
 - (void) initData {
     
-    if (!_scannedBtnArray) {
-        _scannedBtnArray = [NSMutableArray array];
-    }
-    if (!_notinBoundsBtnArray) {
-        _notinBoundsBtnArray = [NSMutableArray array];
+    if (!_currenBindsArray) {
+        _currenBindsArray = [NSMutableArray array];
     }
 }
 
@@ -230,6 +234,7 @@
     }
     return NO;
 }
+
 - (NSMutableArray *)allBindArrays {
     NSMutableArray *tempArray = [NSMutableArray array];
     //找到目前所有的已经绑定的设备
