@@ -11,6 +11,7 @@
 #import "MinewModule.h"
 #import "SettingCollectionViewCell.h"
 #import <SVProgressHUD.h>
+#import "CopyRightView.h"
 
 @interface SettingViewController ()<MinewModuleManagerDelegate,UICollectionViewDelegate,UICollectionViewDataSource>
 
@@ -30,6 +31,8 @@
 
 //存储用户刷新前的设备
 @property (nonatomic, strong) NSMutableArray *currenBindsArray;
+
+@property (nonatomic,strong) CopyRightView *copyrightView;
 
 @end
 
@@ -53,6 +56,23 @@
     }else {
         self.automaticallyAdjustsScrollViewInsets = NO;
     }
+    
+    if ([MinewCommonTool isDeXinProductUserDefault]) {
+        [self.view addSubview:self.copyrightView];
+    }else {
+        [self.copyrightView removeFromSuperview];
+    }
+    
+    _manager = [MinewModuleManager sharedInstance];
+    _manager.firstModuleConnect = ^(MinewModule *module) {
+        [MinewCommonTool onMainThread:^{
+            if (module.productNumber == 160) {//dexin
+                [self.view addSubview:self.copyrightView];
+            }else {
+                [self.copyrightView removeFromSuperview];
+            }
+        }];
+    };
 }
 
 - (void)viewDidLoad {
@@ -77,7 +97,7 @@
     
     //开始自动刷新....
     [self initTimer];
-    
+
 
 }
 
@@ -335,6 +355,7 @@
         case ConnectStateBLE:
         {
             if (module.isBind) {
+                
                 [_manager connecnt:module];
             }else {
                 [_manager disconnect:module];
@@ -358,4 +379,12 @@
     NSLog(@"你当前选择的是:%ld行",indexPath.row);
 }
 
+#pragma mark --- Getter
+- (CopyRightView *)copyrightView
+{
+    if (!_copyrightView) {
+        _copyrightView = [[CopyRightView alloc] initWithFrame:CGRectMake(0, ScreenHeight-100, ScreenWidth, 100)];
+    }
+    return _copyrightView;
+}
 @end

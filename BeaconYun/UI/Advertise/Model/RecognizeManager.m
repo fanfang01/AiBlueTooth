@@ -64,7 +64,9 @@
     
     
 //    [self.asrEventManager setParameter:@"1536" forKey:BDS_ASR_PRODUCT_ID];
-    [self.asrEventManager setParameter:@"1537" forKey:BDS_ASR_PRODUCT_ID];
+//    [self.asrEventManager setParameter:@"1537" forKey:BDS_ASR_PRODUCT_ID];
+    [self.asrEventManager setParameter:@"1936" forKey:BDS_ASR_PRODUCT_ID];
+
 
     //发送指令：启动识别
     [self.asrEventManager sendCommand:BDS_ASR_CMD_START];

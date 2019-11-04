@@ -17,7 +17,7 @@
 #import "MTPeripheralManager.h"
 #import "AdvertiseView.h"
 #import "StartAdvertiseViewController.h"
-
+#import "CopyRightView.h"
 
 #define INTERVAL_KEYBOARD 0
 
@@ -33,6 +33,7 @@
 
 @property(nonatomic,strong) NSMutableArray *tempArr ;//存放当前扫描到的设备
 
+@property (nonatomic,strong)CopyRightView *copyrightView;
 @end
 
 // iPhone bind device mac Address
@@ -68,7 +69,7 @@ static NSInteger scanCount;
     
     self.searchLabel.text = NSLocalizedString(@"搜寻设备", nil);
     
-
+    
 }
 
 - (void)initEnterTimer {
@@ -115,6 +116,23 @@ static NSInteger scanCount;
     for (MinewModule *module in tempArray) {
         [_manager disconnect:module];
     }
+    
+    if ([MinewCommonTool isDeXinProductUserDefault]) {
+        [self.view addSubview:self.copyrightView];
+    }else {
+        [self.copyrightView removeFromSuperview];
+    }
+    
+    _manager = [MinewModuleManager sharedInstance];
+    _manager.firstModuleConnect = ^(MinewModule *module) {
+        [MinewCommonTool onMainThread:^{
+            if (module.productNumber == 160) {//dexin
+                [self.view addSubview:self.copyrightView];
+            }else {
+                [self.copyrightView removeFromSuperview];
+            }
+        }];
+    };
 }
 
 - (NSMutableArray *)allBindArrays {
@@ -242,13 +260,10 @@ static NSInteger scanCount;
             NSLog(@"扫描到设备,此时的scanCount==%ld",(long)scanCount);
             if (scanCount == 0) {
                 if (module.canConnect) {
+                    NSLog(@"Ble蓝牙设备更新。。");
 //                    [strongSelf.manager connecnt:module];
                     strongSelf->_globalManager.connectState = ConnectStateBLE;
-                    
-//                    [MinewCommonTool onMainThread:^{
-//                        [strongSelf startToAdertise];
-//                        _testModule = module;
-//                    }];
+
                     if (_enterTimeCount<3) {
                         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)((3-_enterTimeCount) * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                             [strongSelf startToAdertise];
@@ -258,6 +273,7 @@ static NSInteger scanCount;
                         [strongSelf startToAdertise];
                         _testModule = module;
                     }
+                  
                     scanCount ++;
                     
                 }else {//广播蓝牙
@@ -266,13 +282,6 @@ static NSInteger scanCount;
                         [SVProgressHUD dismiss];
                     });
                     NSLog(@"广播蓝牙方式进入");
-//                    [MinewCommonTool onMainThread:^{
-//                        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)((2-_enterTimeCount) * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-//                            strongSelf->_globalManager.connectState = ConnectStateAdvertise;
-//                            [strongSelf startToAdertise];
-//
-//                        });
-//                    }];
                     if (_enterTimeCount < 3) {
                         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)((3-_enterTimeCount) * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                             strongSelf->_globalManager.connectState = ConnectStateAdvertise;
@@ -335,5 +344,14 @@ static NSInteger scanCount;
 //    }
 }
 - (IBAction)firstButton:(UIButton *)sender {
+}
+
+
+#pragma mark ---- copyrightView
+- (CopyRightView *)copyrightView {
+    if (!_copyrightView) {
+        _copyrightView = [[CopyRightView alloc] initWithFrame:CGRectMake(0, ScreenHeight-100, ScreenWidth, 100)];
+    }
+    return _copyrightView;
 }
 @end

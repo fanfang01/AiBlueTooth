@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>iYou</string>
+	<string>YOUAI</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -39,6 +39,8 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>APP想要使用你的蓝牙去和硬件设备连接，通讯</string>
 	<key>NSBluetoothPeripheralUsageDescription</key>
 	<string>The app will communication with device by bluetooth module. </string>
 	<key>NSMicrophoneUsageDescription</key>

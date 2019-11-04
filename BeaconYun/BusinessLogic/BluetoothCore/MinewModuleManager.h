@@ -24,6 +24,7 @@ typedef NS_ENUM(NSUInteger, LinkStatus) {
 };
 
 typedef void(^FindDevice)(MinewModule *module);
+typedef void (^FistModuleConnect)(MinewModule *module);
 
 @class MinewModuleManager, MinewModule, MinewModule;
 
@@ -70,6 +71,22 @@ typedef void(^FindDevice)(MinewModule *module);
 @end
 
 @interface MinewModuleManager : NSObject
+//适配新的产商ID的特性
+/*
+ *当前连接的蓝牙设备列表
+ */
+@property (nonatomic,strong) NSMutableArray <MinewModule *> *connectedModudels;
+/*
+ * 第一个连接上的Module
+ */
+@property (nonatomic,strong)MinewModule *firstConnectedModule;
+
+@property (nonatomic,copy) FistModuleConnect firstModuleConnect;
+//添加一个字段，判断是否是德鑫能源电子
+@property (nonatomic,assign)BOOL isDexinProduct;
+
+
+
 @property (nonatomic, copy)FindDevice findDevice;
 
 @property (nonatomic, copy)NSString *macString;

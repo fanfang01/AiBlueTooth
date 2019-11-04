@@ -42,4 +42,8 @@
 
 //NSString 转16进制
 - (NSString *)hexStringFromString:(NSString *)string;
+
++ (BOOL)isDeXinProductUserDefault;
+
++ (void)saveDexinUserDefault:(BOOL)key;
 @end

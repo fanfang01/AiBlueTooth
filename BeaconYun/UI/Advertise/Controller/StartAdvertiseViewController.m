@@ -16,6 +16,7 @@
 #import "MinewModule.h"
 #import "SettingViewController.h"
 #import "MinewModuleApi.h"
+#import "CopyRightView.h"
 
 //定义广播数据的结构体
 struct MyAdvDtaModel {
@@ -55,6 +56,8 @@ static NSInteger i = 0;
 @property (nonatomic, strong) FLAnimatedImageView *animatedImgView;
 
 @property (nonatomic,assign) BOOL is_on;//记录开关的状态
+
+@property (nonatomic,strong) CopyRightView *copyrightView;
 @end
 
 @implementation StartAdvertiseViewController
@@ -120,6 +123,23 @@ static NSInteger count = 0;
     }else if (_globalManager.connectState == ConnectStateAdvertise) {
         [self isExistsBindDevicesToAdvertise];
     }
+    
+    if ([MinewCommonTool isDeXinProductUserDefault]) {
+        [self.view addSubview:self.copyrightView];
+    }else {
+        [self.copyrightView removeFromSuperview];
+    }
+    
+    _minewManager = [MinewModuleManager sharedInstance];
+    _minewManager.firstModuleConnect = ^(MinewModule *module) {
+        [MinewCommonTool onMainThread:^{
+            if (module.productNumber == 160) {//dexin
+                [self.view addSubview:self.copyrightView];
+            }else {
+                [self.copyrightView removeFromSuperview];
+            }
+        }];
+    };
 
 }
 
@@ -293,6 +313,7 @@ static NSInteger count = 0;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
+    
     
 }
 
@@ -798,5 +819,14 @@ static NSInteger count = 0;
         imgView.animatedImage = [FLAnimatedImage animatedImageWithGIFData:imageData];
     }
     return _animatedImgView;
+}
+
+#pragma mark --- Getter
+- (CopyRightView *)copyrightView
+{
+    if (!_copyrightView) {
+        _copyrightView = [[CopyRightView alloc] initWithFrame:CGRectMake(0, ScreenHeight-100, ScreenWidth, 100)];
+    }
+    return _copyrightView;
 }
 @end

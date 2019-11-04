@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		282D97F421B7D404004E9D39 /* WakeUp.bin in Resources */ = {isa = PBXBuildFile; fileRef = 282D97F321B7D404004E9D39 /* WakeUp.bin */; };
 		2838681321D61EBF00C56480 /* WakeUp-ch.bin in Resources */ = {isa = PBXBuildFile; fileRef = 2838681221D61EBF00C56480 /* WakeUp-ch.bin */; };
+		286A068B2362DD0E00D2B72F /* CopyRightView.m in Sources */ = {isa = PBXBuildFile; fileRef = 286A068A2362DD0E00D2B72F /* CopyRightView.m */; };
 		286D6B1021B7AC2F000DB7C8 /* MTBeaconManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 286D6B0C21B7AC2F000DB7C8 /* MTBeaconManager.m */; };
 		286D6B1121B7AC2F000DB7C8 /* MTCommonTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 286D6B0D21B7AC2F000DB7C8 /* MTCommonTool.m */; };
 		286D6B1221B7AC2F000DB7C8 /* MTPeripheralManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 286D6B0E21B7AC2F000DB7C8 /* MTPeripheralManager.m */; };
@@ -105,6 +106,8 @@
 /* Begin PBXFileReference section */
 		282D97F321B7D404004E9D39 /* WakeUp.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; path = WakeUp.bin; sourceTree = "<group>"; };
 		2838681221D61EBF00C56480 /* WakeUp-ch.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; path = "WakeUp-ch.bin"; sourceTree = "<group>"; };
+		286A06892362DD0E00D2B72F /* CopyRightView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CopyRightView.h; sourceTree = "<group>"; };
+		286A068A2362DD0E00D2B72F /* CopyRightView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CopyRightView.m; sourceTree = "<group>"; };
 		286D6B0921B7AC2F000DB7C8 /* MTPeripheralManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTPeripheralManager.h; sourceTree = "<group>"; };
 		286D6B0A21B7AC2F000DB7C8 /* MTCommonTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTCommonTool.h; sourceTree = "<group>"; };
 		286D6B0B21B7AC2F000DB7C8 /* MTBeaconManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTBeaconManager.h; sourceTree = "<group>"; };
@@ -634,6 +637,8 @@
 				286D6B1E21B7ACD2000DB7C8 /* BYScanDeviceViewController.h */,
 				286D6B1521B7ACD2000DB7C8 /* BYScanDeviceViewController.m */,
 				E56992F81E5EBE6B00C76E42 /* Common */,
+				286A06892362DD0E00D2B72F /* CopyRightView.h */,
+				286A068A2362DD0E00D2B72F /* CopyRightView.m */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -792,6 +797,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 				"zh-Hans",
@@ -931,6 +937,7 @@
 				E5BF8E721EB040A300AF94DC /* ColorPickerView.m in Sources */,
 				28D9C96821DCCAEF004A552B /* SettingCollectionViewCell.m in Sources */,
 				286D6B2721B7ACD2000DB7C8 /* BYNavigationController.m in Sources */,
+				286A068B2362DD0E00D2B72F /* CopyRightView.m in Sources */,
 				E56992DC1E5EB91500C76E42 /* AppDelegate.m in Sources */,
 				286D6B2521B7ACD2000DB7C8 /* BYInfoViewController.m in Sources */,
 				E5E4BDAF1E710B780086472B /* NSTimer+Blocks.m in Sources */,

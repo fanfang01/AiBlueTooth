@@ -17,5 +17,5 @@
 @property (strong, nonatomic) UIButton *selButton;
 
 
-@property(copy,nonatomic)void (^shakeToSelect)(UIButton *);
+@property (copy,nonatomic) void (^shakeToSelect)(UIButton *);
 @end

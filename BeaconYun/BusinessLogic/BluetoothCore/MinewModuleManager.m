@@ -253,6 +253,11 @@
         uint8_t validate = testByte[1];
         if (validate >=160 && validate <=207) {
             NSLog(@"在此范围内....");
+            //简单的测试
+            if (validate == 160) {
+                _isDexinProduct = YES;
+                
+            }
         }else {
             return ;
         }
@@ -285,6 +290,7 @@
                 [_appearModules addObject:module];
                 [_scannedModules addObject:module];
             }
+            module.productNumber = validate;
             module.macBytes = macBytes;
             module.macString = macString;
             module.canConnect = [connectable boolValue];
@@ -380,7 +386,22 @@
 {
     MinewModule *module = _connectingModuleDict[peripheral.identifier.UUIDString];
     NSLog(@"连接成功%@",module.peripheral);
-    
+    if (self.connectedModudels.count == 0) {
+        self.firstConnectedModule = module;
+        if (self.firstModuleConnect) {
+            self.firstModuleConnect(module);
+        }
+        if (module.productNumber == 160) {
+            [MinewCommonTool saveDexinUserDefault:YES];
+        }else {
+            [MinewCommonTool saveDexinUserDefault:NO];
+        }
+        
+    }
+    if (![self.connectedModudels containsObject:module]) {
+        [self.connectedModudels addObject:module];
+    }
+    NSLog(@"ble蓝牙设备连接成功.....");
     if (module)
     {
         [module didConnect];

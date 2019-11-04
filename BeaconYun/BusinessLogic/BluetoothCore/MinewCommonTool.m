@@ -247,5 +247,15 @@
     return hexStr;
 }
 
++ (BOOL)isDeXinProductUserDefault {
+    NSUserDefaults *def = [NSUserDefaults standardUserDefaults];
+    BOOL isDexin = [def boolForKey:DEXIN_Product];
+    return isDexin;
+}
 
++ (void)saveDexinUserDefault:(BOOL)key {
+    NSUserDefaults *def = [NSUserDefaults standardUserDefaults];
+    [def setBool:key forKey:DEXIN_Product];
+    [def synchronize];
+}
 @end

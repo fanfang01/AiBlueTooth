@@ -31,6 +31,8 @@ typedef void(^Send)(BOOL result);
 @interface MinewModule : NSObject
 //工作模式
 //@property (nonatomic,assign)ConnectState connectState;
+@property (nonatomic,assign)NSInteger productNumber;
+
 
 @property (nonatomic, strong) CBPeripheral *peripheral;
 

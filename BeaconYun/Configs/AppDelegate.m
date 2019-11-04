@@ -12,6 +12,8 @@
 #import <WeexSDK/WeexSDK.h>
 #import "MinewModuleAPI.h"
 #import "WXImgLoaderDefaultImpl.h"
+#import <AVFoundation/AVFoundation.h>
+#import <AVKit/AVKit.h>
 
 
 @interface AppDelegate ()
@@ -43,6 +45,11 @@
     [self.window makeKeyAndVisible];
     
     [MinewModuleAPI sharedInstance];
+    
+    AVAudioSession *audioSession = [AVAudioSession sharedInstance];
+    [audioSession setActive:NO error:nil];
+    [audioSession setCategory:AVAudioSessionCategoryPlayAndRecord  withOptions:AVAudioSessionCategoryOptionAllowBluetooth error:nil];
+    [audioSession setActive:YES error:nil];
 
 //    [self initWeexSDK];
 
