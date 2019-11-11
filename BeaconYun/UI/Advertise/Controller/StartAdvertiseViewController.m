@@ -124,22 +124,23 @@ static NSInteger count = 0;
         [self isExistsBindDevicesToAdvertise];
     }
     
-    if ([MinewCommonTool isDeXinProductUserDefault]) {
-        [self.view addSubview:self.copyrightView];
-    }else {
-        [self.copyrightView removeFromSuperview];
-    }
+    //展示bottom的Copyright View
+//    if ([MinewCommonTool isDeXinProductUserDefault]) {
+//        [self.view addSubview:self.copyrightView];
+//    }else {
+//        [self.copyrightView removeFromSuperview];
+//    }
     
-    _minewManager = [MinewModuleManager sharedInstance];
-    _minewManager.firstModuleConnect = ^(MinewModule *module) {
-        [MinewCommonTool onMainThread:^{
-            if (module.productNumber == 160) {//dexin
-                [self.view addSubview:self.copyrightView];
-            }else {
-                [self.copyrightView removeFromSuperview];
-            }
-        }];
-    };
+//    _minewManager = [MinewModuleManager sharedInstance];
+//    _minewManager.firstModuleConnect = ^(MinewModule *module) {
+//        [MinewCommonTool onMainThread:^{
+//            if (module.productNumber == 160) {//dexin
+//                [self.view addSubview:self.copyrightView];
+//            }else {
+//                [self.copyrightView removeFromSuperview];
+//            }
+//        }];
+//    };
 
 }
 

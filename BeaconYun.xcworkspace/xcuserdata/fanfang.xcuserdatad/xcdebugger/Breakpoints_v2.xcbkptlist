@@ -135,53 +135,5 @@
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "FCD3F2C2-34CE-4BE0-9893-126A612849FE"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "BeaconYun/UI/SettingViewController.m"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "67"
-            endingLineNumber = "67"
-            landmarkName = "-viewDidAppear:"
-            landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "FCD3F2C2-34CE-4BE0-9893-126A612849FE - 38f64780eb0b3ef0"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "-[SettingViewController viewDidAppear:]"
-                  moduleName = "BeaconYun"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/fanfang/AiBlueTooth/BeaconYun/UI/SettingViewController.m"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "67"
-                  endingLineNumber = "67"
-                  offsetFromSymbolStart = "632">
-               </Location>
-               <Location
-                  uuid = "FCD3F2C2-34CE-4BE0-9893-126A612849FE - 27d79ad26b969a60"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "__39-[SettingViewController viewDidAppear:]_block_invoke"
-                  moduleName = "BeaconYun"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/fanfang/AiBlueTooth/BeaconYun/UI/SettingViewController.m"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "67"
-                  endingLineNumber = "67"
-                  offsetFromSymbolStart = "16">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
    </Breakpoints>
 </Bucket>

@@ -57,22 +57,23 @@
         self.automaticallyAdjustsScrollViewInsets = NO;
     }
     
-    if ([MinewCommonTool isDeXinProductUserDefault]) {
-        [self.view addSubview:self.copyrightView];
-    }else {
-        [self.copyrightView removeFromSuperview];
-    }
-    
-    _manager = [MinewModuleManager sharedInstance];
-    _manager.firstModuleConnect = ^(MinewModule *module) {
-        [MinewCommonTool onMainThread:^{
-            if (module.productNumber == 160) {//dexin
-                [self.view addSubview:self.copyrightView];
-            }else {
-                [self.copyrightView removeFromSuperview];
-            }
-        }];
-    };
+    //展示bottom的 Copyright 的View
+//    if ([MinewCommonTool isDeXinProductUserDefault]) {
+//        [self.view addSubview:self.copyrightView];
+//    }else {
+//        [self.copyrightView removeFromSuperview];
+//    }
+//
+//    _manager = [MinewModuleManager sharedInstance];
+//    _manager.firstModuleConnect = ^(MinewModule *module) {
+//        [MinewCommonTool onMainThread:^{
+//            if (module.productNumber == 160) {//dexin
+//                [self.view addSubview:self.copyrightView];
+//            }else {
+//                [self.copyrightView removeFromSuperview];
+//            }
+//        }];
+//    };
 }
 
 - (void)viewDidLoad {
