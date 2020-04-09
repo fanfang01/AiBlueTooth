@@ -58,9 +58,25 @@ typedef NS_ENUM(NSUInteger, CharaType) {
     //remove all the services added before
     [_manager removeAllServices];
     NSLog(@"广播的字符串===%@",_advUUID.UUIDString);
-      [_manager startAdvertising:@{CBAdvertisementDataLocalNameKey: @"ASK",
-                                 CBAdvertisementDataServiceUUIDsKey: @[_advUUID],
+    
+    
+    NSMutableArray *aar = [NSMutableArray array];
+    for (NSInteger i=0; i<6; i++) {
+            NSString *string = _advUUID.UUIDString;
+        string = [string stringByReplacingCharactersInRange:NSMakeRange(0, 2) withString:[NSString stringWithFormat:@"%02x",i+1]];
+        CBUUID *uuid = [CBUUID UUIDWithString:string];
+        [aar addObject:uuid];
+    }
+    [aar addObject:_advUUID];
+
+    [_manager startAdvertising:@{
+                                 CBAdvertisementDataLocalNameKey: @"ASK-ASK-ASK-ASK",
+                                 CBAdvertisementDataServiceUUIDsKey: aar
                                  }];
+    
+//    CBMutableService *service = [[CBMutableService alloc] initWithType:_advUUID primary:NO];
+//
+//    [_manager addService:service];
 }
 
 - (void)stopAdvertising {
@@ -173,6 +189,7 @@ typedef NS_ENUM(NSUInteger, CharaType) {
 //when [self.peripheralManager startAdvertising:] 会监听 DidStartAdvertising
 - (void)peripheralManagerDidStartAdvertising:(CBPeripheralManager *)peripheral error:(NSError *)error
 {
+    NSLog(@"DidStartAdvertising ==== %@",error.description);
     NSLog(@"when [self.peripheralManager startAdvertising:] 会监听 DidStartAdvertising");
 }
 

@@ -73,12 +73,12 @@
 {
     NSInteger svcCount = peripheral.services.count;
     
-    if (svcCount != 1)
-    {
-        [self executeConnectionHandler:NO];
-        return ;
-    }
-    
+//    if (svcCount != 1)
+//    {
+//        [self executeConnectionHandler:NO];
+//        return ;
+//    }
+    NSLog(@"发现服务....");
     
     for ( CBService *s in peripheral.services)
     {

@@ -53,6 +53,7 @@
 		286D6BC121B7B771000DB7C8 /* AdvertiseView.m in Sources */ = {isa = PBXBuildFile; fileRef = 286D6BBC21B7B771000DB7C8 /* AdvertiseView.m */; };
 		286D6BC221B7B771000DB7C8 /* ShakeSelectView.m in Sources */ = {isa = PBXBuildFile; fileRef = 286D6BBD21B7B771000DB7C8 /* ShakeSelectView.m */; };
 		28744FB02213BA6C0053D8D3 /* WakeUp-en.bin in Resources */ = {isa = PBXBuildFile; fileRef = 28744FAF2213BA6C0053D8D3 /* WakeUp-en.bin */; };
+		2896B8A0240E859F00C6E35D /* GaoSongView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2896B89F240E859F00C6E35D /* GaoSongView.m */; };
 		28BB821622CAEE2600C78920 /* GlobalManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 28BB821522CAEE2600C78920 /* GlobalManager.m */; };
 		28BB821822CB13E500C78920 /* Animation.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 28BB821722CB13E500C78920 /* Animation.bundle */; };
 		28D9C96821DCCAEF004A552B /* SettingCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 28D9C96621DCCAEF004A552B /* SettingCollectionViewCell.m */; };
@@ -183,6 +184,8 @@
 		286D6BBE21B7B771000DB7C8 /* AdvertiseView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AdvertiseView.h; sourceTree = "<group>"; };
 		286D6BBF21B7B771000DB7C8 /* ShakeSelectView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShakeSelectView.h; sourceTree = "<group>"; };
 		28744FAF2213BA6C0053D8D3 /* WakeUp-en.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; path = "WakeUp-en.bin"; sourceTree = "<group>"; };
+		2896B89E240E859F00C6E35D /* GaoSongView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GaoSongView.h; sourceTree = "<group>"; };
+		2896B89F240E859F00C6E35D /* GaoSongView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GaoSongView.m; sourceTree = "<group>"; };
 		28BB821422CAEE2600C78920 /* GlobalManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GlobalManager.h; sourceTree = "<group>"; };
 		28BB821522CAEE2600C78920 /* GlobalManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GlobalManager.m; sourceTree = "<group>"; };
 		28BB821722CB13E500C78920 /* Animation.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Animation.bundle; sourceTree = "<group>"; };
@@ -639,6 +642,8 @@
 				E56992F81E5EBE6B00C76E42 /* Common */,
 				286A06892362DD0E00D2B72F /* CopyRightView.h */,
 				286A068A2362DD0E00D2B72F /* CopyRightView.m */,
+				2896B89E240E859F00C6E35D /* GaoSongView.h */,
+				2896B89F240E859F00C6E35D /* GaoSongView.m */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -940,6 +945,7 @@
 				286A068B2362DD0E00D2B72F /* CopyRightView.m in Sources */,
 				E56992DC1E5EB91500C76E42 /* AppDelegate.m in Sources */,
 				286D6B2521B7ACD2000DB7C8 /* BYInfoViewController.m in Sources */,
+				2896B8A0240E859F00C6E35D /* GaoSongView.m in Sources */,
 				E5E4BDAF1E710B780086472B /* NSTimer+Blocks.m in Sources */,
 				28FE6DE921C8A354008ED44F /* RecognizeManager.m in Sources */,
 				286D6BC221B7B771000DB7C8 /* ShakeSelectView.m in Sources */,
@@ -1116,7 +1122,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 14;
+				CURRENT_PROJECT_VERSION = 16;
 				DEVELOPMENT_TEAM = 8FJMU234N7;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/BeaconYun/Configs/PrefixHeader.pch";
@@ -1127,7 +1133,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/BeaconYun/BaiduSDK/BDSClientLib",
 				);
-				MARKETING_VERSION = 1.2.0;
+				MARKETING_VERSION = 1.2.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.anshunkang.iYou;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1142,7 +1148,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 14;
+				CURRENT_PROJECT_VERSION = 16;
 				DEVELOPMENT_TEAM = 8FJMU234N7;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/BeaconYun/Configs/PrefixHeader.pch";
@@ -1153,7 +1159,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/BeaconYun/BaiduSDK/BDSClientLib",
 				);
-				MARKETING_VERSION = 1.2.0;
+				MARKETING_VERSION = 1.2.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.anshunkang.iYou;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

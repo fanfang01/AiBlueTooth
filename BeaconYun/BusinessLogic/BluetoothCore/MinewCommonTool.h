@@ -10,6 +10,8 @@
 
 @interface MinewCommonTool : NSObject
 
+@property (nonatomic, assign) NSInteger producetNumber;
+
 // delete char in a string
 + (NSString *)deleteCharacter:(char)cha ofString:(NSString *)string;
 
@@ -43,7 +45,9 @@
 //NSString 转16进制
 - (NSString *)hexStringFromString:(NSString *)string;
 
-+ (BOOL)isDeXinProductUserDefault;
++ (NSInteger)getProductNumber;
 
-+ (void)saveDexinUserDefault:(BOOL)key;
++ (void)saveProductNumber:(NSInteger)num;
+
+
 @end

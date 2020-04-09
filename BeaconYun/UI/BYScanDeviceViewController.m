@@ -18,6 +18,7 @@
 #import "AdvertiseView.h"
 #import "StartAdvertiseViewController.h"
 #import "CopyRightView.h"
+#import "GaoSongView.h"
 
 #define INTERVAL_KEYBOARD 0
 
@@ -34,6 +35,8 @@
 @property(nonatomic,strong) NSMutableArray *tempArr ;//存放当前扫描到的设备
 
 @property (nonatomic,strong)CopyRightView *copyrightView;
+@property (nonatomic,strong)GaoSongView *gaoSongView;
+
 @end
 
 // iPhone bind device mac Address
@@ -53,6 +56,10 @@ static NSInteger scanCount;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+//NSString *advString = @"00000000-aff4-0085-0000-000000000000-00000000-aff4-0085-0000-000000000000";
+//    CBUUID *uuid = [CBUUID UUIDWithString:advString];
+
     
     scanCount = 0;
 //    [self initGUI];
@@ -117,22 +124,37 @@ static NSInteger scanCount;
         [_manager disconnect:module];
     }
     
-    if ([MinewCommonTool isDeXinProductUserDefault]) {
-        [self.view addSubview:self.copyrightView];
-    }else {
-        [self.copyrightView removeFromSuperview];
-    }
+//    if ([MinewCommonTool isDeXinProductUserDefault]) {
+//        [self.view addSubview:self.copyrightView];
+//    }else {
+//        [self.copyrightView removeFromSuperview];
+//    }
     
     _manager = [MinewModuleManager sharedInstance];
+    //for test
     _manager.firstModuleConnect = ^(MinewModule *module) {
+        NSInteger num = [MinewCommonTool getProductNumber];
         [MinewCommonTool onMainThread:^{
-            if (module.productNumber == 160) {//dexin
+            if (module.productNumber == 160 || num == 160) {//dexin
+                [self.gaoSongView removeFromSuperview];
                 [self.view addSubview:self.copyrightView];
-            }else {
+            }else if (module.productNumber == 161 || num == 161){
                 [self.copyrightView removeFromSuperview];
+                [self.view addSubview:self.gaoSongView];
             }
         }];
     };
+    
+    NSInteger num = [MinewCommonTool getProductNumber];
+    [MinewCommonTool onMainThread:^{
+        if ( num == 160) {//dexin
+            [self.gaoSongView removeFromSuperview];
+            [self.view addSubview:self.copyrightView];
+        }else if ( num == 161){//gaosong
+            [self.copyrightView removeFromSuperview];
+            [self.view addSubview:self.gaoSongView];
+        }
+    }];
 }
 
 - (NSMutableArray *)allBindArrays {
@@ -257,7 +279,7 @@ static NSInteger scanCount;
             if (!module.canConnect) {//表明是广播蓝牙的设备...
                 //优先扫描ble的设备
             }
-            NSLog(@"扫描到设备,此时的scanCount==%ld",(long)scanCount);
+//            NSLog(@"扫描到设备,此时的scanCount==%ld",(long)scanCount);
             if (scanCount == 0) {
                 if (module.canConnect) {
                     NSLog(@"Ble蓝牙设备更新。。");
@@ -353,5 +375,12 @@ static NSInteger scanCount;
         _copyrightView = [[CopyRightView alloc] initWithFrame:CGRectMake(0, ScreenHeight-100, ScreenWidth, 100)];
     }
     return _copyrightView;
+}
+
+- (GaoSongView *)gaoSongView {
+    if (!_gaoSongView) {
+        _gaoSongView = [[GaoSongView alloc] initWithFrame:CGRectMake(0, ScreenHeight-100, ScreenWidth, 100)];
+    }
+    return _gaoSongView;
 }
 @end

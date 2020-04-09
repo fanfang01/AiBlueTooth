@@ -11,6 +11,15 @@
 
 @implementation MinewCommonTool
 
++ (instancetype)sharedInstance {
+    static MinewCommonTool *tool = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        tool = [[self alloc] init];
+    });
+    return tool;
+}
+
 + (NSString *)deleteCharacter:(char)cha ofString:(NSString *)string
 {
     NSMutableString *str = [NSMutableString stringWithString: string];
@@ -166,18 +175,24 @@
    });
 }
 
-+ (NSString *)getDataString:(NSObject *)data
++ (NSString *)getDataString:(NSData *)data
 {
-    NSString *dataString = [NSString stringWithFormat:@"%@", data];
-    
-    NSArray *signs = @[@"<", @" ", @">"];
-    
-    for ( NSString *sign in signs)
-    {
-        dataString = [dataString stringByReplacingOccurrencesOfString:sign withString:@""];
+    Byte *bytes = (Byte *)[data bytes];
+    NSString *string = @"";
+    for (NSInteger i=0; i<[data length]; i++) {
+        string = [NSString stringWithFormat:@"%@%02x",string,bytes[i]];
     }
+
+//    NSString *dataString = [NSString stringWithFormat:@"%@", data];
+//
+//    NSArray *signs = @[@"<", @" ", @">"];
+//
+//    for ( NSString *sign in signs)
+//    {
+//        dataString = [dataString stringByReplacingOccurrencesOfString:sign withString:@""];
+//    }
     
-    return dataString;
+    return string;
 }
 
 + (float)distanceByRSSI:(NSInteger)rssi
@@ -256,6 +271,18 @@
 + (void)saveDexinUserDefault:(BOOL)key {
     NSUserDefaults *def = [NSUserDefaults standardUserDefaults];
     [def setBool:key forKey:DEXIN_Product];
+    [def synchronize];
+}
+
++ (NSInteger)getProductNumber {
+    NSUserDefaults *def = [NSUserDefaults standardUserDefaults];
+    NSInteger num = [def integerForKey:@"product"];
+    return num;
+}
+
++ (void)saveProductNumber:(NSInteger)num {
+    NSUserDefaults *def = [NSUserDefaults standardUserDefaults];
+    [def setInteger:num forKey:@"product"];
     [def synchronize];
 }
 @end

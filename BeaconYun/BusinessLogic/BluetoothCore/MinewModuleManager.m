@@ -248,11 +248,11 @@
     NSString *connectable = advertisementData[CBAdvertisementDataIsConnectable];
     NSData *manufactureData = advertisementData[CBAdvertisementDataManufacturerDataKey];
     Byte *testByte = (Byte *)[manufactureData bytes];
-    NSLog(@"advertisementDat==%@",advertisementData);
+//    NSLog(@"advertisementDat==%@",advertisementData);
     if ( manufactureData.length >= 8 ) {
         uint8_t validate = testByte[1];
         if (validate >=160 && validate <=207) {
-            NSLog(@"在此范围内....");
+//            NSLog(@"在此范围内....");
             //简单的测试
             if (validate == 160) {
                 _isDexinProduct = YES;
@@ -275,7 +275,7 @@
             }
         }
         NSInteger sum = [[MinewCommonTool numberHexString:[NSString stringWithFormat:@"%02x",macBytes%256]] integerValue];
-        NSLog(@"testByte[0] == %ld macBytes=%02x sum=%ldmodule.macString=%@",testByte[0],macBytes%256,sum, macString);
+//        NSLog(@"testByte[0] == %ld macBytes=%02x sum=%ldmodule.macString=%@",testByte[0],macBytes%256,sum, macString);
 
         if (sum == testByte[0]) {
             if ( [GlobalManager sharedInstance].connectState == ConnectStateAdvertise) {
@@ -304,7 +304,7 @@
 
         }
         
-        NSLog(@"ble的返回数据===%@",advertisementData);
+//        NSLog(@"ble的返回数据===%@",advertisementData);
     }
     
     if ([adName isEqualToString:@"HToy"])
@@ -391,11 +391,17 @@
         if (self.firstModuleConnect) {
             self.firstModuleConnect(module);
         }
-        if (module.productNumber == 160) {
-            [MinewCommonTool saveDexinUserDefault:YES];
-        }else {
-            [MinewCommonTool saveDexinUserDefault:NO];
+        if (module.productNumber) {
+            [MinewCommonTool saveProductNumber:module.productNumber];
         }
+//        if (module.productNumber == 160) {
+//            [MinewCommonTool saveDexinUserDefault:YES];
+//        }else {
+//            [MinewCommonTool saveDexinUserDefault:NO];
+//        }
+//        if (module.productNumber == 161) {
+//            [MinewCommonTool saveGaoSongnUserDefault:YES];
+//        }
         
     }
     if (![self.connectedModudels containsObject:module]) {

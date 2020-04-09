@@ -214,6 +214,7 @@ static NSInteger count = 0;
     
     switch (_globalManager.connectState) {
         case ConnectStateBLE:
+            NSLog(@"ConnectStateBLE");
         {
             if (_is_on) {
                 [self sendPowerOnIns];
@@ -224,6 +225,7 @@ static NSInteger count = 0;
             break;
         case ConnectStateAdvertise:
         {
+            NSLog(@"ConnectStateAdvertise");
             [self sendData:12];
         }
             break;
@@ -602,7 +604,7 @@ static NSInteger count = 0;
         
         NSString *string = [[NSString alloc] initWithData:cmdData encoding:NSUTF8StringEncoding];
         NSString *advString = [@"00000000-aff4-0085-" stringByAppendingString:string];
-        NSLog(@"开始广播=%@",advString);
+        NSLog(@"开始广播=%@",advString);//
         
         CBUUID *newUuid = [CBUUID UUIDWithString:advString];
         [_uuidArray addObject:newUuid];
@@ -641,12 +643,14 @@ static NSInteger count = 0;
     if ([key isEqualToString:@"小爱你好"] || [key isEqualToString:@"哈喽哈尼"]) {
         self.is_on = !_is_on;
         if (_globalManager.connectState == ConnectStateBLE) {
+            NSLog(@"BLE的方式");
             if (_is_on) {
                 [self sendPowerOnIns];
             }else {
                 [self sendPowerOffIns];
             }
         }else if (_globalManager.connectState == ConnectStateAdvertise){
+            NSLog(@"广播蓝牙的方式");
             [self sendData:12];
         }
         if ([key isEqualToString:@"哈喽哈尼"] ) {

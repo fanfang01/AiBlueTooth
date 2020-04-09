@@ -158,6 +158,7 @@ WX_EXPORT_METHOD(@selector(getLanguage:))
     NSLog(@"++INS:%@, hex:%d", data, hex);
     
     MinewModuleAPI *api = [self getInstance];
+
     
     NSData *dataValue = nil;
     
